@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - Enemy
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - Enemies
+  - Water
+  - UI
+  - Character
+  - Bullets
+  - Props and Furniture
+  - Wall
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Floor
+    uniqueID: 1343500367
+    locked: 0
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: Wall
+    uniqueID: 1401184007
+    locked: 0
+  - name: Props and Furniture
+    uniqueID: 540858873
+    locked: 0
+  - name: Characters and Enemies and Props for Sorting
+    uniqueID: 2123452755
+    locked: 0
+  - name: Anything in Front of Character and Enemies
+    uniqueID: 2920312831
+    locked: 0
+  - name: Crosshair
+    uniqueID: 1204339069
+    locked: 0
