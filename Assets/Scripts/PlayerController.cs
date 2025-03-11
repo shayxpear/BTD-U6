@@ -66,22 +66,20 @@ public class PlayerController : MonoBehaviour
                 break;
         }
 
-
-
         while (currentDashTime > 0f)
         {
             currentDashTime -= Time.deltaTime; // Lower the dash timer each.
 
-            rb.velocity = direction * dashSpeed; // Dash in the direction that was held down.
+            rb.linearVelocity = direction * dashSpeed; // Dash in the direction that was held down.
 
             yield return null; // Returns out of the coroutine this frame so we don't hit an infinite loop.
         }
-
-        rb.velocity = new Vector2(0f, 0f); // Stop dashing. 
-        canDash = true;
+        rb.linearVelocity = new Vector2(0f, 0f); // Stop dashing. 
         playerCollider.enabled = true;
         guitarSpriteRenderer.enabled = true;
+        canDash = true;
     }
+
 
     private void PlayerMovement()
     {
@@ -93,7 +91,7 @@ public class PlayerController : MonoBehaviour
         if (canDash)
         {
             rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
-            switch (playerScreenPosition.y < mousePosition.y)
+            switch (playerScreenPosition.y+100 < mousePosition.y)
             {
                 case true: // back
                     switch ((movement.x != 0 | movement.y != 0))
