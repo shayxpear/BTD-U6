@@ -10,18 +10,11 @@ public class Bullet : MonoBehaviour
     {
         //GameObject effect = Instantiate(hitEffect, transform.position, Quaternion.identity);
         //Destroy(hitEffect, 5f);
-        if (collision.gameObject != GameObject.FindGameObjectWithTag("Player"))
+        if (collision.gameObject.CompareTag("Enemy"))
         {
-            Destroy(gameObject);
+            collision.gameObject.GetComponent<HealthController>().TakeDamage(damage);
         }
-    }
+        Destroy(gameObject);
 
-    private void OnTriggerEnter2D(Collider2D collision) //Enemies
-    {
-        if (collision.gameObject.TryGetComponent<EnemyAI>(out EnemyAI enemyComponent))
-        {
-            enemyComponent.TakeDamage(damage);
-            Destroy(gameObject);
-        }
     }
 }

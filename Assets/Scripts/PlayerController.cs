@@ -53,8 +53,9 @@ public class PlayerController : MonoBehaviour
     {
         guitarSpriteRenderer.enabled = false;
         canDash = false;
-        playerCollider.enabled = false;
         currentDashTime = dashTime;
+        playerCollider.excludeLayers = LayerMask.GetMask("Enemies");
+        rb.excludeLayers = LayerMask.GetMask("Enemies");
 
         switch (direction.y > 0)
         {
@@ -75,9 +76,11 @@ public class PlayerController : MonoBehaviour
             yield return null; // Returns out of the coroutine this frame so we don't hit an infinite loop.
         }
         rb.linearVelocity = new Vector2(0f, 0f); // Stop dashing. 
-        playerCollider.enabled = true;
+        
         guitarSpriteRenderer.enabled = true;
         canDash = true;
+        playerCollider.excludeLayers = LayerMask.GetMask("Nothing");
+        rb.excludeLayers = LayerMask.GetMask("Nothing");
     }
 
 

@@ -33,7 +33,6 @@ public class GuitarController : MonoBehaviour
     public float missCooldown;
 
     bool cooldown;
-    int mouseInput; //0: left click 1: right click
 
     
 
