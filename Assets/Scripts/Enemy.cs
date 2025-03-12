@@ -4,14 +4,21 @@ public class EnemyAI : MonoBehaviour
 {
     public EnemyData enemyData;
 
-    public enum EnemyState { Idle, Chasing } // Removed Attacking
-    public EnemyState currentState = EnemyState.Idle;
+    public enum EnemyState { Idle, Chasing, Attacking }
+    public enum MobType { Melee, Ranged }
+
+    public EnemyState currentState = EnemyState.Idle; 
+    public MobType mobType = MobType.Melee;
 
     public float chaseDistance = 5f; // Distance at which enemy starts chasing the player
     public float stopChasingDistance = 5f; // Distance at which enemy returns to Idle (after chasing)
+    public float attackDistance = 2f; // Distance at which the enemy attacks
+    public float moveSpeed = 2f; // Speed of the enemy
+    public float attackCooldown = 1f; // Time between attacks
 
     private Transform player;
     public Transform enemyTransform;
+    private float timeSinceLastAttack = 1f;
 
     public Animator enemyAnimator;
 
@@ -25,6 +32,7 @@ public class EnemyAI : MonoBehaviour
 
     private void Update()
     {
+        timeSinceLastAttack += Time.deltaTime;
         // Switch states based on current state
         switch (currentState)
         {
@@ -34,6 +42,9 @@ public class EnemyAI : MonoBehaviour
 
             case EnemyState.Chasing:
                 ChasingState();
+                break;
+            case EnemyState.Attacking:
+                AttackingState();
                 break;
         }
     }
@@ -63,6 +74,36 @@ public class EnemyAI : MonoBehaviour
         {
             Debug.Log("Lost player, returning to Idle");
             currentState = EnemyState.Idle;
+        }
+    }
+
+    private void AttackingState()
+    {
+        // Attack the player if the cooldown is over
+        if (timeSinceLastAttack >= attackCooldown)
+        {
+            Attack();
+            timeSinceLastAttack = 0f; // Reset the attack cooldown
+        }
+
+        // Check if the player is out of attack range
+        if (Vector3.Distance(transform.position, player.position) > attackDistance)
+        {
+            currentState = EnemyState.Chasing;
+        }
+    }
+
+    private void Attack()
+    {
+        if (mobType == MobType.Melee)
+        {
+            // Melee attack logic (e.g., damage player in range)
+            Debug.Log("Melee Attack");
+        }
+        else if (mobType == MobType.Ranged)
+        {
+            // Ranged attack logic (e.g., shoot projectile at player)
+            Debug.Log("Ranged Attack");
         }
     }
 
