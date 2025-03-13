@@ -200,18 +200,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46cfda66e8074414aa52dce670cc7ded, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0.5
-  rotationSpeed: 500
-  strength: 3
-  obstacleCheckCircleRadius: 0.2
-  obstacleCheckDistance: 0.1
-  obstacleLayerMask:
-    serializedVersion: 2
-    m_Bits: 777
-  enemyData: {fileID: 11400000, guid: efacf47031e835d409bf1811095da24b, type: 2}
-  mobType: 0
-  attackDistance: 2
-  attackCooldown: 1
+  enemyStats: {fileID: 11400000, guid: 2acd6b90e9cb80342b04dd282e59daec, type: 2}
 --- !u!114 &1429717574238277093
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -237,5 +226,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32de277aeff2b9d4685ae26cbc797432, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentHealth: 0
-  health: {fileID: 11400000, guid: efacf47031e835d409bf1811095da24b, type: 2}
+  characterStats: {fileID: 11400000, guid: 2acd6b90e9cb80342b04dd282e59daec, type: 2}

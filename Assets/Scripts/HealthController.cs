@@ -7,17 +7,18 @@ using UnityEngine.SceneManagement;
 public class HealthController : MonoBehaviour
 {
     [Header("Health")]
-    public int currentHealth;
-    public EnemyData health;
+    public CharacterStats characterStats;
+    public int GetCurrentHealth { get; private set; }
+
 
     void Start()
     {
-        currentHealth = health.hp;
+        GetCurrentHealth = characterStats.health;  
     }
 
     void Update()
     {
-        if (currentHealth == 0)
+        if (GetCurrentHealth == 0)
         {
             Die();
         }
@@ -25,12 +26,21 @@ public class HealthController : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        this.currentHealth -= damage;
+        this.GetCurrentHealth -= damage;
     }
 
     private void Die()
     {
-        Debug.Log(" You Died.");
-        Destroy(gameObject);
+        if (characterStats is PlayerStats)
+        {
+            Debug.Log("Player has died.");
+            Destroy(gameObject);
+            // Handle player-specific death logic
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
     }
 }

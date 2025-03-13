@@ -50,6 +50,8 @@ public class NoteManager : MonoBehaviour
     {
         // Load Midi File on start
         LoadMidiFile();
+
+
     }
 
     private void Update()
@@ -97,22 +99,22 @@ public class NoteManager : MonoBehaviour
             }
 
             // Player Left Click Check
-            if (Input.GetMouseButtonDown(0) && playerController.canDash && guitarController.GetCooldown() == false)
+            if (Input.GetMouseButtonDown(0) && playerController.CanDash && guitarController.GetCooldown() == false)
             {
                 bool hit = CollisionCheck(true);
                 activeLeftNotes.Dequeue().gameObject.SetActive(false);
-                Debug.Log($"Hit = {hit}"); // Output hit true or false on left note
+                //Debug.Log($"Hit = {hit}"); // Output hit true or false on left note
 
                 if(hit) { Hit(); }
                 else { Miss(); }
             }
 
             // Player Right Click Check
-            if (Input.GetMouseButtonDown(1) && playerController.canDash && guitarController.GetCooldown() == false)
+            if (Input.GetMouseButtonDown(1) && playerController.CanDash && guitarController.GetCooldown() == false)
             {
                 bool hit = CollisionCheck(false);
                 activeRightNotes.Dequeue().gameObject.SetActive(false);
-                Debug.Log($"Hit = {hit}"); // Output hit true or false on right note
+                //Debug.Log($"Hit = {hit}"); // Output hit true or false on right note
 
                 if (hit) { Hit(); }
                 else { Miss(); }

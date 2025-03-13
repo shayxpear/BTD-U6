@@ -5,19 +5,23 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
 
-    [Header("Components")]
-    public Rigidbody2D rb;
-    public Animator animator;
-    public Collider2D playerCollider; //Prevents player from going through walls when dashing, not used to test if enemies have attacked the player
-    public Transform playerSpriteTransform;
-    public SpriteRenderer guitarSpriteRenderer;
+    [Header("Player Stats")]
+    public PlayerStats playerStats;
 
-    [HideInInspector] public bool canDash;
+    private Rigidbody2D rb;
+    private Animator animator;
+    private Collider2D playerCollider; //Prevents player from going through walls when dashing, not used to test if enemies have attacked the player
 
-    [Header("PlayerController Variables")]
-    [SerializeField] float moveSpeed;
-    [SerializeField] float dashTime;
-    [SerializeField] float dashSpeed;
+    private GameObject spriteController;
+    private GameObject guitarController;
+    private Transform playerSpriteTransform;
+    private SpriteRenderer guitarSpriteRenderer;
+
+    public bool CanDash { get; private set; }
+
+    private float moveSpeed;
+    private float dashTime;
+    private float dashSpeed;
 
     private float currentDashTime;
 
@@ -27,7 +31,19 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        canDash = true;
+        spriteController = GameObject.Find("SpriteController");
+        guitarController = GameObject.Find("GuitarController");
+
+        rb = GetComponent<Rigidbody2D>();
+        animator = spriteController.GetComponent<Animator>();
+        playerCollider = GetComponent<Collider2D>();
+
+        playerSpriteTransform = spriteController.GetComponent<Transform>();
+        guitarSpriteRenderer = guitarController.GetComponent<SpriteRenderer>();
+        moveSpeed = playerStats.speed;
+        dashTime = playerStats.dashTime;
+        dashSpeed = playerStats.dashSpeed;
+        CanDash = true;
     }
 
     void Update()
@@ -43,7 +59,7 @@ public class PlayerController : MonoBehaviour
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
 
-        if (canDash && (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.Space)) && (movement.x != 0 || movement.y != 0))
+        if (CanDash && (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.Space)) && (movement.x != 0 || movement.y != 0))
         {
             StartCoroutine(Dash(new Vector2(movement.x, movement.y).normalized));
         }
@@ -52,7 +68,7 @@ public class PlayerController : MonoBehaviour
     IEnumerator Dash(Vector2 direction)
     {
         guitarSpriteRenderer.enabled = false;
-        canDash = false;
+        CanDash = false;
         currentDashTime = dashTime;
         playerCollider.excludeLayers = LayerMask.GetMask("Enemies");
         rb.excludeLayers = LayerMask.GetMask("Enemies");
@@ -78,7 +94,7 @@ public class PlayerController : MonoBehaviour
         rb.linearVelocity = new Vector2(0f, 0f); // Stop dashing. 
         
         guitarSpriteRenderer.enabled = true;
-        canDash = true;
+        CanDash = true;
         playerCollider.excludeLayers = LayerMask.GetMask("Nothing");
         rb.excludeLayers = LayerMask.GetMask("Nothing");
     }
@@ -91,7 +107,7 @@ public class PlayerController : MonoBehaviour
         movement.y = Input.GetAxisRaw("Vertical");
 
         //Move Rigidbody
-        if (canDash)
+        if (CanDash)
         {
             rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
             switch (playerScreenPosition.y+100 < mousePosition.y)
@@ -136,6 +152,4 @@ public class PlayerController : MonoBehaviour
 
 
     }
-
-
 }

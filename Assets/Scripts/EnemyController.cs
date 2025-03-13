@@ -2,35 +2,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyMovement : MonoBehaviour
+public class EnemyController : MonoBehaviour
 {
-    [Header("Enemy Movement")]
-    [SerializeField] private float speed;
-    [SerializeField] private float rotationSpeed;
-    [SerializeField] private float strength;
+    [Header("Enemy Type")]
+    public EnemyStats enemyStats;
+
+    private float obstacleCheckCircleRadius;
+    private float obstacleCheckDistance;
+    private LayerMask obstacleLayerMask;
+
+    private float attackCooldown;
+    private float speed;
+    private float rotationSpeed;
 
     private Rigidbody2D rb;
     private PlayerDetection playerDetection;
     private Vector2 targetDirection;
     private RaycastHit2D[] obstacleCollisions;
-
-    [Header("Obstacle Checker")]
-    [SerializeField] private float obstacleCheckCircleRadius;
-    [SerializeField] private float obstacleCheckDistance;
-    [SerializeField] private LayerMask obstacleLayerMask; //in order to ignore everything but player
-
-    public EnemyData enemyData;
-    public enum MobType { Melee, Ranged }
-    public MobType mobType = MobType.Melee;
-    public float attackDistance = 2f; // Distance at which the enemy attacks
-    public float attackCooldown = 1f; // Time between attacks
-
     private Transform player;
     private bool isCooldown;
-    private int currentEnemyHp;
 
     private void Awake()
     {
+        obstacleCheckCircleRadius = enemyStats.obstacleCheckCircleRadius;
+        obstacleCheckDistance = enemyStats.obstacleCheckDistance;
+        obstacleLayerMask = enemyStats.obstacleLayerMask;
+        attackCooldown = enemyStats.attackCooldown;
+        speed= enemyStats.speed;
+        rotationSpeed= enemyStats.rotationSpeed;
+
         rb = GetComponent<Rigidbody2D>();
         playerDetection = GetComponent<PlayerDetection>();
         obstacleCollisions = new RaycastHit2D[100];
@@ -136,16 +136,8 @@ public class EnemyMovement : MonoBehaviour
 
     private void Attack()
     {
-        if (mobType == MobType.Melee)
-        {
-            // Melee attack logic (e.g., damage player in range)
-            Debug.Log("Melee Attack");
-            player.GetComponent<HealthController>().TakeDamage(enemyData.damage);
-        }
-        else if (mobType == MobType.Ranged)
-        {
-            // Ranged attack logic (e.g., shoot projectile at player)
-            Debug.Log("Ranged Attack");
-        }
+        Debug.Log("Melee Attack");
+        player.GetComponent<HealthController>().TakeDamage(enemyStats.damage);
+
     }
 }
