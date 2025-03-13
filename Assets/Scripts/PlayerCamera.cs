@@ -9,6 +9,13 @@ public class PlayerCamera : MonoBehaviour
     [Header("Camera Displacement")]
     public float camDisplacementMultiplier = 0.15f;
 
+    private GameObject playerObject;
+
+    private void Start()
+    {
+        playerObject = GameObject.Find("Player");
+        camTarget = playerObject.transform;
+    }
     // Update is called once per frame
     void Update()
     {
