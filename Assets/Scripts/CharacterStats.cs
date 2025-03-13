@@ -1,6 +1,6 @@
 using UnityEngine;
 
-
+[System.Serializable]
 public abstract class CharacterStats : ScriptableObject
 {
     [Header("General Attributes")]
