@@ -92557,7 +92557,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32de277aeff2b9d4685ae26cbc797432, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterStats: {fileID: 11400000, guid: 416c5ff9995241141ae0e945df3afa6f, type: 2}
+  characterStats: {fileID: 0}
 --- !u!222 &2762861782014785575
 CanvasRenderer:
   m_ObjectHideFlags: 0
