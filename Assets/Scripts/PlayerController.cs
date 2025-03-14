@@ -6,7 +6,6 @@ public class PlayerController : MonoBehaviour
 {
 
     [Header("Player Stats")]
-    public PlayerStats playerStats;
 
     private Rigidbody2D rb;
     private Animator animator;
@@ -31,6 +30,14 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        PlayerStats playerStats = GameManager.Instance.playerStats;
+        if (playerStats != null)
+        {
+            moveSpeed = playerStats.speed;
+            dashTime = playerStats.dashTime;
+            dashSpeed = playerStats.dashSpeed;
+        }
+
         spriteController = GameObject.Find("SpriteController");
         guitarController = GameObject.Find("GuitarController");
 
@@ -40,9 +47,7 @@ public class PlayerController : MonoBehaviour
 
         playerSpriteTransform = spriteController.GetComponent<Transform>();
         guitarSpriteRenderer = guitarController.GetComponent<SpriteRenderer>();
-        moveSpeed = playerStats.speed;
-        dashTime = playerStats.dashTime;
-        dashSpeed = playerStats.dashSpeed;
+        
         CanDash = true;
     }
 

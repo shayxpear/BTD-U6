@@ -5,11 +5,11 @@ public class RoomDetection : MonoBehaviour
     public bool playerInRange;
     public GameObject Doors;
 
-    private bool enemyInRange;
+    private int enemiesInRange = 0;
 
     public void Update()
     {
-        if(playerInRange && enemyInRange)
+        if (playerInRange && enemiesInRange > 0)
         {
             Doors.SetActive(true);
         }
@@ -28,7 +28,7 @@ public class RoomDetection : MonoBehaviour
 
         if (other.CompareTag("Enemy"))
         {
-            enemyInRange = true;
+            enemiesInRange++;
         }
     }
 
@@ -36,7 +36,7 @@ public class RoomDetection : MonoBehaviour
     {
         if (other.CompareTag("Enemy"))
         {
-            enemyInRange = false;
+            enemiesInRange = Mathf.Max(0, enemiesInRange - 1);
         }
     }
 }

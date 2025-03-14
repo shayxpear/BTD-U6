@@ -1,24 +1,44 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class HealthController : MonoBehaviour
 {
-    [Header("Health")]
-    public CharacterStats characterStats;
+    private CharacterStats characterStats;
     public int GetCurrentHealth { get; private set; }
-
 
     void Start()
     {
-        GetCurrentHealth = characterStats.health;  
+        // Determine if this is the Player or an Enemy
+        if (CompareTag("Player"))
+        {
+            // Get PlayerStats from the GameManager
+            characterStats = GameManager.Instance.playerStats;
+        }
+        else if (CompareTag("Enemy"))
+        {
+            EnemyStats enemyStats = GetComponent<EnemyController>().enemyStats;
+            if (enemyStats != null)
+            {
+                characterStats = enemyStats;
+            }
+        }
+
+        // Initialize health
+        if (characterStats != null)
+        {
+            GetCurrentHealth = characterStats.health;
+        }
+        else
+        {
+            Debug.LogError("CharacterStats not assigned in HealthController!");
+        }
     }
 
     void Update()
     {
-        if (GetCurrentHealth == 0)
+        if (GetCurrentHealth <= 0)
         {
             Die();
         }
@@ -26,7 +46,7 @@ public class HealthController : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        this.GetCurrentHealth -= damage;
+        GetCurrentHealth -= damage;
     }
 
     private void Die()
@@ -34,13 +54,13 @@ public class HealthController : MonoBehaviour
         if (characterStats is PlayerStats)
         {
             Debug.Log("Player has died.");
-            Destroy(gameObject);
-            // Handle player-specific death logic
+            // Handle player-specific death logic here, e.g., reload scene or show game over screen
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
         else
         {
+            Debug.Log("Enemy has died.");
             Destroy(gameObject);
         }
-
     }
 }

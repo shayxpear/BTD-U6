@@ -9,7 +9,6 @@ public class PlayerDetection : MonoBehaviour
 
     [Header("Detection")]
     [SerializeField] private float detectionDistance;
-    [SerializeField] private GameObject detectionCollider;
 
     private RoomDetection roomDetection;
 
@@ -18,7 +17,7 @@ public class PlayerDetection : MonoBehaviour
     private void Start()
     {
         StartCoroutine(FindPlayer());
-        roomDetection = detectionCollider.GetComponent<RoomDetection>();
+        StartCoroutine(FindDetectionCollider());
     }
 
     private IEnumerator FindPlayer()
@@ -29,6 +28,21 @@ public class PlayerDetection : MonoBehaviour
             if (playerObj != null)
             {
                 player = playerObj.transform;
+            }
+            yield return null;  // Wait a frame and try again
+        }
+
+        
+    }
+
+    private IEnumerator FindDetectionCollider()
+    {
+        while (roomDetection == null)
+        {
+            GameObject detectionCollider = GameObject.FindWithTag("DetectionCollider");
+            if (detectionCollider != null)
+            {
+                roomDetection = detectionCollider.GetComponent<RoomDetection>();
             }
             yield return null;  // Wait a frame and try again
         }

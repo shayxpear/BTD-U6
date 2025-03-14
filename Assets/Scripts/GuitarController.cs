@@ -5,7 +5,7 @@ using UnityEngine;
 public class GuitarController : MonoBehaviour
 {
     public GameObject bulletType;
-    public PlayerStats playerStats;
+    PlayerStats playerStats;
 
     Transform playerSpriteTransform;
     Transform crosshairTransform;
@@ -33,9 +33,15 @@ public class GuitarController : MonoBehaviour
 
     void Start()
     {
-        bulletForce = playerStats.bulletForce;
-        bulletScale = playerStats.bulletScale;
-        missCooldown = playerStats.missCooldown;
+        PlayerStats playerStats = GameManager.Instance.playerStats;
+        if (playerStats != null)
+        {
+            bulletForce = playerStats.bulletForce;
+            bulletScale = playerStats.bulletScale;
+            missCooldown = playerStats.missCooldown;
+        }
+
+        
 
         spriteController = GameObject.Find("SpriteController");
         guitarController = GameObject.Find("GuitarController");

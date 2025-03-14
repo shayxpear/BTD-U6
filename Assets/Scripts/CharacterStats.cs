@@ -9,7 +9,8 @@ public abstract class CharacterStats : ScriptableObject
     public float speed;
 }
 
-[CreateAssetMenu(fileName = "PlayerStats", menuName = "Stats/PlayerStats")]
+[System.Serializable]
+[CreateAssetMenu(fileName = "PlayerStats", menuName = "Scriptable Objects/PlayerStats")]
 public class PlayerStats : CharacterStats
 {
     [Header("Player Attributes")]
@@ -24,9 +25,10 @@ public class PlayerStats : CharacterStats
 
 }
 
-public enum EnemyType { Rat, Blob }
-public enum AttackType { Melee, Ranged}
-[CreateAssetMenu(fileName = "EnemyStats", menuName = "Stats/EnemyStats")]
+[System.Serializable]
+public enum EnemyType { Rat, Blob, Dummy }
+public enum AttackType { Melee, Ranged }
+[CreateAssetMenu(fileName = "EnemyStats", menuName = "Scriptable Objects/EnemyStats")]
 public class EnemyStats : CharacterStats
 {
     [Header("Enemy Type")]
@@ -34,7 +36,7 @@ public class EnemyStats : CharacterStats
     public AttackType attackType;
 
     [Header("Enemy Attributes")]
-    public int experienceValue;
+    public int gold;
     public float rotationSpeed;
     public float attackCooldown;
 
