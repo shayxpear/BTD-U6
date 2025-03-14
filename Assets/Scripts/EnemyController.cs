@@ -35,7 +35,24 @@ public class EnemyController : MonoBehaviour
         playerDetection = GetComponent<PlayerDetection>();
         obstacleCollisions = new RaycastHit2D[100];
         isCooldown = false;
-        player = GameObject.FindWithTag("Player").transform;
+       
+    }
+    private void Start()
+    {
+        StartCoroutine(FindPlayer());
+    }
+
+    private IEnumerator FindPlayer()
+    {
+        while (player == null)
+        {
+            GameObject playerObj = GameObject.FindWithTag("Player");
+            if (playerObj != null)
+            {
+                player = playerObj.transform;
+            }
+            yield return null;  // Wait a frame and try again
+        }
     }
 
     private void FixedUpdate()

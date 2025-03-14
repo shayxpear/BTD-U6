@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerDetection : MonoBehaviour
@@ -7,26 +9,38 @@ public class PlayerDetection : MonoBehaviour
 
     [Header("Detection")]
     [SerializeField] private float detectionDistance;
+    [SerializeField] private GameObject detectionCollider;
+
+    private RoomDetection roomDetection;
 
     private Transform player;
 
-    private void Awake()
+    private void Start()
     {
-        player  = GameObject.FindWithTag("Player").transform;
+        StartCoroutine(FindPlayer());
+        roomDetection = detectionCollider.GetComponent<RoomDetection>();
+    }
+
+    private IEnumerator FindPlayer()
+    {
+        while (player == null)
+        {
+            GameObject playerObj = GameObject.FindWithTag("Player");
+            if (playerObj != null)
+            {
+                player = playerObj.transform;
+            }
+            yield return null;  // Wait a frame and try again
+        }
     }
 
     private void Update()
     {
-        CheckDistance();
-    }
-
-    private void CheckDistance()
-    {
-        Vector2 enemyToPlayerVector = player.position - transform.position;
-        PlayerDirection = enemyToPlayerVector.normalized;
-
-        if(enemyToPlayerVector.magnitude <= detectionDistance)
+        if (roomDetection.playerInRange)
         {
+            Vector2 enemyToPlayerVector = player.position - transform.position;
+            PlayerDirection = enemyToPlayerVector.normalized;
+            Debug.Log("Player is in range — Attack!");
             PlayerDetected = true;
         }
         else
@@ -34,4 +48,5 @@ public class PlayerDetection : MonoBehaviour
             PlayerDetected = false;
         }
     }
+
 }
