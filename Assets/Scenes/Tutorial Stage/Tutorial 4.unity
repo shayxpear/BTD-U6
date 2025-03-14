@@ -17850,6 +17850,10 @@ PrefabInstance:
       propertyPath: enemyType
       value: 
       objectReference: {fileID: 11400000, guid: 2acd6b90e9cb80342b04dd282e59daec, type: 2}
+    - target: {fileID: 3344435903906621824, guid: 1de0ffd6116f31d49951302f6f704882, type: 3}
+      propertyPath: enemyStats
+      value: 
+      objectReference: {fileID: 11400000, guid: cafdd21eef8a6a34e9680b33bb0462dd, type: 2}
     - target: {fileID: 4349989708136202863, guid: 1de0ffd6116f31d49951302f6f704882, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2.801
@@ -18877,6 +18881,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 972d5d7e6d5f60848b217c17755cb87b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerStats: {fileID: 0}
+  enemyStatsList: []
   musicSource: {fileID: 0}
 --- !u!1 &914532745
 GameObject:
@@ -19129,6 +19135,10 @@ PrefabInstance:
       propertyPath: enemyType
       value: 
       objectReference: {fileID: 11400000, guid: 2acd6b90e9cb80342b04dd282e59daec, type: 2}
+    - target: {fileID: 3344435903906621824, guid: 1de0ffd6116f31d49951302f6f704882, type: 3}
+      propertyPath: enemyStats
+      value: 
+      objectReference: {fileID: 11400000, guid: cafdd21eef8a6a34e9680b33bb0462dd, type: 2}
     - target: {fileID: 4349989708136202863, guid: 1de0ffd6116f31d49951302f6f704882, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.849
@@ -25044,6 +25054,10 @@ PrefabInstance:
       propertyPath: enemyType
       value: 
       objectReference: {fileID: 11400000, guid: 2acd6b90e9cb80342b04dd282e59daec, type: 2}
+    - target: {fileID: 3344435903906621824, guid: 1de0ffd6116f31d49951302f6f704882, type: 3}
+      propertyPath: enemyStats
+      value: 
+      objectReference: {fileID: 11400000, guid: cafdd21eef8a6a34e9680b33bb0462dd, type: 2}
     - target: {fileID: 4349989708136202863, guid: 1de0ffd6116f31d49951302f6f704882, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.849
@@ -25109,6 +25123,10 @@ PrefabInstance:
       propertyPath: enemyType
       value: 
       objectReference: {fileID: 11400000, guid: 2acd6b90e9cb80342b04dd282e59daec, type: 2}
+    - target: {fileID: 3344435903906621824, guid: 1de0ffd6116f31d49951302f6f704882, type: 3}
+      propertyPath: enemyStats
+      value: 
+      objectReference: {fileID: 11400000, guid: cafdd21eef8a6a34e9680b33bb0462dd, type: 2}
     - target: {fileID: 4349989708136202863, guid: 1de0ffd6116f31d49951302f6f704882, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.587
@@ -25308,6 +25326,10 @@ PrefabInstance:
       propertyPath: enemyType
       value: 
       objectReference: {fileID: 11400000, guid: 2acd6b90e9cb80342b04dd282e59daec, type: 2}
+    - target: {fileID: 3344435903906621824, guid: 1de0ffd6116f31d49951302f6f704882, type: 3}
+      propertyPath: enemyStats
+      value: 
+      objectReference: {fileID: 11400000, guid: cafdd21eef8a6a34e9680b33bb0462dd, type: 2}
     - target: {fileID: 4349989708136202863, guid: 1de0ffd6116f31d49951302f6f704882, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2.801

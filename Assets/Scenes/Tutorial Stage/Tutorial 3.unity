@@ -8712,6 +8712,10 @@ PrefabInstance:
       propertyPath: enemyType
       value: 
       objectReference: {fileID: 11400000, guid: 2acd6b90e9cb80342b04dd282e59daec, type: 2}
+    - target: {fileID: 3344435903906621824, guid: 1de0ffd6116f31d49951302f6f704882, type: 3}
+      propertyPath: enemyStats
+      value: 
+      objectReference: {fileID: 11400000, guid: cafdd21eef8a6a34e9680b33bb0462dd, type: 2}
     - target: {fileID: 4349989708136202863, guid: 1de0ffd6116f31d49951302f6f704882, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2.801
@@ -10009,6 +10013,10 @@ PrefabInstance:
       propertyPath: enemyType
       value: 
       objectReference: {fileID: 11400000, guid: 2acd6b90e9cb80342b04dd282e59daec, type: 2}
+    - target: {fileID: 3344435903906621824, guid: 1de0ffd6116f31d49951302f6f704882, type: 3}
+      propertyPath: enemyStats
+      value: 
+      objectReference: {fileID: 11400000, guid: cafdd21eef8a6a34e9680b33bb0462dd, type: 2}
     - target: {fileID: 4349989708136202863, guid: 1de0ffd6116f31d49951302f6f704882, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.849
@@ -11062,6 +11070,10 @@ PrefabInstance:
       propertyPath: enemyType
       value: 
       objectReference: {fileID: 11400000, guid: 2acd6b90e9cb80342b04dd282e59daec, type: 2}
+    - target: {fileID: 3344435903906621824, guid: 1de0ffd6116f31d49951302f6f704882, type: 3}
+      propertyPath: enemyStats
+      value: 
+      objectReference: {fileID: 11400000, guid: cafdd21eef8a6a34e9680b33bb0462dd, type: 2}
     - target: {fileID: 4349989708136202863, guid: 1de0ffd6116f31d49951302f6f704882, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2.801
@@ -11209,6 +11221,10 @@ PrefabInstance:
       propertyPath: enemyType
       value: 
       objectReference: {fileID: 11400000, guid: 2acd6b90e9cb80342b04dd282e59daec, type: 2}
+    - target: {fileID: 3344435903906621824, guid: 1de0ffd6116f31d49951302f6f704882, type: 3}
+      propertyPath: enemyStats
+      value: 
+      objectReference: {fileID: 11400000, guid: cafdd21eef8a6a34e9680b33bb0462dd, type: 2}
     - target: {fileID: 4349989708136202863, guid: 1de0ffd6116f31d49951302f6f704882, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.606
