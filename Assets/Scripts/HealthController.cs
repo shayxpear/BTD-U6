@@ -5,62 +5,63 @@ using UnityEngine.SceneManagement;
 
 public class HealthController : MonoBehaviour
 {
-    private CharacterStats characterStats;
-    public int GetCurrentHealth { get; private set; }
+    private int currentHealth;
+    private PlayerController playerController;
+    private EnemyController enemyController;
 
-    void Start()
+    void Awake()
     {
-        // Determine if this is the Player or an Enemy
-        if (CompareTag("Player"))
-        {
-            // Get PlayerStats from the GameManager
-            characterStats = GameManager.Instance.playerStats;
-        }
-        else if (CompareTag("Enemy"))
-        {
-            EnemyStats enemyStats = GetComponent<EnemyController>().enemyStats;
-            if (enemyStats != null)
-            {
-                characterStats = enemyStats;
-            }
-        }
+        playerController = GetComponent<PlayerController>();
+        enemyController = GetComponent<EnemyController>();
 
-        // Initialize health
-        if (characterStats != null)
+        if (this.playerController != null)
         {
-            GetCurrentHealth = characterStats.health;
+            currentHealth = playerController.GetPlayerHealth;
         }
-        else
+        else if (this.enemyController != null)
         {
-            Debug.LogError("CharacterStats not assigned in HealthController!");
-        }
-    }
-
-    void Update()
-    {
-        if (GetCurrentHealth <= 0)
-        {
-            Die();
+            currentHealth = enemyController.GetEnemyHealth;
         }
     }
 
     public void TakeDamage(int damage)
     {
-        GetCurrentHealth -= damage;
+        currentHealth -= damage;
+        currentHealth = Mathf.Clamp(currentHealth, 0, currentHealth);
+
+        if (playerController != null)
+        {
+            Debug.Log($"Player took {damage} damage. Current Health: {currentHealth}");
+        }
+        else if (enemyController != null)
+        {
+            Debug.Log($"Enemy took {damage} damage. Current Health: {currentHealth}");
+        }
+
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
     }
 
     private void Die()
     {
-        if (characterStats is PlayerStats)
+        if (playerController != null)
         {
             Debug.Log("Player has died.");
-            // Handle player-specific death logic here, e.g., reload scene or show game over screen
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            // Add player death logic here.
         }
-        else
+        else if (enemyController != null)
         {
             Debug.Log("Enemy has died.");
-            Destroy(gameObject);
+            // Add enemy death logic here.
         }
+
+        Destroy(gameObject);
+    }
+
+    public int GetCurrentHealth()
+    {
+        return currentHealth;
     }
 }

@@ -4,16 +4,19 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-    [Header("Enemy Type")]
-    public EnemyStats enemyStats;
+    [Header("Enemy Stats")]
+    [SerializeField] private int health;
+    [SerializeField] private int damage;
+    [SerializeField] private float speed;
+    [SerializeField] private float attackCooldown;
+    [SerializeField] private float rotationSpeed;
 
-    private float obstacleCheckCircleRadius;
-    private float obstacleCheckDistance;
-    private LayerMask obstacleLayerMask;
 
-    private float attackCooldown;
-    private float speed;
-    private float rotationSpeed;
+    [Header("Detection")]
+    [SerializeField] private float obstacleCheckCircleRadius;
+    [SerializeField] private float obstacleCheckDistance;
+    [SerializeField] private LayerMask obstacleLayerMask;
+
 
     private Rigidbody2D rb;
     private PlayerDetection playerDetection;
@@ -21,16 +24,10 @@ public class EnemyController : MonoBehaviour
     private RaycastHit2D[] obstacleCollisions;
     private Transform player;
     private bool isCooldown;
+    public int GetEnemyHealth => health;
 
     private void Awake()
     {
-        obstacleCheckCircleRadius = enemyStats.obstacleCheckCircleRadius;
-        obstacleCheckDistance = enemyStats.obstacleCheckDistance;
-        obstacleLayerMask = enemyStats.obstacleLayerMask;
-        attackCooldown = enemyStats.attackCooldown;
-        speed= enemyStats.speed;
-        rotationSpeed= enemyStats.rotationSpeed;
-
         rb = GetComponent<Rigidbody2D>();
         playerDetection = GetComponent<PlayerDetection>();
         obstacleCollisions = new RaycastHit2D[100];
@@ -154,7 +151,7 @@ public class EnemyController : MonoBehaviour
     private void Attack()
     {
         Debug.Log("Melee Attack");
-        player.GetComponent<HealthController>().TakeDamage(enemyStats.damage);
+        player.GetComponent<HealthController>().TakeDamage(damage);
 
     }
 }

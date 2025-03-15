@@ -6,6 +6,10 @@ public class PlayerController : MonoBehaviour
 {
 
     [Header("Player Stats")]
+    [SerializeField] private int health;
+    [SerializeField] private float moveSpeed;
+    [SerializeField] private float dashTime;
+    [SerializeField] private float dashSpeed;
 
     private Rigidbody2D rb;
     private Animator animator;
@@ -17,11 +21,7 @@ public class PlayerController : MonoBehaviour
     private SpriteRenderer guitarSpriteRenderer;
 
     public bool CanDash { get; private set; }
-
-    private float moveSpeed;
-    private float dashTime;
-    private float dashSpeed;
-
+    public int GetPlayerHealth => health;
     private float currentDashTime;
 
     Vector2 movement;
@@ -30,14 +30,6 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        PlayerStats playerStats = GameManager.Instance.playerStats;
-        if (playerStats != null)
-        {
-            moveSpeed = playerStats.speed;
-            dashTime = playerStats.dashTime;
-            dashSpeed = playerStats.dashSpeed;
-        }
-
         spriteController = GameObject.Find("SpriteController");
         guitarController = GameObject.Find("GuitarController");
 

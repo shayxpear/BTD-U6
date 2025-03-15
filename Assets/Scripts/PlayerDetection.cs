@@ -7,9 +7,6 @@ public class PlayerDetection : MonoBehaviour
     public bool PlayerDetected { get; private set; }
     public Vector2 PlayerDirection { get; private set; }
 
-    [Header("Detection")]
-    [SerializeField] private float detectionDistance;
-
     private RoomDetection roomDetection;
 
     private Transform player;

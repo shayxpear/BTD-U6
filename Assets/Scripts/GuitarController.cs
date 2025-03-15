@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class GuitarController : MonoBehaviour
 {
+    [Header("Bullet Type")]
     public GameObject bulletType;
-    PlayerStats playerStats;
-
     Transform playerSpriteTransform;
     Transform crosshairTransform;
     Transform firePoint;
@@ -15,9 +14,11 @@ public class GuitarController : MonoBehaviour
     Vector2 playerScreenPosition;
     Vector2 mousePosition;
 
-    float bulletForce;
-    float bulletScale;
-    float missCooldown;
+    [Header("Guitar Stats")]
+    [SerializeField] private int bulletDamage;
+    [SerializeField] private float bulletForce;
+    [SerializeField] private float bulletScale;
+    [SerializeField] private float missCooldown;
 
     GameObject spriteController;
     GameObject guitarController;
@@ -33,16 +34,6 @@ public class GuitarController : MonoBehaviour
 
     void Start()
     {
-        PlayerStats playerStats = GameManager.Instance.playerStats;
-        if (playerStats != null)
-        {
-            bulletForce = playerStats.bulletForce;
-            bulletScale = playerStats.bulletScale;
-            missCooldown = playerStats.missCooldown;
-        }
-
-        
-
         spriteController = GameObject.Find("SpriteController");
         guitarController = GameObject.Find("GuitarController");
         crosshairController = GameObject.Find("CrosshairController");
@@ -112,6 +103,7 @@ public class GuitarController : MonoBehaviour
     public void Shoot()
     {
         GameObject bullet = Instantiate(bulletType, firePoint.position, guitarController.transform.rotation);
+        bullet.GetComponent<Bullet>().bulletDamage = bulletDamage; 
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
         rb.AddForce(firePoint.up * bulletForce, ForceMode2D.Impulse);
         guitarAnimator.Play("mainCharacter_guitarShoot",-1, 0f);

@@ -20,7 +20,7 @@ public class PlayerUI : MonoBehaviour
     {
         if (healthController == null || healthBarSprites.Length != 10) return;
 
-        int playerHealth = healthController.GetCurrentHealth;
+        int playerHealth = healthController.GetCurrentHealth();
         playerHealth = Mathf.Clamp(playerHealth, 0, 9);  // Ensure health is within bounds
 
         healthBar.sprite = healthBarSprites[playerHealth];
