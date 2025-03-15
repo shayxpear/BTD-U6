@@ -19653,14 +19653,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   midiFilePath: test1.mid
-  hitTolerance: 50
+  hitTolerance: 25
   noteDespawnPastDistance: 5
   startSongDelaySeconds: 0
   noteTravelTimeSeconds: 1
   notebar: {fileID: 4315506749363859661}
   mainCircle: {fileID: 6492864688097953953}
   audioSource: {fileID: 5738475202501010321}
+  music: {fileID: 4012422445143729197}
   missSFX: {fileID: 5007386461095583610}
+  reloadRefresh: {fileID: 8660193523167772552}
+  fadeDuration: 1
   leftNotePrefab: {fileID: 7883400903560103422, guid: c09d6579ef905f24192a42755e51d5c1, type: 3}
   rightNotePrefab: {fileID: 796594625953969667, guid: e1e89f7e268b7204d83710dd0f8bc660, type: 3}
   guitarController: {fileID: 8403176677395653958}
@@ -20610,7 +20613,7 @@ RectTransform:
   m_GameObject: {fileID: 7046378053015618935}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: -0.95}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2240613846488604354}
@@ -20656,7 +20659,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: d5068790f10e84b4fac595f2c1cea178, type: 3}
   m_Resource: {fileID: 8300000, guid: d5068790f10e84b4fac595f2c1cea178, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -20883,8 +20886,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 9
   moveSpeed: 1.3
-  dashTime: 0.8
-  dashSpeed: 1.7
+  dashTime: 0.5
+  dashSpeed: 2
+  dashCooldown: 0.2
 --- !u!114 &5536165163465072809
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21622,10 +21626,10 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: 3417de50d0bbf894c84d239121cda7cc, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 9c2c33dd8c00c08488e766ffcd02d2dd, type: 3}
+  m_Resource: {fileID: 8300000, guid: 9c2c33dd8c00c08488e766ffcd02d2dd, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0

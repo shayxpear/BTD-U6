@@ -20,7 +20,12 @@ public class NoteManager : MonoBehaviour
 
     [Header("Audio")]
     [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioSource music;
     [SerializeField] private AudioSource missSFX;
+    [SerializeField] private AudioSource reloadRefresh;
+
+    [SerializeField] private float fadeDuration = 0.5f; // Duration for fade in/out
+    private Coroutine fadeCoroutine;
     private double AudioSourceTime
     {
         get
@@ -45,6 +50,9 @@ public class NoteManager : MonoBehaviour
     private int rightNoteIndex = 0;
     private bool started = false;
     bool cooldown = false;
+    bool ended;
+
+    private int noteCombo;
 
     private void Start()
     {
@@ -57,7 +65,7 @@ public class NoteManager : MonoBehaviour
     private void Update()
     {
 
-        if (audioSource.isPlaying)
+        if (audioSource.isPlaying && !ended)
         {
             // Left Note Spawn Check
             if (leftNoteIndex < leftNoteTimes.Count && AudioSourceTime >= leftNoteTimes[leftNoteIndex] - noteTravelTimeSeconds)
@@ -119,18 +127,78 @@ public class NoteManager : MonoBehaviour
                 if (hit) { Hit(); }
                 else { Miss(); }
             }
+
+            if((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.Space)) && playerController.CanDash)
+            {
+                bool leftHit = CollisionCheck(true);
+                bool rightHit = CollisionCheck(false);
+                if (leftHit)
+                {
+                    activeLeftNotes.Dequeue().gameObject.SetActive(false);
+                    if (leftHit) { HitDash(); }
+                    else { Miss(); }
+                }
+                if(rightHit)
+                {
+                    activeRightNotes.Dequeue().gameObject.SetActive(false);
+                    if (rightHit) { HitDash(); }
+                    else { Miss(); }
+                }
+            }
+        }
+        else
+        {
+            music.volume = 1f;
+        }
+    }
+
+    private IEnumerator FadeAudio(bool fadeIn)
+    {
+        float startVolume = fadeIn ? 0f : audioSource.volume;
+        float targetVolume = fadeIn ? 1f : 0f;
+        float elapsedTime = 0f;
+
+        if (fadeIn && !audioSource.isPlaying)
+        {
+            audioSource.volume = 0f;
+            audioSource.Play();
+        }
+
+        while (elapsedTime < fadeDuration)
+        {
+            audioSource.volume = Mathf.Lerp(startVolume, targetVolume, elapsedTime / fadeDuration);
+            music.volume = Mathf.Lerp(1f, 0.5f, elapsedTime / fadeDuration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        audioSource.volume = targetVolume;
+        music.volume = 0.5f;
+
+        if (!fadeIn)
+        {
+            music.volume = 1f;
+            audioSource.Stop();
         }
     }
 
     public void Hit()
     {
         guitarController.Shoot();
+        noteCombo++;
+    }
+
+    public void HitDash()
+    {
+        noteCombo++;
     }
 
     public void Miss()
     {
+        reloadRefresh.Play();
         audioSource.Stop();
         missSFX.Play();
+        fadeCoroutine = StartCoroutine(FadeAudio(false));
         StartCoroutine(guitarController.MissCooldown());
         while (activeLeftNotes.Count > 0)
         {
@@ -143,7 +211,6 @@ public class NoteManager : MonoBehaviour
         }
     }
 
-    
     // Creates time lists for right notes and left notes from Midi file
     private void LoadMidiFile()
     {
@@ -180,6 +247,7 @@ public class NoteManager : MonoBehaviour
     {
         if (started || audioSource.isPlaying) return; // Prevent user from starting song if already running
         started = true;
+        ended = false;
         leftNoteIndex = 0; // Reset left and right node indexes for new run
         rightNoteIndex = 0;
         Invoke(nameof(StartSongHelper), startSongDelaySeconds);
@@ -188,7 +256,7 @@ public class NoteManager : MonoBehaviour
     // Helper function to call after delay
     private void StartSongHelper()
     {
-        audioSource.Play();
+        fadeCoroutine = StartCoroutine(FadeAudio(true));
         started = false;
     }
            
