@@ -4,6 +4,14 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
+    public enum AttackType {Melee, Ranged}
+    public enum EnemyType {Rat, Sumelse}
+
+    [Header("Enemy Type")]
+    [SerializeField] private EnemyType enemyType;
+    [SerializeField, HideInInspector] private EnemyType lastEnemyType;
+    [SerializeField] private AttackType attackType;
+    
     [Header("Enemy Stats")]
     [SerializeField] private int health;
     [SerializeField] private int damage;
@@ -150,8 +158,51 @@ public class EnemyController : MonoBehaviour
 
     private void Attack()
     {
-        Debug.Log("Melee Attack");
-        player.GetComponent<HealthController>().TakeDamage(damage);
+        switch (attackType)
+        {
+            case AttackType.Melee:
+                Debug.Log("Melee Attack");
+                if (player != null)
+                    player.GetComponent<HealthController>()?.TakeDamage(damage);
+                break;
 
+            case AttackType.Ranged:
+                Debug.Log("Ranged Attack");
+                //Shoot projectiles, have enemy stop when within attack range
+                break;
+        }
+    }
+    private void OnValidate()
+    {
+        if (!Application.isPlaying && enemyType != lastEnemyType)
+        {
+            //Changes Enemy stats within the inspector for enemy types
+            SetEnemyType(enemyType);
+            lastEnemyType = enemyType;
+        }
+    }
+
+    //Holds Stats for enemy Types
+    private void SetEnemyType(EnemyType preset)
+    {
+        switch (enemyType)
+        {
+            case EnemyType.Rat:
+                health = 3;
+                damage = 1;
+                speed = 0.5f;
+                attackCooldown = 1;
+                rotationSpeed = 500;
+                attackType = AttackType.Melee;
+                break;
+            case EnemyType.Sumelse:
+                health = 0;
+                damage = 0;
+                speed = 0;
+                attackCooldown = 0;
+                rotationSpeed = 0;
+                attackType = AttackType.Ranged;
+                break;
+        }    
     }
 }
