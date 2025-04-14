@@ -19657,6 +19657,10 @@ MonoBehaviour:
   noteDespawnPastDistance: 5
   startSongDelaySeconds: 0
   noteTravelTimeSeconds: 1
+  leftPulseObject: {fileID: 2823836399500507727}
+  rightPulseObject: {fileID: 2391399429899123323}
+  pulseDistance: -30
+  pulseDuration: 0.3
   notebar: {fileID: 4315506749363859661}
   mainCircle: {fileID: 6492864688097953953}
   audioSource: {fileID: 5738475202501010321}
@@ -19668,6 +19672,10 @@ MonoBehaviour:
   rightNotePrefab: {fileID: 796594625953969667, guid: e1e89f7e268b7204d83710dd0f8bc660, type: 3}
   guitarController: {fileID: 8403176677395653958}
   playerController: {fileID: 5490831414920916292}
+  pulsePhase: 0
+  bpm: 100
+  pulseAmount: 0.3
+  smoothTime: 0.1
 --- !u!212 &1072807480227111939
 SpriteRenderer:
   m_ObjectHideFlags: 0

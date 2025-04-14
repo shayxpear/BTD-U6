@@ -82,7 +82,14 @@ public class GuitarController : MonoBehaviour
 
         if ((Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)) && playerController.CanDash && !cooldown)
         {
-            noteManager.StartSong();
+            if (noteManager.pulsePhase >= 0.9f || noteManager.pulsePhase <= 0.1f)
+            {
+                noteManager.StartSong();
+            }
+            else
+            {
+                Debug.Log("Not on beat! Wait for the pulse.");
+            }
         }
 
 

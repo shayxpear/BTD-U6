@@ -14,6 +14,16 @@ public class NoteManager : MonoBehaviour
     [SerializeField] private float startSongDelaySeconds; // Delay before starting song after calling StartSong
     [SerializeField] private float noteTravelTimeSeconds; // Seconds the note will travel for
 
+    [Header("Pulse Objects")]
+    [SerializeField] private RectTransform leftPulseObject;
+    [SerializeField] private RectTransform rightPulseObject;
+    [SerializeField] private float pulseDistance = 100f; // Distance the objects move outwards
+    [SerializeField] private float pulseDuration = 0.2f;
+
+    private Vector2 leftOriginalPos;
+    private Vector2 rightOriginalPos;
+
+
     [Header("Canvas Elements")]
     [SerializeField] private RectTransform notebar; // Note bar rectangle will spawn left circles at left edge and right circles at right edge
     [SerializeField] private Image mainCircle; // Main circle for the player to hit the notes with
@@ -51,6 +61,14 @@ public class NoteManager : MonoBehaviour
     private bool started = false;
     bool cooldown = false;
     bool ended;
+    [HideInInspector] public float pulsePhase;
+
+    [Header("BPM")]
+    [SerializeField] private float bpm = 120f; // Set this in the inspector or calculate from MIDI
+    private Coroutine bpmPulseCoroutine;
+    private Vector3 originalScale;
+    public float pulseAmount = 0.1f;
+    public float smoothTime = 0.1f;
 
     private int noteCombo;
 
@@ -58,12 +76,23 @@ public class NoteManager : MonoBehaviour
     {
         // Load Midi File on start
         LoadMidiFile();
+        originalScale = mainCircle.rectTransform.localScale;
 
+        if (bpmPulseCoroutine != null) StopCoroutine(bpmPulseCoroutine);
+        bpmPulseCoroutine = StartCoroutine(BpmPulse());
+
+        leftOriginalPos = leftPulseObject.anchoredPosition;
+        rightOriginalPos = rightPulseObject.anchoredPosition;
 
     }
 
     private void Update()
     {
+        if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            ShootPulse(true);
+            ShootPulse(false);// Left click
+        }
 
         if (audioSource.isPlaying && !ended)
         {
@@ -251,6 +280,8 @@ public class NoteManager : MonoBehaviour
         leftNoteIndex = 0; // Reset left and right node indexes for new run
         rightNoteIndex = 0;
         Invoke(nameof(StartSongHelper), startSongDelaySeconds);
+
+        
     }
 
     // Helper function to call after delay
@@ -331,5 +362,60 @@ public class NoteManager : MonoBehaviour
             }
         }
         return false;
+    }
+
+    private IEnumerator BpmPulse()
+    {
+        float pulseInterval = 60f / bpm;
+
+        while (true)
+        {
+            // Instantly enlarge
+            mainCircle.rectTransform.localScale = originalScale * (1f + pulseAmount);
+
+            float elapsedTime = 0f;
+
+            // Smooth shrink phase
+            while (elapsedTime < pulseInterval)
+            {
+                float t = elapsedTime / pulseInterval;
+                float scale = 1f + pulseAmount * (1f - Mathf.SmoothStep(0f, 1f, t));
+                mainCircle.rectTransform.localScale = originalScale * scale;
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
+
+            // Ensure it's at the original size after shrinking
+            mainCircle.rectTransform.localScale = originalScale;
+
+            yield return null;
+        }
+    }
+
+    public void ShootPulse(bool isLeft)
+    {
+        StartCoroutine(SmoothPulse(isLeft));
+    }
+
+    private IEnumerator SmoothPulse(bool isLeft)
+    {
+        RectTransform pulseObject = isLeft ? leftPulseObject : rightPulseObject;
+        Vector2 originalPos = isLeft ? leftOriginalPos : rightOriginalPos;
+        Vector2 targetPos = originalPos + (isLeft ? Vector2.left : Vector2.right) * pulseDistance;
+
+        float elapsedTime = 0f;
+
+        // Smooth pulse out and back
+        while (elapsedTime < pulseDuration)
+        {
+            float t = elapsedTime / pulseDuration;
+            float smoothT = Mathf.SmoothStep(0f, 1f, t <= 0.5f ? t * 2f : (1f - t) * 2f); // Out and back
+            pulseObject.anchoredPosition = Vector2.Lerp(originalPos, targetPos, smoothT);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        // Ensure it snaps back
+        pulseObject.anchoredPosition = originalPos;
     }
 }
