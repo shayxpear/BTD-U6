@@ -11,6 +11,8 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private EnemyType enemyType;
     [SerializeField, HideInInspector] private EnemyType lastEnemyType;
     [SerializeField] private AttackType attackType;
+
+    public Animator enemyAnimator;
     
     [Header("Enemy Stats")]
     [SerializeField] private int health;
@@ -32,6 +34,7 @@ public class EnemyController : MonoBehaviour
     private RaycastHit2D[] obstacleCollisions;
     private Transform player;
     private bool isCooldown;
+    private bool enemyCollided;
     public int GetEnemyHealth => health;
 
     private void Awake()
@@ -139,14 +142,41 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision) //Enemies
+    private void OnCollisionEnter2D(Collision2D collision) //Enemy touches player
     {
         //Debug.Log(collision);
         if (collision.gameObject == GameObject.FindGameObjectWithTag("Player") && !isCooldown)
         {
-            Attack();
+            enemyCollided = true;
+            
+        }
+       
+    }
+
+    private void OnCollisionExit2D(Collision2D collision) //Player stops touching enemy
+    {
+        if (collision.gameObject == GameObject.FindGameObjectWithTag("Player") && !isCooldown)
+        {
+            enemyCollided = false;
+
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision) //Player enters attack zone
+    {
+        if (collision.gameObject == GameObject.FindGameObjectWithTag("Player"))
+        {
+            PlayEnemyAttackAnimation();
             isCooldown = true;
             StartCoroutine(AttackingCooldown());
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision) //Player exits attack zone
+    {
+        if (collision.gameObject == GameObject.FindGameObjectWithTag("Player"))
+        {
+            PlayEnemyWalkingAnimation();
         }
     }
 
@@ -156,13 +186,14 @@ public class EnemyController : MonoBehaviour
         isCooldown = false;
     }
 
-    private void Attack()
+    public void Attack()
     {
         switch (attackType)
         {
+
             case AttackType.Melee:
                 Debug.Log("Melee Attack");
-                if (player != null)
+                if (player != null && enemyCollided)
                     player.GetComponent<HealthController>()?.TakeDamage(damage);
                 break;
 
@@ -204,5 +235,26 @@ public class EnemyController : MonoBehaviour
                 attackType = AttackType.Ranged;
                 break;
         }    
+    }
+
+    //Hold Enemy Animations
+    public void PlayEnemyWalkingAnimation()
+    {
+        switch (enemyType)
+        {
+            case EnemyType.Rat:
+                enemyAnimator.Play("rat_walk");
+                break;
+        }
+    }
+
+    public void PlayEnemyAttackAnimation()
+    {
+        switch (enemyType)
+        {
+            case EnemyType.Rat:
+                enemyAnimator.Play("rat_attack");
+                break;
+        }
     }
 }
