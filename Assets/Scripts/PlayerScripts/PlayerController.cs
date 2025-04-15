@@ -10,6 +10,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float moveSpeed;
     [SerializeField] private float dashTime;
     [SerializeField] private float dashSpeed;
+    [SerializeField] private float dashCooldown;
+
+    bool isCooldown;
 
     private Rigidbody2D rb;
     private Animator animator;
@@ -59,7 +62,7 @@ public class PlayerController : MonoBehaviour
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
 
-        if (CanDash && (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.Space)) && (movement.x != 0 || movement.y != 0))
+        if (!isCooldown && CanDash && (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.Space)) && (movement.x != 0 || movement.y != 0))
         {
             StartCoroutine(Dash(new Vector2(movement.x, movement.y).normalized));
         }
@@ -67,6 +70,7 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator Dash(Vector2 direction)
     {
+        isCooldown = true;
         guitarSpriteRenderer.enabled = false;
         CanDash = false;
         currentDashTime = dashTime;
@@ -97,6 +101,8 @@ public class PlayerController : MonoBehaviour
         CanDash = true;
         playerCollider.excludeLayers = LayerMask.GetMask("Nothing");
         rb.excludeLayers = LayerMask.GetMask("Nothing");
+        yield return new WaitForSeconds(dashCooldown);
+        isCooldown = false;
     }
 
 
