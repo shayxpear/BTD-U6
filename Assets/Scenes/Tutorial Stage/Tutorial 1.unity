@@ -19489,9 +19489,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1245844833172599066, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
+      propertyPath: speed
+      value: 0.7
+      objectReference: {fileID: 0}
     - target: {fileID: 7576607333861121549, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
       propertyPath: m_Name
       value: Rat
+      objectReference: {fileID: 0}
+    - target: {fileID: 8517268546449587133, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8517268546449587133, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
+      propertyPath: m_LocalScale.y
+      value: -2
       objectReference: {fileID: 0}
     - target: {fileID: 8517268546449587133, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
       propertyPath: m_LocalPosition.x
@@ -20207,7 +20219,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 1000
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 0

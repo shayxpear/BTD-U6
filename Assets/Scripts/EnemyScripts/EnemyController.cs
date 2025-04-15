@@ -4,6 +4,16 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
+    public enum AttackType {Melee, Ranged}
+    public enum EnemyType {Rat, Sumelse}
+
+    [Header("Enemy Type")]
+    [SerializeField] private EnemyType enemyType;
+    [SerializeField, HideInInspector] private EnemyType lastEnemyType;
+    [SerializeField] private AttackType attackType;
+
+    public Animator enemyAnimator;
+    
     [Header("Enemy Stats")]
     [SerializeField] private int health;
     [SerializeField] private int damage;
@@ -24,6 +34,7 @@ public class EnemyController : MonoBehaviour
     private RaycastHit2D[] obstacleCollisions;
     private Transform player;
     private bool isCooldown;
+    private bool enemyCollided;
     public int GetEnemyHealth => health;
 
     private void Awake()
@@ -131,14 +142,41 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision) //Enemies
+    private void OnCollisionEnter2D(Collision2D collision) //Enemy touches player
     {
         //Debug.Log(collision);
         if (collision.gameObject == GameObject.FindGameObjectWithTag("Player") && !isCooldown)
         {
-            Attack();
+            enemyCollided = true;
+            
+        }
+       
+    }
+
+    private void OnCollisionExit2D(Collision2D collision) //Player stops touching enemy
+    {
+        if (collision.gameObject == GameObject.FindGameObjectWithTag("Player") && !isCooldown)
+        {
+            enemyCollided = false;
+
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision) //Player enters attack zone
+    {
+        if (collision.gameObject == GameObject.FindGameObjectWithTag("Player"))
+        {
+            PlayEnemyAttackAnimation();
             isCooldown = true;
             StartCoroutine(AttackingCooldown());
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision) //Player exits attack zone
+    {
+        if (collision.gameObject == GameObject.FindGameObjectWithTag("Player"))
+        {
+            PlayEnemyWalkingAnimation();
         }
     }
 
@@ -148,10 +186,75 @@ public class EnemyController : MonoBehaviour
         isCooldown = false;
     }
 
-    private void Attack()
+    public void Attack()
     {
-        Debug.Log("Melee Attack");
-        player.GetComponent<HealthController>().TakeDamage(damage);
+        switch (attackType)
+        {
 
+            case AttackType.Melee:
+                Debug.Log("Melee Attack");
+                if (player != null && enemyCollided)
+                    player.GetComponent<HealthController>()?.TakeDamage(damage);
+                break;
+
+            case AttackType.Ranged:
+                Debug.Log("Ranged Attack");
+                //Shoot projectiles, have enemy stop when within attack range
+                break;
+        }
+    }
+    private void OnValidate()
+    {
+        if (!Application.isPlaying && enemyType != lastEnemyType)
+        {
+            //Changes Enemy stats within the inspector for enemy types
+            SetEnemyType(enemyType);
+            lastEnemyType = enemyType;
+        }
+    }
+
+    //Holds Stats for enemy Types
+    private void SetEnemyType(EnemyType preset)
+    {
+        switch (enemyType)
+        {
+            case EnemyType.Rat:
+                health = 3;
+                damage = 1;
+                speed = 0.5f;
+                attackCooldown = 1;
+                rotationSpeed = 500;
+                attackType = AttackType.Melee;
+                break;
+            case EnemyType.Sumelse:
+                health = 0;
+                damage = 0;
+                speed = 0;
+                attackCooldown = 0;
+                rotationSpeed = 0;
+                attackType = AttackType.Ranged;
+                break;
+        }    
+    }
+
+    //Hold Enemy Animations
+    public void PlayEnemyWalkingAnimation()
+    {
+        switch (enemyType)
+        {
+            case EnemyType.Rat:
+                enemyAnimator.Play("rat_walk");
+                break;
+        }
+    }
+
+    public void PlayEnemyAttackAnimation()
+    {
+        switch (enemyType)
+        {
+            case EnemyType.Rat:
+                enemyAnimator.Play("rat_attack");
+                break;
+        }
     }
 }

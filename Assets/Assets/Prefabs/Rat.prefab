@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 1245844833172599066}
   - component: {fileID: 1449853393039647472}
   - component: {fileID: 8360269938983190604}
+  - component: {fileID: 5427231530552088281}
   m_Layer: 3
   m_Name: Rat
   m_TagString: Enemy
@@ -200,9 +201,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46cfda66e8074414aa52dce670cc7ded, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyType: 0
+  lastEnemyType: 0
+  attackType: 0
+  enemyAnimator: {fileID: 1368374263797500992}
   health: 3
   damage: 1
-  speed: 0.5
+  speed: 1
   attackCooldown: 1
   rotationSpeed: 500
   obstacleCheckCircleRadius: 0.2
@@ -234,3 +239,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32de277aeff2b9d4685ae26cbc797432, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!58 &5427231530552088281
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7576607333861121549}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 0.48
