@@ -1,22 +1,21 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class Projectile : MonoBehaviour
+public class EnemyBullet : MonoBehaviour
 {
-    private void Start()
-    {
-        Destroy(gameObject, 5f); // auto-destroy after 5 seconds to avoid clutter
-    }
+    [HideInInspector] public int bulletDamage;
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionEnter2D(Collision2D collision) //Objects
     {
-        Debug.Log("Projectile hit: " + collision.gameObject.name);
-
+        //GameObject effect = Instantiate(hitEffect, transform.position, Quaternion.identity);
+        //Destroy(hitEffect, 5f);
         if (collision.gameObject.CompareTag("Player"))
         {
-            //collision.gameObject.GetComponent<HealthController>()?.TakeDamage(damage);
-            Debug.Log("Hit player with projectile");
-            Destroy(gameObject);
+            collision.gameObject.GetComponent<HealthController>().TakeDamage(bulletDamage);
         }
+        Destroy(gameObject);
 
     }
 }
+

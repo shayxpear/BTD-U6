@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4801113949439086555}
   - component: {fileID: 7754714874175102273}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: quarterNote
-  m_TagString: Untagged
+  m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -99,9 +99,9 @@ GameObject:
   - component: {fileID: 7984918406837899525}
   - component: {fileID: 5171214737781412342}
   - component: {fileID: 221488715477580472}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: bulletQuarter
-  m_TagString: Untagged
+  m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -161,6 +161,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ee2d2b2fa7e01a4f8f837f0d1720e16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bulletDamage: 0
+  enemyBulletDamage: 0
+  bulletCollision: 0
 --- !u!58 &221488715477580472
 CircleCollider2D:
   m_ObjectHideFlags: 0

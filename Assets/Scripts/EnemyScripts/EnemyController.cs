@@ -20,7 +20,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private float speed;
     [SerializeField] private float attackCooldown;
     [SerializeField] private float rotationSpeed;
-    [SerializeField] private float attackRange;
+    [SerializeField] private float rangedAttackRange;
 
     [Header("Detection")]
     [SerializeField] private float obstacleCheckCircleRadius;
@@ -31,7 +31,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private float projSpeed;
     [SerializeField] private Transform projPos;
     [SerializeField] private GameObject projPrefab;
-
+    [SerializeField] private bool bulletCollision;
     private Rigidbody2D rb;
     private PlayerDetection playerDetection;
     private Vector2 targetDirection;
@@ -39,10 +39,7 @@ public class EnemyController : MonoBehaviour
     private Transform player;
     private bool isCooldown;
     private bool enemyCollided;
-    private bool isPlayerInRange;
-    private float stopBufferTime = 0.2f;
-    private float stopTimer = 0f;
-
+  
     public int GetEnemyHealth => health;
 
     private void Awake()
@@ -113,7 +110,7 @@ public class EnemyController : MonoBehaviour
 
     private void SetVelocity()
     {
-        if(targetDirection == Vector2.zero)
+        if(targetDirection == Vector2.zero || (attackType == AttackType.Ranged && isCooldown))
         {
             rb.linearVelocity = Vector2.zero;
         }
@@ -196,22 +193,15 @@ public class EnemyController : MonoBehaviour
     private void PlayerInRange()
     {
         var playerLayer = LayerMask.GetMask("Player");
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.up, attackRange, playerLayer);
-        Debug.DrawRay(transform.position, transform.up * attackRange, Color.yellow);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.up, rangedAttackRange, playerLayer);
+        Debug.DrawRay(transform.position, transform.up * rangedAttackRange, Color.yellow);
 
         if (hit && !isCooldown)
         {
             Debug.Log("Raycast Hit: Player");
-            isPlayerInRange = true;
-            stopTimer = stopBufferTime;
             Attack();
             isCooldown = true;
             StartCoroutine(AttackingCooldown());
-        }
-        else
-        {
-            stopTimer -= Time.fixedDeltaTime;
-            isPlayerInRange = stopTimer > 0f;
         }
     }
 
@@ -220,6 +210,19 @@ public class EnemyController : MonoBehaviour
         Debug.Log("Shooting Projectile");
         GameObject newProjectile = Instantiate(projPrefab, projPos.position, transform.rotation);
         Rigidbody2D rbProj = newProjectile.GetComponent<Rigidbody2D>();
+        Bullet bullet = newProjectile.GetComponent<Bullet>();
+
+        if (bullet != null)
+        {
+            bullet.enemyBulletDamage = damage;
+            bullet.bulletCollision = bulletCollision;
+            if(bullet.bulletCollision)
+            {
+                Debug.Log("Bullet Collision Off");
+                //bullet.bulletCollision = false;
+            }
+        }
+
         if (rbProj != null)
         {
             rbProj.linearVelocity = transform.up * projSpeed;
@@ -264,18 +267,20 @@ public class EnemyController : MonoBehaviour
                 speed = 0.7f;
                 attackCooldown = 1;
                 rotationSpeed = 500;
-                attackRange = 0.3f;
+                rangedAttackRange = 0.3f;
                 attackType = AttackType.Melee;
+                bulletCollision = false;
                 break;
             case EnemyType.Sumelse:
                 health = 3;
-                damage = 0;
+                damage = 1;
                 speed = 0.5f;
                 attackCooldown = 1;
                 rotationSpeed = 500;
-                attackRange = 1.5f;
-                projSpeed = 0.5f;
+                rangedAttackRange = 2f;
+                projSpeed = 3f;
                 attackType = AttackType.Ranged;
+                bulletCollision = false;
                 break;
         }
     }
