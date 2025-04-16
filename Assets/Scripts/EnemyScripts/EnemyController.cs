@@ -215,18 +215,6 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    private void StopStartMovement()
-    {
-        if (targetDirection == Vector2.zero || isPlayerInRange)
-        {
-            rb.linearVelocity = Vector2.zero;
-        }
-        else
-        {
-            rb.linearVelocity = transform.up * speed;
-        }
-    }
-
     private void ShootProjectile()
     {
         Debug.Log("Shooting Projectile");
