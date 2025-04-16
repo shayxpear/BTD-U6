@@ -13,20 +13,24 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private AttackType attackType;
 
     public Animator enemyAnimator;
-    
+
     [Header("Enemy Stats")]
     [SerializeField] private int health;
     [SerializeField] private int damage;
     [SerializeField] private float speed;
     [SerializeField] private float attackCooldown;
     [SerializeField] private float rotationSpeed;
-
+    [SerializeField] private float attackRange;
 
     [Header("Detection")]
     [SerializeField] private float obstacleCheckCircleRadius;
     [SerializeField] private float obstacleCheckDistance;
     [SerializeField] private LayerMask obstacleLayerMask;
 
+    [Header("Projectile Stats")]
+    [SerializeField] private float projSpeed;
+    [SerializeField] private Transform projPos;
+    [SerializeField] private GameObject projPrefab;
 
     private Rigidbody2D rb;
     private PlayerDetection playerDetection;
@@ -35,6 +39,10 @@ public class EnemyController : MonoBehaviour
     private Transform player;
     private bool isCooldown;
     private bool enemyCollided;
+    private bool isPlayerInRange;
+    private float stopBufferTime = 0.2f;
+    private float stopTimer = 0f;
+
     public int GetEnemyHealth => health;
 
     private void Awake()
@@ -43,8 +51,8 @@ public class EnemyController : MonoBehaviour
         playerDetection = GetComponent<PlayerDetection>();
         obstacleCollisions = new RaycastHit2D[100];
         isCooldown = false;
-       
     }
+
     private void Start()
     {
         StartCoroutine(FindPlayer());
@@ -68,6 +76,7 @@ public class EnemyController : MonoBehaviour
         UpdateTargetDirection();
         RotateTowardsTarget();
         SetVelocity();
+        PlayerInRange();
     }
 
     private void UpdateTargetDirection()
@@ -87,6 +96,7 @@ public class EnemyController : MonoBehaviour
             targetDirection = Vector2.zero;
         }
     }
+
 
     private void RotateTowardsTarget()
     {
@@ -148,9 +158,7 @@ public class EnemyController : MonoBehaviour
         if (collision.gameObject == GameObject.FindGameObjectWithTag("Player") && !isCooldown)
         {
             enemyCollided = true;
-            
         }
-       
     }
 
     private void OnCollisionExit2D(Collision2D collision) //Player stops touching enemy
@@ -158,7 +166,6 @@ public class EnemyController : MonoBehaviour
         if (collision.gameObject == GameObject.FindGameObjectWithTag("Player") && !isCooldown)
         {
             enemyCollided = false;
-
         }
     }
 
@@ -186,23 +193,68 @@ public class EnemyController : MonoBehaviour
         isCooldown = false;
     }
 
+    private void PlayerInRange()
+    {
+        var playerLayer = LayerMask.GetMask("Player");
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.up, attackRange, playerLayer);
+        Debug.DrawRay(transform.position, transform.up * attackRange, Color.yellow);
+
+        if (hit && !isCooldown)
+        {
+            Debug.Log("Raycast Hit: Player");
+            isPlayerInRange = true;
+            stopTimer = stopBufferTime;
+            Attack();
+            isCooldown = true;
+            StartCoroutine(AttackingCooldown());
+        }
+        else
+        {
+            stopTimer -= Time.fixedDeltaTime;
+            isPlayerInRange = stopTimer > 0f;
+        }
+    }
+
+    private void StopStartMovement()
+    {
+        if (targetDirection == Vector2.zero || isPlayerInRange)
+        {
+            rb.linearVelocity = Vector2.zero;
+        }
+        else
+        {
+            rb.linearVelocity = transform.up * speed;
+        }
+    }
+
+    private void ShootProjectile()
+    {
+        Debug.Log("Shooting Projectile");
+        GameObject newProjectile = Instantiate(projPrefab, projPos.position, transform.rotation);
+        Rigidbody2D rbProj = newProjectile.GetComponent<Rigidbody2D>();
+        if (rbProj != null)
+        {
+            rbProj.linearVelocity = transform.up * projSpeed;
+        }
+    }
+
     public void Attack()
     {
         switch (attackType)
         {
-
             case AttackType.Melee:
                 Debug.Log("Melee Attack");
                 if (player != null && enemyCollided)
                     player.GetComponent<HealthController>()?.TakeDamage(damage);
                 break;
-
             case AttackType.Ranged:
                 Debug.Log("Ranged Attack");
-                //Shoot projectiles, have enemy stop when within attack range
+                if (player != null)
+                    ShootProjectile();
                 break;
         }
     }
+
     private void OnValidate()
     {
         if (!Application.isPlaying && enemyType != lastEnemyType)
@@ -221,20 +273,23 @@ public class EnemyController : MonoBehaviour
             case EnemyType.Rat:
                 health = 3;
                 damage = 1;
-                speed = 0.5f;
+                speed = 0.7f;
                 attackCooldown = 1;
                 rotationSpeed = 500;
+                attackRange = 0.3f;
                 attackType = AttackType.Melee;
                 break;
             case EnemyType.Sumelse:
-                health = 0;
+                health = 3;
                 damage = 0;
-                speed = 0;
-                attackCooldown = 0;
-                rotationSpeed = 0;
+                speed = 0.5f;
+                attackCooldown = 1;
+                rotationSpeed = 500;
+                attackRange = 1.5f;
+                projSpeed = 0.5f;
                 attackType = AttackType.Ranged;
                 break;
-        }    
+        }
     }
 
     //Hold Enemy Animations
