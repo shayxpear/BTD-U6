@@ -267,7 +267,7 @@ public class EnemyController : MonoBehaviour
                 speed = 0.7f;
                 attackCooldown = 1;
                 rotationSpeed = 500;
-                rangedAttackRange = 0.3f;
+                rangedAttackRange = 0f;
                 attackType = AttackType.Melee;
                 bulletCollision = false;
                 break;
