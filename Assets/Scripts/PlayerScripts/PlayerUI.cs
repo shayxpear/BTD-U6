@@ -10,6 +10,10 @@ public class PlayerUI : MonoBehaviour
     public Image healthBar;
     public Sprite[] healthBarSprites;
 
+    public GameObject pauseMenu;
+
+    private bool paused;
+
     void Start()
     {
         healthController = GetComponent<HealthController>();
@@ -24,5 +28,11 @@ public class PlayerUI : MonoBehaviour
         playerHealth = Mathf.Clamp(playerHealth, 0, 9);  // Ensure health is within bounds
 
         healthBar.sprite = healthBarSprites[playerHealth];
+
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            paused = !paused;
+            pauseMenu.SetActive(paused);
+        }
     }
 }
