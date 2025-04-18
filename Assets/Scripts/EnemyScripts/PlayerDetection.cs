@@ -51,7 +51,7 @@ public class PlayerDetection : MonoBehaviour
         {
             Vector2 enemyToPlayerVector = player.position - transform.position;
             PlayerDirection = enemyToPlayerVector.normalized;
-            Debug.Log("Player is in range — Attack!");
+           // Debug.Log("Player is in range — Attack!");
             PlayerDetected = true;
         }
         else
