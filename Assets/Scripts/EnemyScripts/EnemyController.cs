@@ -36,7 +36,7 @@ public class EnemyController : MonoBehaviour
     [Header("Leap Attack")]
     [SerializeField] private float leapSpeed = 5f;
     [SerializeField] private float leapDuration = 0.3f;
-    [SerializeField] private float leapChargeDuration = 0.9f;
+    [SerializeField] private float leapChargeDuration = 0.7f;
     [SerializeField] private float attackRadius = 0.5f;
     private bool isLeaping;
 
