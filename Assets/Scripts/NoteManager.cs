@@ -13,6 +13,9 @@ public class NoteManager : MonoBehaviour
     [SerializeField] private float noteDespawnPastDistance; // Distance for a note to go past hitting the center before despawning
     [SerializeField] private float startSongDelaySeconds; // Delay before starting song after calling StartSong
     [SerializeField] private float noteTravelTimeSeconds; // Seconds the note will travel for
+    [SerializeField] private int attempts;
+
+    private int tempAttempts; //prevents hardcoding reset for attempts
 
     [Header("Pulse Objects")]
     [SerializeField] private RectTransform leftPulseObject;
@@ -64,13 +67,15 @@ public class NoteManager : MonoBehaviour
     [HideInInspector] public float pulsePhase;
 
     [Header("BPM")]
-    [SerializeField] private float bpm = 120f; // Set this in the inspector or calculate from MIDI
+    [SerializeField] private float bpm; // Set this in the inspector or calculate from MIDI
     private Coroutine bpmPulseCoroutine;
     private Vector3 originalScale;
     public float pulseAmount = 0.1f;
     public float smoothTime = 0.1f;
 
     private int noteCombo;
+
+    private bool canStartSong;
 
     private void Start()
     {
@@ -83,6 +88,8 @@ public class NoteManager : MonoBehaviour
 
         leftOriginalPos = leftPulseObject.anchoredPosition;
         rightOriginalPos = rightPulseObject.anchoredPosition;
+
+        tempAttempts = attempts; //should always be the number set in engine
 
     }
 
@@ -224,19 +231,25 @@ public class NoteManager : MonoBehaviour
 
     public void Miss()
     {
-        reloadRefresh.Play();
-        audioSource.Stop();
+        attempts--;
         missSFX.Play();
-        fadeCoroutine = StartCoroutine(FadeAudio(false));
-        StartCoroutine(guitarController.MissCooldown());
-        while (activeLeftNotes.Count > 0)
+        if (attempts <= 0)
         {
-            activeLeftNotes.Dequeue().gameObject.SetActive(false);
-        }
+            reloadRefresh.Play();
+            audioSource.Stop();
+            fadeCoroutine = StartCoroutine(FadeAudio(false));
+            StartCoroutine(guitarController.MissCooldown());
+            while (activeLeftNotes.Count > 0)
+            {
+                activeLeftNotes.Dequeue().gameObject.SetActive(false);
+            }
 
-        while (activeRightNotes.Count > 0)
-        {
-            activeRightNotes.Dequeue().gameObject.SetActive(false);
+            while (activeRightNotes.Count > 0)
+            {
+                activeRightNotes.Dequeue().gameObject.SetActive(false);
+            }
+            attempts = tempAttempts;
+
         }
     }
 
@@ -244,44 +257,52 @@ public class NoteManager : MonoBehaviour
     private void LoadMidiFile()
     {
         MidiFile midiFile = MidiFile.Read($"{Application.streamingAssetsPath}/{midiFilePath}");
+        TempoMap tempoMap = midiFile.GetTempoMap();
+
+        // Get the first tempo event (assuming constant tempo for simplicity)
+        var tempoChanges = tempoMap.GetTempoChanges();
+        foreach (var tempo in tempoChanges)
+        {
+            double microsecondsPerQuarterNote = tempo.Value.MicrosecondsPerQuarterNote;
+            bpm = 60000000f / (float)microsecondsPerQuarterNote;
+            Debug.Log($"Detected BPM: {bpm}");
+            break; // Assuming only the first tempo for simplicity
+        }
+
         foreach (Note note in midiFile.GetNotes())
         {
-            var metricTimeSpan = TimeConverter.ConvertTo<MetricTimeSpan>(note.Time, midiFile.GetTempoMap());
-            if (note.NoteName == Melanchall.DryWetMidi.MusicTheory.NoteName.F) // F note for left
-            {
-                // Add time to left list
-                leftNoteTimes.Add((double)metricTimeSpan.Minutes * 60f + metricTimeSpan.Seconds + (double)metricTimeSpan.Milliseconds / 1000f);
+            var metricTimeSpan = TimeConverter.ConvertTo<MetricTimeSpan>(note.Time, tempoMap);
+            double noteTime = metricTimeSpan.Minutes * 60 + metricTimeSpan.Seconds + metricTimeSpan.Milliseconds / 1000f;
 
-                // Create gameobject for this note ahead of time
+            if (note.NoteName == Melanchall.DryWetMidi.MusicTheory.NoteName.F)
+            {
+                leftNoteTimes.Add(noteTime);
                 GameObject g = Instantiate(leftNotePrefab, notebar);
                 g.SetActive(false);
                 leftNotes.Add(g);
             }
-            else if (note.NoteName == Melanchall.DryWetMidi.MusicTheory.NoteName.FSharp) // FSharp note for right
+            else if (note.NoteName == Melanchall.DryWetMidi.MusicTheory.NoteName.FSharp)
             {
-                // Add time to right list
-                rightNoteTimes.Add((double)metricTimeSpan.Minutes * 60f + metricTimeSpan.Seconds + (double)metricTimeSpan.Milliseconds / 1000f);
-
-                // Create gameobject for this note ahead of time
+                rightNoteTimes.Add(noteTime);
                 GameObject g = Instantiate(rightNotePrefab, notebar);
                 g.SetActive(false);
                 rightNotes.Add(g);
             }
         }
-
     }
 
     // Call this to start the song and the node spawning after the delay
     public void StartSong()
     {
         if (started || audioSource.isPlaying) return; // Prevent user from starting song if already running
+
+
         started = true;
         ended = false;
         leftNoteIndex = 0; // Reset left and right node indexes for new run
         rightNoteIndex = 0;
+        attempts = tempAttempts;
         Invoke(nameof(StartSongHelper), startSongDelaySeconds);
-
-        
     }
 
     // Helper function to call after delay
@@ -372,22 +393,23 @@ public class NoteManager : MonoBehaviour
         {
             // Instantly enlarge
             mainCircle.rectTransform.localScale = originalScale * (1f + pulseAmount);
-
             float elapsedTime = 0f;
 
             // Smooth shrink phase
             while (elapsedTime < pulseInterval)
             {
+                
                 float t = elapsedTime / pulseInterval;
+                startSongDelaySeconds = t;
                 float scale = 1f + pulseAmount * (1f - Mathf.SmoothStep(0f, 1f, t));
                 mainCircle.rectTransform.localScale = originalScale * scale;
                 elapsedTime += Time.deltaTime;
                 yield return null;
+
             }
 
             // Ensure it's at the original size after shrinking
             mainCircle.rectTransform.localScale = originalScale;
-
             yield return null;
         }
     }

@@ -20154,6 +20154,7 @@ MonoBehaviour:
   noteDespawnPastDistance: 5
   startSongDelaySeconds: 0
   noteTravelTimeSeconds: 1
+  attempts: 3
   leftPulseObject: {fileID: 2823836399500507727}
   rightPulseObject: {fileID: 2391399429899123323}
   pulseDistance: -30
