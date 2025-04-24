@@ -74,8 +74,8 @@ public class PlayerController : MonoBehaviour
         guitarSpriteRenderer.enabled = false;
         CanDash = false;
         currentDashTime = dashTime;
-        playerCollider.excludeLayers = LayerMask.GetMask("Enemies");
-        rb.excludeLayers = LayerMask.GetMask("Enemies");
+        playerCollider.excludeLayers = LayerMask.GetMask("Enemies", "Bullets", "CollisionBullets");
+        rb.excludeLayers = LayerMask.GetMask("Enemies", "Bullets", "CollisionBullets");
 
         switch (direction.y > 0)
         {

@@ -8,7 +8,7 @@ public class Bullet : MonoBehaviour
     [HideInInspector] public int enemyBulletDamage;
     [HideInInspector] public bool bulletCollision;
     private string bulletLayerName = "Bullets";
-
+    
     private void Start()
     {
         // Set initial layer when bullet spawns

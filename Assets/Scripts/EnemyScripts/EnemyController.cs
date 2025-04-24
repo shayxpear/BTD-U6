@@ -32,6 +32,14 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private Transform projPos;
     [SerializeField] private GameObject projPrefab;
     [SerializeField] private bool bulletCollision;
+
+    [Header("Leap Attack")]
+    [SerializeField] private float leapSpeed = 5f;
+    [SerializeField] private float leapDuration = 0.3f;
+    [SerializeField] private float leapChargeDuration = 0.95f;
+    [SerializeField] private float attackRadius = 0.5f;
+    private bool isLeaping;
+
     private Rigidbody2D rb;
     private PlayerDetection playerDetection;
     private Vector2 targetDirection;
@@ -39,7 +47,8 @@ public class EnemyController : MonoBehaviour
     private Transform player;
     private bool isCooldown;
     private bool enemyCollided;
-  
+    private bool hasLeaped = false;
+
     public int GetEnemyHealth => health;
 
     private void Awake()
@@ -110,9 +119,13 @@ public class EnemyController : MonoBehaviour
 
     private void SetVelocity()
     {
-        if(targetDirection == Vector2.zero || (attackType == AttackType.Ranged && isCooldown))
+        if(isLeaping || targetDirection == Vector2.zero || (attackType == AttackType.Ranged && isCooldown))
         {
             rb.linearVelocity = Vector2.zero;
+        }
+        else if (hasLeaped)
+        {
+            rb.linearVelocity = transform.up * leapSpeed;
         }
         else
         {
@@ -168,21 +181,52 @@ public class EnemyController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision) //Player enters attack zone
     {
-        if (collision.gameObject == GameObject.FindGameObjectWithTag("Player"))
+        if (collision.gameObject == GameObject.FindGameObjectWithTag("Player") && attackType == AttackType.Ranged)
         {
             PlayEnemyAttackAnimation();
             isCooldown = true;
             StartCoroutine(AttackingCooldown());
         }
-    }
+        // When the attack type is melee, the enemy will leap towards the player
+        if (collision.CompareTag("Player") && attackType == AttackType.Melee && !isCooldown)
+        {
+            StartCoroutine(LeapAttack());
+        }
 
+    }
     private void OnTriggerExit2D(Collider2D collision) //Player exits attack zone
     {
-        if (collision.gameObject == GameObject.FindGameObjectWithTag("Player"))
+        if (collision.gameObject == GameObject.FindGameObjectWithTag("Player") && attackType == AttackType.Ranged)
+        {
+            PlayEnemyWalkingAnimation();
+        }
+        if (collision.gameObject == GameObject.FindGameObjectWithTag("Player") && !isLeaping && !hasLeaped)
         {
             PlayEnemyWalkingAnimation();
         }
     }
+    private IEnumerator LeapAttack()
+    {
+        isCooldown = true;
+        StartCoroutine(AttackingCooldown());
+        isLeaping = true;
+
+    
+        PlayEnemyAttackAnimation();
+        // Start Leap Charge
+        yield return new WaitForSeconds(leapChargeDuration);
+        hasLeaped = true;
+        isLeaping = false;
+
+
+        // Leap towards the player
+        yield return new WaitForSeconds(leapDuration);
+       
+        // Reset the leap state
+        hasLeaped = false;
+    }
+
+    
 
     IEnumerator AttackingCooldown()
     {
