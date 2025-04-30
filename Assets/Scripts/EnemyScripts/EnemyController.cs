@@ -37,7 +37,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private float leapSpeed = 5f;
     [SerializeField] private float leapDuration = 0.3f;
     [SerializeField] private float leapChargeDuration = 0.95f;
-    [SerializeField] private float attackRadius = 0.5f;
+    
     private bool isLeaping;
 
     private Rigidbody2D rb;
@@ -308,11 +308,14 @@ public class EnemyController : MonoBehaviour
             case EnemyType.Rat:
                 health = 3;
                 damage = 1;
-                speed = 0.7f;
+                speed = 1f;
                 attackCooldown = 1;
                 rotationSpeed = 500;
                 rangedAttackRange = 0f;
                 attackType = AttackType.Melee;
+                leapSpeed = 5f;
+                leapDuration = 0.3f;
+                leapChargeDuration = 0.9f;
                 bulletCollision = false;
                 break;
             case EnemyType.Sumelse:
