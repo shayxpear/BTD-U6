@@ -23,7 +23,6 @@ public class GuitarController : MonoBehaviour
     GameObject spriteController;
     GameObject guitarController;
     GameObject noteManagerObject;
-    GameObject crosshairController;
     GameObject firePointObject;
 
     PlayerController playerController;
@@ -36,14 +35,12 @@ public class GuitarController : MonoBehaviour
     {
         spriteController = GameObject.Find("SpriteController");
         guitarController = GameObject.Find("GuitarController");
-        crosshairController = GameObject.Find("CrosshairController");
         noteManagerObject = GameObject.Find("NoteManager");
         firePointObject = GameObject.Find("firingPoint");
 
         playerController = GetComponent<PlayerController>();
         noteManager = noteManagerObject.GetComponent<NoteManager>();
         playerSpriteTransform = spriteController.GetComponent<Transform>();
-        crosshairTransform = crosshairController.GetComponent<Transform>();
         firePoint = firePointObject.GetComponent<Transform>();
         guitarAnimator = guitarController.GetComponent<Animator>();
         
@@ -58,7 +55,6 @@ public class GuitarController : MonoBehaviour
 
         mousePosition = Input.mousePosition;
         PlayerGuitar();
-        PlayerCrosshair();
     }
 
     private void PlayerGuitar()
@@ -97,11 +93,6 @@ public class GuitarController : MonoBehaviour
     public bool GetCooldown()
     {
         return cooldown;
-    }
-    private void PlayerCrosshair()
-    {
-        Vector2 mouseCursorPos = Camera.main.ScreenToWorldPoint(mousePosition);
-        crosshairTransform.position = mouseCursorPos;
     }
 
     public IEnumerator MissCooldown()

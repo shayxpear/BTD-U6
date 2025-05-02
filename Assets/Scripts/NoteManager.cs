@@ -52,6 +52,7 @@ public class NoteManager : MonoBehaviour
     [SerializeField] private GameObject rightNotePrefab;
     [SerializeField] private GuitarController guitarController;
     [SerializeField] private PlayerController playerController;
+    [SerializeField] private PlayerUI playerUI;
 
     private readonly List<double> leftNoteTimes = new();
     private readonly List<double> rightNoteTimes = new();
@@ -74,7 +75,7 @@ public class NoteManager : MonoBehaviour
     public float smoothTime = 0.1f;
 
     private int noteCombo;
-
+    private int sprite;
     private bool canStartSong;
 
     private void Start()
@@ -90,6 +91,8 @@ public class NoteManager : MonoBehaviour
         rightOriginalPos = rightPulseObject.anchoredPosition;
 
         tempAttempts = attempts; //should always be the number set in engine
+
+        StartCoroutine(CrosshairSprite());
 
     }
 
@@ -107,6 +110,7 @@ public class NoteManager : MonoBehaviour
             if (leftNoteIndex < leftNoteTimes.Count && AudioSourceTime >= leftNoteTimes[leftNoteIndex] - noteTravelTimeSeconds)
             {
                 SpawnNote(leftNoteIndex++, true); // Spawn left side note
+                
             }
 
             // Right Note Spawn Check
@@ -360,6 +364,22 @@ public class NoteManager : MonoBehaviour
         noteImage.color = noteOpacity;
     }
 
+    private IEnumerator CrosshairSprite()
+    {
+        if (sprite < playerUI.crosshairSprites.Length)
+        {
+            sprite++;
+        }
+
+        else
+        {
+            sprite = 0;
+        }
+        playerUI.crosshairSprite = playerUI.crosshairSprites[sprite];
+        yield return new WaitForSeconds((60f / bpm) / 6);
+        
+    }
+
     private bool CollisionCheck(bool isLeftSide)
     {
         if (isLeftSide) // Left side code
@@ -393,6 +413,7 @@ public class NoteManager : MonoBehaviour
         {
             // Instantly enlarge
             mainCircle.rectTransform.localScale = originalScale * (1f + pulseAmount);
+            playerUI.healthBar.transform.localScale = originalScale * (4f + pulseAmount);
             float elapsedTime = 0f;
 
             // Smooth shrink phase
@@ -403,6 +424,7 @@ public class NoteManager : MonoBehaviour
                 startSongDelaySeconds = t;
                 float scale = 1f + pulseAmount * (1f - Mathf.SmoothStep(0f, 1f, t));
                 mainCircle.rectTransform.localScale = originalScale * scale;
+                playerUI.healthBar.transform.localScale = originalScale * 4f * scale;
                 elapsedTime += Time.deltaTime;
                 yield return null;
 
@@ -410,6 +432,7 @@ public class NoteManager : MonoBehaviour
 
             // Ensure it's at the original size after shrinking
             mainCircle.rectTransform.localScale = originalScale;
+            playerUI.healthBar.transform.localScale = originalScale * 4f;
             yield return null;
         }
     }
