@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-    public enum AttackType {Melee, Ranged}
-    public enum EnemyType {Rat, Sumelse}
+    public enum AttackType {Melee, Ranged, Laser}
+    public enum EnemyType {Rat, Sumelse, Laser}
 
     [Header("Enemy Type")]
     [SerializeField] private EnemyType enemyType;
@@ -34,10 +34,22 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private bool bulletCollision;
 
     [Header("Leap Attack")]
-    [SerializeField] private float leapSpeed = 5f;
-    [SerializeField] private float leapDuration = 0.3f;
-    [SerializeField] private float leapChargeDuration = 0.95f;
-    
+    [SerializeField] private float leapSpeed;
+    [SerializeField] private float leapDuration;
+    [SerializeField] private float leapChargeDuration;
+    [SerializeField] private float leapCooldown;
+
+    [Header("Laser Settings")]
+    [SerializeField] private LineRenderer laserLine;
+    // public Transform firePoint;
+    [SerializeField] private float laserDuration;
+    [SerializeField] private float laserCooldown;
+    [SerializeField] private int laserDamage;
+    [SerializeField] private LayerMask playerLayer;
+    [SerializeField] private LayerMask laserHitLayers;
+
+    private bool isFiring;
+
     private bool isLeaping;
 
     private Rigidbody2D rb;
@@ -48,6 +60,7 @@ public class EnemyController : MonoBehaviour
     private bool isCooldown;
     private bool enemyCollided;
     private bool hasLeaped = false;
+    private bool leapRest = false;
 
     public int GetEnemyHealth => health;
 
@@ -62,6 +75,7 @@ public class EnemyController : MonoBehaviour
     private void Start()
     {
         StartCoroutine(FindPlayer());
+        
     }
 
     private IEnumerator FindPlayer()
@@ -77,14 +91,19 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+
     private void FixedUpdate()
     {
         UpdateTargetDirection();
         RotateTowardsTarget();
         SetVelocity();
-        PlayerInRange();
+        // Handle laser firing
+        if (!isFiring && !isCooldown && PlayerDetected() && attackType == AttackType.Laser)
+        {
+            StartCoroutine(FireLaser());
+        }
     }
-
+ 
     private void UpdateTargetDirection()
     {
         HandlePlayerTargeting();
@@ -106,7 +125,7 @@ public class EnemyController : MonoBehaviour
 
     private void RotateTowardsTarget()
     {
-        if(targetDirection == Vector2.zero)
+        if(isFiring || targetDirection == Vector2.zero)
         {
             return;
         }
@@ -119,7 +138,7 @@ public class EnemyController : MonoBehaviour
 
     private void SetVelocity()
     {
-        if(isLeaping || targetDirection == Vector2.zero || (attackType == AttackType.Ranged && isCooldown))
+        if(leapRest || isFiring || isLeaping || targetDirection == Vector2.zero || (attackType == AttackType.Ranged && isCooldown))
         {
             rb.linearVelocity = Vector2.zero;
         }
@@ -200,7 +219,7 @@ public class EnemyController : MonoBehaviour
         {
             PlayEnemyWalkingAnimation();
         }
-        if (collision.gameObject == GameObject.FindGameObjectWithTag("Player") && !isLeaping && !hasLeaped)
+        if (collision.gameObject == GameObject.FindGameObjectWithTag("Player") && !isLeaping && !hasLeaped || leapRest)
         {
             PlayEnemyWalkingAnimation();
         }
@@ -224,6 +243,10 @@ public class EnemyController : MonoBehaviour
        
         // Reset the leap state
         hasLeaped = false;
+        leapRest = true;
+
+        yield return new WaitForSeconds(leapCooldown);
+        leapRest = false;
     }
 
     
@@ -234,20 +257,7 @@ public class EnemyController : MonoBehaviour
         isCooldown = false;
     }
 
-    private void PlayerInRange()
-    {
-        var playerLayer = LayerMask.GetMask("Player");
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.up, rangedAttackRange, playerLayer);
-        Debug.DrawRay(transform.position, transform.up * rangedAttackRange, Color.yellow);
-
-        if (hit && !isCooldown)
-        {
-            Debug.Log("Raycast Hit: Player");
-            Attack();
-            isCooldown = true;
-            StartCoroutine(AttackingCooldown());
-        }
-    }
+    
 
     private void ShootProjectile()
     {
@@ -272,7 +282,62 @@ public class EnemyController : MonoBehaviour
             rbProj.linearVelocity = transform.up * projSpeed;
         }
     }
+    //Player detection for laser
+    private bool PlayerDetected()
+    {
+        Debug.Log("Player Detected");
+        RaycastHit2D hit = Physics2D.Raycast(projPos.position, projPos.up, Mathf.Infinity, playerLayer);
+        return hit.collider != null;
+    }
 
+    private IEnumerator FireLaser()
+    {
+        isFiring = true;
+        laserLine.enabled = true;
+        float startTime = Time.time;
+
+        while (Time.time < startTime + laserDuration)
+        {
+            Vector3 startPos = projPos.position;
+            startPos.z = 0;
+            //Cast a ray against all layers in laserHitLayers
+            RaycastHit2D hit = Physics2D.Raycast(startPos, projPos.up, Mathf.Infinity, laserHitLayers);
+
+            Vector3 endPos;
+            if (hit.collider != null)
+            {
+                endPos = hit.point;
+                endPos.z = 0;
+                //Check if the hit object is the player
+                if (hit.collider.CompareTag("Player"))
+                {
+                    //Damage the player
+                    HealthController hc = hit.collider.GetComponent<HealthController>();
+                    if (hc != null)
+                    {
+                        hc.TakeDamage(laserDamage);
+                    }
+                }
+            }
+            else
+            {
+                endPos = startPos + projPos.up * 100f;
+                endPos.z = 0;
+            }
+           
+            laserLine.SetPosition(0, startPos);
+            laserLine.SetPosition(1, endPos);
+
+            yield return null; 
+        }
+        //Disable the laser after the duration
+        laserLine.enabled = false;
+        isFiring = false;
+        isCooldown = true;
+        //Start cooldown
+        yield return new WaitForSeconds(laserCooldown);
+        isCooldown = false;
+    }
     public void Attack()
     {
         switch (attackType)
@@ -317,6 +382,11 @@ public class EnemyController : MonoBehaviour
                 leapDuration = 0.3f;
                 leapChargeDuration = 0.9f;
                 bulletCollision = false;
+
+                leapSpeed = 5f;
+                leapDuration = 0.3f;
+                leapChargeDuration = 0.95f;
+                leapCooldown = 1f;
                 break;
             case EnemyType.Sumelse:
                 health = 3;
@@ -328,6 +398,21 @@ public class EnemyController : MonoBehaviour
                 projSpeed = 3f;
                 attackType = AttackType.Ranged;
                 bulletCollision = false;
+                break;
+            case EnemyType.Laser:
+                health = 3;
+                damage = 1;
+                speed = 0f;
+                attackCooldown = 1;
+                rotationSpeed = 500;
+                rangedAttackRange = 2f;
+                projSpeed = 3f;
+                attackType = AttackType.Laser;
+                bulletCollision = false;
+                laserDuration = 2f;
+                laserCooldown = 3f;
+                laserDamage = 2;
+                
                 break;
         }
     }

@@ -4883,6 +4883,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1245844833172599066, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
+      propertyPath: leapSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1245844833172599066, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
       propertyPath: projSpeed
       value: 3
       objectReference: {fileID: 0}
@@ -4895,6 +4899,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: cafdd21eef8a6a34e9680b33bb0462dd, type: 2}
     - target: {fileID: 1245844833172599066, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
+      propertyPath: leapCooldown
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1245844833172599066, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
+      propertyPath: leapDuration
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1245844833172599066, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
       propertyPath: lastEnemyType
       value: 0
       objectReference: {fileID: 0}
@@ -4904,7 +4916,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1245844833172599066, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
       propertyPath: leapChargeDuration
-      value: 0.9
+      value: 0.95
       objectReference: {fileID: 0}
     - target: {fileID: 1449853393039647472, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
       propertyPath: detectionCollider
