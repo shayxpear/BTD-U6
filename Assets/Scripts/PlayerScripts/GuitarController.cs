@@ -103,13 +103,28 @@ public class GuitarController : MonoBehaviour
     }
     public void Shoot()
     {
-        GameObject bullet = Instantiate(bulletType, firePoint.position, guitarController.transform.rotation);
-        bullet.GetComponent<Bullet>().bulletDamage = bulletDamage; 
-        Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
-        rb.AddForce(firePoint.up * bulletForce, ForceMode2D.Impulse);
-        guitarAnimator.Play("mainCharacter_guitarShoot",-1, 0f);
+        if(noteManager.noteCombo % 5 == 0)
+        {
+            GameObject bullet = Instantiate(bulletType, firePoint.position, guitarController.transform.rotation);
+            bullet.GetComponent<Bullet>().bulletDamage = bulletDamage;
+            Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
+            rb.AddForce(firePoint.up * bulletForce, ForceMode2D.Impulse);
+            guitarAnimator.Play("mainCharacter_guitarShoot", -1, 0f);
 
-        if (playerScreenPosition.x > mousePosition.x) { bullet.transform.localScale = new Vector2(-bulletScale, -bulletScale); }
-        else {bullet.transform.localScale = new Vector2(bulletScale, bulletScale); }
+            if (playerScreenPosition.x > mousePosition.x) { bullet.transform.localScale = new Vector2(-bulletScale, -bulletScale); }
+            else { bullet.transform.localScale = new Vector2(bulletScale * 2, bulletScale * 2); }
+        }
+        else
+        {
+            GameObject bullet = Instantiate(bulletType, firePoint.position, guitarController.transform.rotation);
+            bullet.GetComponent<Bullet>().bulletDamage = bulletDamage;
+            Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
+            rb.AddForce(firePoint.up * bulletForce, ForceMode2D.Impulse);
+            guitarAnimator.Play("mainCharacter_guitarShoot", -1, 0f);
+
+            if (playerScreenPosition.x > mousePosition.x) { bullet.transform.localScale = new Vector2(-bulletScale, -bulletScale); }
+            else { bullet.transform.localScale = new Vector2(bulletScale, bulletScale); }
+        }
+        
     }
 }

@@ -74,7 +74,8 @@ public class NoteManager : MonoBehaviour
     public float pulseAmount = 0.1f;
     public float smoothTime = 0.1f;
 
-    private int noteCombo;
+    [Header("Debug")]
+    [SerializeField] public int noteCombo;
     private int sprite;
     private bool canStartSong;
 
@@ -237,6 +238,7 @@ public class NoteManager : MonoBehaviour
     {
         attempts--;
         missSFX.Play();
+        noteCombo = 0;
         if (attempts <= 0)
         {
             reloadRefresh.Play();
