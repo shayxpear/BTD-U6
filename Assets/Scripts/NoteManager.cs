@@ -426,7 +426,7 @@ public class NoteManager : MonoBehaviour
         {
             // Instantly enlarge
             mainCircle.rectTransform.localScale = originalScale * (1f + pulseAmount);
-            playerUI.healthBar.transform.localScale = originalScale * (4f + pulseAmount);
+            playerUI.healthBar.transform.localScale = originalScale * (1f + pulseAmount);
             float elapsedTime = 0f;
 
             // Smooth shrink phase
@@ -437,7 +437,7 @@ public class NoteManager : MonoBehaviour
                 startSongDelaySeconds = t;
                 float scale = 1f + pulseAmount * (1f - Mathf.SmoothStep(0f, 1f, t));
                 mainCircle.rectTransform.localScale = originalScale * scale;
-                playerUI.healthBar.transform.localScale = originalScale * 4f * scale;
+                playerUI.healthBar.transform.localScale = originalScale * scale;
                 elapsedTime += Time.deltaTime;
                 yield return null;
 
@@ -445,7 +445,7 @@ public class NoteManager : MonoBehaviour
 
             // Ensure it's at the original size after shrinking
             mainCircle.rectTransform.localScale = originalScale;
-            playerUI.healthBar.transform.localScale = originalScale * 4f;
+            playerUI.healthBar.transform.localScale = originalScale;
             yield return null;
         }
     }
