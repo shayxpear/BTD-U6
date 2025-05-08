@@ -20437,7 +20437,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1245844833172599066, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
       propertyPath: damage
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1245844833172599066, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
       propertyPath: health
@@ -20744,10 +20744,11 @@ MonoBehaviour:
   pulsePhase: 0
   bpm: 100
   pulseAmount: 0.1
-  smoothTime: 0.05
+  smoothTime: 0.1
   noteCombo: 0
   startedRiff: 0
   started: 0
+  crosshairRenderer: {fileID: 3820910120167366493}
 --- !u!212 &1072807480227111939
 SpriteRenderer:
   m_ObjectHideFlags: 0
