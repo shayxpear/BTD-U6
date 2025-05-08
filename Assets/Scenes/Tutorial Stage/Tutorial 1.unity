@@ -577,7 +577,7 @@ TilemapRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: c5fc1567127f9fb41a150244709483fa, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6721,6 +6721,7 @@ MonoBehaviour:
   playerInRange: 0
   Doors: {fileID: 1002378576}
   noteManager: {fileID: 1066390108290444808}
+  noteManagerGameObject: {fileID: 0}
 --- !u!4 &87015442 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1351338865616927092, guid: b80b5a42ce1b7d64690ce677355cf999, type: 3}
@@ -7236,6 +7237,69 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 1
+--- !u!1 &239965319
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 239965321}
+  - component: {fileID: 239965320}
+  - component: {fileID: 239965322}
+  m_Layer: 0
+  m_Name: Track Holder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &239965320
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 239965319}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfd3c7b5d9ecced47b75101e5411cbc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &239965321
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 239965319}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.1640078, y: -1.2287129, z: 0.07467248}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 673877864892444015}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &239965322
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 239965319}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f02506f01013fa446aa0edbf6330ce91, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  midiPath: test1.mid
+  guitarRiffClip:
+  - {fileID: 8300000, guid: 8497b353550c27c42a7996b36f9b149d, type: 3}
+  - {fileID: 8300000, guid: fafbc25524813bc4abeb3d2bad5435ca, type: 3}
+  guitarRiff: {fileID: 5738475202501010321}
 --- !u!4 &268076068 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6913027357005846544, guid: 0e5e1450c431cbe44a459e1509ef51a1, type: 3}
@@ -15539,6 +15603,63 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!1001 &1536150999
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 7888501527499802821, guid: 7613e229596329840af7786148b431c2, type: 3}
+      propertyPath: m_Name
+      value: Blobby(Large)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8697827403517021887, guid: 7613e229596329840af7786148b431c2, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.45153
+      objectReference: {fileID: 0}
+    - target: {fileID: 8697827403517021887, guid: 7613e229596329840af7786148b431c2, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.6376876
+      objectReference: {fileID: 0}
+    - target: {fileID: 8697827403517021887, guid: 7613e229596329840af7786148b431c2, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8697827403517021887, guid: 7613e229596329840af7786148b431c2, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8697827403517021887, guid: 7613e229596329840af7786148b431c2, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8697827403517021887, guid: 7613e229596329840af7786148b431c2, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8697827403517021887, guid: 7613e229596329840af7786148b431c2, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8697827403517021887, guid: 7613e229596329840af7786148b431c2, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8697827403517021887, guid: 7613e229596329840af7786148b431c2, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8697827403517021887, guid: 7613e229596329840af7786148b431c2, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 7613e229596329840af7786148b431c2, type: 3}
 --- !u!4 &1549114612 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2223088923522426488, guid: 1d785066fb7dbbf4f96a1edf5b5ff2a0, type: 3}
@@ -16170,6 +16291,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nextScene: Tutorial 2
+  noteManager: {fileID: 1066390108290444808}
+  noteManagerGameObject: {fileID: 0}
 --- !u!61 &1664205541
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -20642,11 +20765,11 @@ Transform:
   m_GameObject: {fileID: 77661085722860717}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.02561131, y: -0.035252895, z: 0}
+  m_LocalPosition: {x: -2.1831174, y: 3.2220905, z: -410.16916}
   m_LocalScale: {x: 1, y: 1, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2737363706933248545}
+  m_Father: {fileID: 239965321}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!210 &707933553319791542
 SortingGroup:
@@ -20718,7 +20841,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9241f7f3f9aebae4ab7f1c1847423653, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  midiFilePath: test1.mid
   hitTolerance: 25
   noteDespawnPastDistance: 0
   startSongDelaySeconds: 0
@@ -20730,7 +20852,6 @@ MonoBehaviour:
   pulseDuration: 0.3
   notebar: {fileID: 4315506749363859661}
   mainCircle: {fileID: 6492864688097953953}
-  audioSource: {fileID: 5738475202501010321}
   music: {fileID: 4012422445143729197}
   missSFX: {fileID: 5007386461095583610}
   reloadRefresh: {fileID: 8660193523167772552}
@@ -20741,13 +20862,16 @@ MonoBehaviour:
   playerController: {fileID: 5490831414920916292}
   playerUI: {fileID: 966633497016133035}
   playerCooldown: {fileID: 1000935763}
+  trackHolder: {fileID: 239965322}
   pulsePhase: 0
   bpm: 100
   pulseAmount: 0.1
   smoothTime: 0.05
   noteCombo: 0
+  ended: 0
   startedRiff: 0
   started: 0
+  levelsBeaten: 0
 --- !u!212 &1072807480227111939
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -21171,7 +21295,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 673877864892444015}
   - {fileID: 1585689869373760004}
   - {fileID: 2047786953443673388}
   m_Father: {fileID: 9097112278709004348}
@@ -22871,3 +22994,5 @@ SceneRoots:
   - {fileID: 762805478}
   - {fileID: 173020713507543303}
   - {fileID: 650637571}
+  - {fileID: 1536150999}
+  - {fileID: 239965321}
