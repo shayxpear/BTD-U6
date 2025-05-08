@@ -394,7 +394,7 @@ public class NoteManager : MonoBehaviour
 
     private IEnumerator CrosshairSprite()
     {
-        // Combine all note times and sort them chronologically
+        // Sort the note times
         var sortedNoteTimes = new List<double>(leftNoteTimes);
         sortedNoteTimes.AddRange(rightNoteTimes);
         sortedNoteTimes.Sort();
@@ -404,7 +404,7 @@ public class NoteManager : MonoBehaviour
         int spriteIndex = 0;
         int totalSprites = playerUI.crosshairSprites.Length;
 
-        // Process each consecutive pair of notes
+        // Loop through the sorted note times
         for (int i = 0; i < sortedNoteTimes.Count - 1; i++)
         {
             double currentNoteTime = sortedNoteTimes[i];
