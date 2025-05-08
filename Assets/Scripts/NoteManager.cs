@@ -62,7 +62,7 @@ public class NoteManager : MonoBehaviour
     private readonly Queue<RectTransform> activeRightNotes = new();
     private int leftNoteIndex = 0;
     private int rightNoteIndex = 0;
-    private bool started = false;
+    
     bool cooldown = false;
     bool ended;
     [HideInInspector] public float pulsePhase;
@@ -74,9 +74,12 @@ public class NoteManager : MonoBehaviour
     public float pulseAmount = 0.1f;
     public float smoothTime = 0.1f;
 
-    private int noteCombo;
+    [Header("Debug")]
+    [SerializeField] public int noteCombo;
     private int sprite;
     private bool canStartSong;
+    public bool startedRiff;
+    public bool started = false;
 
     private void Start()
     {
@@ -190,6 +193,12 @@ public class NoteManager : MonoBehaviour
         {
             music.volume = 1f;
         }
+        Debug.Log(leftNoteIndex);
+        if (leftNoteIndex == leftNotes.Count && rightNoteIndex == rightNotes.Count)
+        {
+            started = false;
+            startedRiff = false;
+        }
     }
 
     private IEnumerator FadeAudio(bool fadeIn)
@@ -235,13 +244,16 @@ public class NoteManager : MonoBehaviour
 
     public void Miss()
     {
-        attempts--;
-        missSFX.Play();
+        if(startedRiff)
+        {
+            attempts--;
+            missSFX.Play();
+            noteCombo = 0;
+            
+        }
         if (attempts <= 0)
         {
             reloadRefresh.Play();
-            audioSource.Stop();
-            fadeCoroutine = StartCoroutine(FadeAudio(false));
             StartCoroutine(guitarController.MissCooldown());
             while (activeLeftNotes.Count > 0)
             {
@@ -253,8 +265,9 @@ public class NoteManager : MonoBehaviour
                 activeRightNotes.Dequeue().gameObject.SetActive(false);
             }
             attempts = tempAttempts;
-
+            startedRiff = false;
         }
+
     }
 
     // Creates time lists for right notes and left notes from Midi file
@@ -313,7 +326,7 @@ public class NoteManager : MonoBehaviour
     private void StartSongHelper()
     {
         fadeCoroutine = StartCoroutine(FadeAudio(true));
-        started = false;
+        //started = false;
     }
            
     // Spawns a note in

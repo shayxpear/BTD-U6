@@ -6720,6 +6720,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerInRange: 0
   Doors: {fileID: 1002378576}
+  noteManager: {fileID: 1066390108290444808}
 --- !u!4 &87015442 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1351338865616927092, guid: b80b5a42ce1b7d64690ce677355cf999, type: 3}
@@ -20478,6 +20479,9 @@ MonoBehaviour:
   bpm: 100
   pulseAmount: 0.1
   smoothTime: 0.05
+  noteCombo: 0
+  startedRiff: 0
+  started: 0
 --- !u!212 &1072807480227111939
 SpriteRenderer:
   m_ObjectHideFlags: 0
