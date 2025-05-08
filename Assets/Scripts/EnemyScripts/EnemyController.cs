@@ -343,18 +343,20 @@ public class EnemyController : MonoBehaviour
             {
                 Transform pos = projPos[i];
                 LineRenderer line = laserLines[i];
-
+                // Set the laser line's start and end positions
                 Vector3 startPos = pos.position;
                 startPos.z = 0;
                 RaycastHit2D hit = Physics2D.Raycast(startPos, pos.up, Mathf.Infinity, laserHitLayers);
 
                 Vector3 endPos;
+                // Check if the raycast hit something
                 if (hit.collider != null)
                 {
                     endPos = hit.point;
                     endPos.z = 0;
                     if (hit.collider.CompareTag("Player"))
                     {
+                        // Player hit and apply damage
                         HealthController hc = hit.collider.GetComponent<HealthController>();
                         if (hc != null)
                         {
