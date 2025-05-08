@@ -80,7 +80,11 @@ public class GuitarController : MonoBehaviour
         {
             if (noteManager.pulsePhase >= 0.9f || noteManager.pulsePhase <= 0.1f)
             {
-                noteManager.StartSong();
+                //noteManager.StartSong();
+                if (!noteManager.startedRiff)
+                {
+                    noteManager.startedRiff = true;
+                }
             }
             else
             {

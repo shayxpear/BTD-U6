@@ -4,6 +4,7 @@ public class RoomDetection : MonoBehaviour
 {
     public bool playerInRange;
     public GameObject Doors;
+    public NoteManager noteManager;
 
     private int enemiesInRange = 0;
 
@@ -12,6 +13,16 @@ public class RoomDetection : MonoBehaviour
         if (playerInRange && enemiesInRange > 0)
         {
             Doors.SetActive(true);
+            if (!noteManager.started)
+            {
+                noteManager.StartSong();
+            }
+            else
+            {
+                noteManager.StartSong();
+            }
+           
+
         }
         else
         {
