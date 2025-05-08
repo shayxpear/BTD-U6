@@ -53,6 +53,7 @@ public class NoteManager : MonoBehaviour
     [SerializeField] private GuitarController guitarController;
     [SerializeField] private PlayerController playerController;
     [SerializeField] private PlayerUI playerUI;
+    [SerializeField] private PlayerCooldown playerCooldown;
 
     private readonly List<double> leftNoteTimes = new();
     private readonly List<double> rightNoteTimes = new();
@@ -94,13 +95,25 @@ public class NoteManager : MonoBehaviour
         rightOriginalPos = rightPulseObject.anchoredPosition;
 
         tempAttempts = attempts; //should always be the number set in engine
-
         StartCoroutine(CrosshairSprite());
 
     }
 
     private void Update()
     {
+        if(playerCooldown.cooldown || !startedRiff)
+        {
+            leftNotePrefab.GetComponent<Image>().material.color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
+            rightNotePrefab.GetComponent<Image>().material.color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
+        }
+        else
+        {
+            leftNotePrefab.GetComponent<Image>().material.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+            rightNotePrefab.GetComponent<Image>().material.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+        }
+        
+
+
         if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.LeftShift))
         {
             ShootPulse(true);
@@ -150,7 +163,7 @@ public class NoteManager : MonoBehaviour
             }
 
             // Player Left Click Check
-            if (Input.GetMouseButtonDown(0) && playerController.CanDash && guitarController.GetCooldown() == false)
+            if (Input.GetMouseButtonDown(0) && playerController.CanDash && playerCooldown.GetCooldown() == false)
             {
                 bool hit = CollisionCheck(true);
                 activeLeftNotes.Dequeue().gameObject.SetActive(false);
@@ -161,7 +174,7 @@ public class NoteManager : MonoBehaviour
             }
 
             // Player Right Click Check
-            if (Input.GetMouseButtonDown(1) && playerController.CanDash && guitarController.GetCooldown() == false)
+            if (Input.GetMouseButtonDown(1) && playerController.CanDash && playerCooldown.GetCooldown() == false)
             {
                 bool hit = CollisionCheck(false);
                 activeRightNotes.Dequeue().gameObject.SetActive(false);
@@ -194,10 +207,9 @@ public class NoteManager : MonoBehaviour
             music.volume = 1f;
         }
         Debug.Log(leftNoteIndex);
-        if (leftNoteIndex == leftNotes.Count && rightNoteIndex == rightNotes.Count)
+        if ((leftNoteIndex == leftNotes.Count && rightNoteIndex == rightNotes.Count) && activeLeftNotes.Count == 0 && activeRightNotes.Count == 0)
         {
             started = false;
-            startedRiff = false;
         }
     }
 
@@ -234,12 +246,11 @@ public class NoteManager : MonoBehaviour
     public void Hit()
     {
         guitarController.Shoot();
-        noteCombo++;
     }
 
     public void HitDash()
     {
-        noteCombo++;
+
     }
 
     public void Miss()
@@ -254,7 +265,7 @@ public class NoteManager : MonoBehaviour
         if (attempts <= 0)
         {
             reloadRefresh.Play();
-            StartCoroutine(guitarController.MissCooldown());
+            playerCooldown.StartCooldown();
             while (activeLeftNotes.Count > 0)
             {
                 activeLeftNotes.Dequeue().gameObject.SetActive(false);

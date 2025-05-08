@@ -28,8 +28,8 @@ public class GuitarController : MonoBehaviour
     PlayerController playerController;
     NoteManager noteManager;
 
+    public PlayerCooldown playerCooldown;
 
-    bool cooldown;
 
     void Start()
     {
@@ -76,7 +76,7 @@ public class GuitarController : MonoBehaviour
             guitarController.transform.localPosition = new Vector2(Mathf.Abs(guitarController.transform.localPosition.x), guitarController.transform.localPosition.y);
         }
 
-        if ((Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)) && playerController.CanDash && !cooldown)
+        if ((Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)) && playerController.CanDash && !playerCooldown.GetCooldown())
         {
             if (noteManager.pulsePhase >= 0.9f || noteManager.pulsePhase <= 0.1f)
             {
@@ -91,23 +91,11 @@ public class GuitarController : MonoBehaviour
                 Debug.Log("Not on beat! Wait for the pulse.");
             }
         }
-
-
-    }
-    public bool GetCooldown()
-    {
-        return cooldown;
-    }
-
-    public IEnumerator MissCooldown()
-    {
-        cooldown = true;
-        yield return new WaitForSeconds(missCooldown);
-        cooldown = false;
     }
     public void Shoot()
     {
-        if(noteManager.noteCombo % 5 == 0)
+        noteManager.noteCombo++;
+        if (noteManager.noteCombo % 5 == 0 && noteManager.noteCombo != 0)
         {
             GameObject bullet = Instantiate(bulletType, firePoint.position, guitarController.transform.rotation);
             bullet.GetComponent<Bullet>().bulletDamage = bulletDamage;
@@ -115,7 +103,7 @@ public class GuitarController : MonoBehaviour
             rb.AddForce(firePoint.up * bulletForce, ForceMode2D.Impulse);
             guitarAnimator.Play("mainCharacter_guitarShoot", -1, 0f);
 
-            if (playerScreenPosition.x > mousePosition.x) { bullet.transform.localScale = new Vector2(-bulletScale, -bulletScale); }
+            if (playerScreenPosition.x > mousePosition.x) { bullet.transform.localScale = new Vector2(-bulletScale * 2, -bulletScale * 2); }
             else { bullet.transform.localScale = new Vector2(bulletScale * 2, bulletScale * 2); }
         }
         else
