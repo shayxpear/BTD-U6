@@ -13,7 +13,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private AttackType attackType;
 
     public Animator enemyAnimator;
-
+    
     [Header("Enemy Stats")]
     [SerializeField] private int health;
     [SerializeField] private int damage;
@@ -29,7 +29,7 @@ public class EnemyController : MonoBehaviour
 
     [Header("Projectile Stats")]
     [SerializeField] private float projSpeed;
-    [SerializeField] private Transform projPos;
+    [SerializeField] private Transform[] projPos; 
     [SerializeField] private GameObject projPrefab;
     [SerializeField] private bool bulletCollision;
 
@@ -40,18 +40,18 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private float leapCooldown;
 
     [Header("Laser Settings")]
-    [SerializeField] private LineRenderer laserLine;
-    // public Transform firePoint;
+    [SerializeField] private LineRenderer[] laserLines;
     [SerializeField] private float laserDuration;
     [SerializeField] private float laserCooldown;
     [SerializeField] private int laserDamage;
     [SerializeField] private LayerMask playerLayer;
     [SerializeField] private LayerMask laserHitLayers;
 
+    [Header("Collider Settings")]
+    [SerializeField] private CircleCollider2D attackTriggerCollider;
+
     private bool isFiring;
-
     private bool isLeaping;
-
     private Rigidbody2D rb;
     private PlayerDetection playerDetection;
     private Vector2 targetDirection;
@@ -61,6 +61,7 @@ public class EnemyController : MonoBehaviour
     private bool enemyCollided;
     private bool hasLeaped = false;
     private bool leapRest = false;
+
 
     public int GetEnemyHealth => health;
 
@@ -75,7 +76,6 @@ public class EnemyController : MonoBehaviour
     private void Start()
     {
         StartCoroutine(FindPlayer());
-        
     }
 
     private IEnumerator FindPlayer()
@@ -87,23 +87,23 @@ public class EnemyController : MonoBehaviour
             {
                 player = playerObj.transform;
             }
-            yield return null;  // Wait a frame and try again
+            yield return null;
         }
     }
-
 
     private void FixedUpdate()
     {
         UpdateTargetDirection();
         RotateTowardsTarget();
         SetVelocity();
-        // Handle laser firing
         if (!isFiring && !isCooldown && PlayerDetected() && attackType == AttackType.Laser)
         {
             StartCoroutine(FireLaser());
         }
+        
     }
- 
+
+
     private void UpdateTargetDirection()
     {
         HandlePlayerTargeting();
@@ -200,12 +200,14 @@ public class EnemyController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision) //Player enters attack zone
     {
-        if (collision.gameObject == GameObject.FindGameObjectWithTag("Player") && attackType == AttackType.Ranged)
-        {
-            PlayEnemyAttackAnimation();
-            isCooldown = true;
-            StartCoroutine(AttackingCooldown());
-        }
+        //if (collision.gameObject == GameObject.FindGameObjectWithTag("Player") && attackType == AttackType.Ranged && !isCooldown)
+        //{
+
+        //    PlayEnemyAttackAnimation();
+
+        //    StartCoroutine(AttackingCooldown());
+        //}
+ 
         // When the attack type is melee, the enemy will leap towards the player
         if (collision.CompareTag("Player") && attackType == AttackType.Melee && !isCooldown)
         {
@@ -215,11 +217,34 @@ public class EnemyController : MonoBehaviour
     }
     private void OnTriggerExit2D(Collider2D collision) //Player exits attack zone
     {
-        if (collision.gameObject == GameObject.FindGameObjectWithTag("Player") && attackType == AttackType.Ranged)
+        //if (collision.gameObject == GameObject.FindGameObjectWithTag("Player") && attackType == AttackType.Ranged && isCooldown)
+        //{
+        //    PlayEnemyWalkingAnimation();
+        //}
+      
+        if (collision.gameObject == GameObject.FindGameObjectWithTag("Player") && attackType == AttackType.Melee && !isLeaping && !hasLeaped || leapRest)
         {
             PlayEnemyWalkingAnimation();
         }
-        if (collision.gameObject == GameObject.FindGameObjectWithTag("Player") && !isLeaping && !hasLeaped || leapRest)
+        if (collision.CompareTag("Player") && attackType == AttackType.Ranged && isCooldown)
+        {
+            AnimatorStateInfo animState = enemyAnimator.GetCurrentAnimatorStateInfo(0);
+            if (!animState.IsName("blob_attack")) // Replace with your ranged attack animation name if different
+            {
+                PlayEnemyWalkingAnimation();
+            }
+        }
+    }
+    private void OnTriggerStay2D(Collider2D collision) //Player stays in attack zone
+    {
+
+        if (collision.gameObject == GameObject.FindGameObjectWithTag("Player") && attackType == AttackType.Ranged && !isCooldown)
+        {
+            PlayEnemyAttackAnimation();
+
+            StartCoroutine(AttackingCooldown());
+        }
+        if (collision.gameObject == GameObject.FindGameObjectWithTag("Player") && attackType == AttackType.Ranged && isCooldown)
         {
             PlayEnemyWalkingAnimation();
         }
@@ -257,87 +282,109 @@ public class EnemyController : MonoBehaviour
         isCooldown = false;
     }
 
-    
+
 
     private void ShootProjectile()
     {
         Debug.Log("Shooting Projectile");
-        GameObject newProjectile = Instantiate(projPrefab, projPos.position, transform.rotation);
-        Rigidbody2D rbProj = newProjectile.GetComponent<Rigidbody2D>();
-        Bullet bullet = newProjectile.GetComponent<Bullet>();
-
-        if (bullet != null)
+        foreach (Transform pos in projPos)
         {
-            bullet.enemyBulletDamage = damage;
-            bullet.bulletCollision = bulletCollision;
-            if(bullet.bulletCollision)
+            // Use the spawn point's rotation instead of parent's rotation
+            GameObject newProjectile = Instantiate(projPrefab, pos.position, pos.rotation);
+            Rigidbody2D rbProj = newProjectile.GetComponent<Rigidbody2D>();
+            Bullet bullet = newProjectile.GetComponent<Bullet>();
+
+            if (bullet != null)
             {
-                Debug.Log("Bullet Collision Off");
-                //bullet.bulletCollision = false;
+                bullet.enemyBulletDamage = damage;
+                bullet.bulletCollision = bulletCollision;
+                if (bullet.bulletCollision)
+                {
+                    Debug.Log("Bullet Collision Off");
+                }
             }
-        }
-
-        if (rbProj != null)
-        {
-            rbProj.linearVelocity = transform.up * projSpeed;
+            isCooldown = true;
+            PlayEnemyWalkingAnimation();
+            if (rbProj != null)
+            {
+                // Use the spawn point's up direction instead of parent's up
+                rbProj.linearVelocity = pos.up * projSpeed;
+            }
         }
     }
     //Player detection for laser
     private bool PlayerDetected()
     {
-        Debug.Log("Player Detected");
-        RaycastHit2D hit = Physics2D.Raycast(projPos.position, projPos.up, Mathf.Infinity, playerLayer);
-        return hit.collider != null;
+        foreach (Transform pos in projPos)
+        {
+            RaycastHit2D hit = Physics2D.Raycast(pos.position, pos.up, Mathf.Infinity, playerLayer);
+            if (hit.collider != null && hit.collider.CompareTag("Player"))
+            {
+                Debug.Log("Player Detected from position: " + pos.name);
+                return true;
+            }
+        }
+        return false;
     }
 
     private IEnumerator FireLaser()
     {
         isFiring = true;
-        laserLine.enabled = true;
+        foreach (LineRenderer line in laserLines) // Enable all laser lines
+        {
+            line.enabled = true;
+        }
+
         float startTime = Time.time;
 
         while (Time.time < startTime + laserDuration)
         {
-            Vector3 startPos = projPos.position;
-            startPos.z = 0;
-            //Cast a ray against all layers in laserHitLayers
-            RaycastHit2D hit = Physics2D.Raycast(startPos, projPos.up, Mathf.Infinity, laserHitLayers);
-
-            Vector3 endPos;
-            if (hit.collider != null)
+            for (int i = 0; i < projPos.Length; i++)
             {
-                endPos = hit.point;
-                endPos.z = 0;
-                //Check if the hit object is the player
-                if (hit.collider.CompareTag("Player"))
+                Transform pos = projPos[i];
+                LineRenderer line = laserLines[i];
+
+                Vector3 startPos = pos.position;
+                startPos.z = 0;
+                RaycastHit2D hit = Physics2D.Raycast(startPos, pos.up, Mathf.Infinity, laserHitLayers);
+
+                Vector3 endPos;
+                if (hit.collider != null)
                 {
-                    //Damage the player
-                    HealthController hc = hit.collider.GetComponent<HealthController>();
-                    if (hc != null)
+                    endPos = hit.point;
+                    endPos.z = 0;
+                    if (hit.collider.CompareTag("Player"))
                     {
-                        hc.TakeDamage(laserDamage);
+                        HealthController hc = hit.collider.GetComponent<HealthController>();
+                        if (hc != null)
+                        {
+                            hc.TakeDamage(laserDamage);
+                        }
                     }
                 }
-            }
-            else
-            {
-                endPos = startPos + projPos.up * 100f;
-                endPos.z = 0;
-            }
-           
-            laserLine.SetPosition(0, startPos);
-            laserLine.SetPosition(1, endPos);
+                else
+                {
+                    endPos = startPos + pos.up * 100f;
+                    endPos.z = 0;
+                }
 
-            yield return null; 
+                line.SetPosition(0, startPos);
+                line.SetPosition(1, endPos);
+            }
+            yield return null;
         }
-        //Disable the laser after the duration
-        laserLine.enabled = false;
+
+        foreach (LineRenderer line in laserLines) // Disable all laser lines
+        {
+            line.enabled = false;
+        }
+
         isFiring = false;
         isCooldown = true;
-        //Start cooldown
         yield return new WaitForSeconds(laserCooldown);
         isCooldown = false;
     }
+
     public void Attack()
     {
         switch (attackType)
@@ -425,6 +472,9 @@ public class EnemyController : MonoBehaviour
             case EnemyType.Rat:
                 enemyAnimator.Play("rat_walk");
                 break;
+            case EnemyType.Sumelse:
+                enemyAnimator.Play("blob_idle");
+                break;
         }
     }
 
@@ -434,6 +484,9 @@ public class EnemyController : MonoBehaviour
         {
             case EnemyType.Rat:
                 enemyAnimator.Play("rat_attack");
+                break;
+            case EnemyType.Sumelse:
+                enemyAnimator.Play("blob_attack");
                 break;
         }
     }
