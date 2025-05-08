@@ -13,6 +13,19 @@ public class NoteManager : MonoBehaviour
     [SerializeField] private float noteDespawnPastDistance; // Distance for a note to go past hitting the center before despawning
     [SerializeField] private float startSongDelaySeconds; // Delay before starting song after calling StartSong
     [SerializeField] private float noteTravelTimeSeconds; // Seconds the note will travel for
+    [SerializeField] private int attempts;
+
+    private int tempAttempts; //prevents hardcoding reset for attempts
+
+    [Header("Pulse Objects")]
+    [SerializeField] private RectTransform leftPulseObject;
+    [SerializeField] private RectTransform rightPulseObject;
+    [SerializeField] private float pulseDistance = 100f; // Distance the objects move outwards
+    [SerializeField] private float pulseDuration = 0.2f;
+
+    private Vector2 leftOriginalPos;
+    private Vector2 rightOriginalPos;
+
 
     [Header("Canvas Elements")]
     [SerializeField] private RectTransform notebar; // Note bar rectangle will spawn left circles at left edge and right circles at right edge
@@ -20,7 +33,12 @@ public class NoteManager : MonoBehaviour
 
     [Header("Audio")]
     [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioSource music;
     [SerializeField] private AudioSource missSFX;
+    [SerializeField] private AudioSource reloadRefresh;
+
+    [SerializeField] private float fadeDuration = 0.5f; // Duration for fade in/out
+    private Coroutine fadeCoroutine;
     private double AudioSourceTime
     {
         get
@@ -34,6 +52,8 @@ public class NoteManager : MonoBehaviour
     [SerializeField] private GameObject rightNotePrefab;
     [SerializeField] private GuitarController guitarController;
     [SerializeField] private PlayerController playerController;
+    [SerializeField] private PlayerUI playerUI;
+    [SerializeField] private PlayerCooldown playerCooldown;
 
     private readonly List<double> leftNoteTimes = new();
     private readonly List<double> rightNoteTimes = new();
@@ -43,24 +63,70 @@ public class NoteManager : MonoBehaviour
     private readonly Queue<RectTransform> activeRightNotes = new();
     private int leftNoteIndex = 0;
     private int rightNoteIndex = 0;
-    private bool started = false;
+    
     bool cooldown = false;
+    bool ended;
+    [HideInInspector] public float pulsePhase;
+
+    [Header("BPM")]
+    [SerializeField] private float bpm; // Set this in the inspector or calculate from MIDI
+    private Coroutine bpmPulseCoroutine;
+    private Vector3 originalScale;
+    public float pulseAmount = 0.1f;
+    public float smoothTime = 0.1f;
+
+    [Header("Debug")]
+    [SerializeField] public int noteCombo;
+    private int sprite;
+    private bool canStartSong;
+    public bool startedRiff;
+    public bool started = false;
 
     private void Start()
     {
         // Load Midi File on start
         LoadMidiFile();
+        originalScale = mainCircle.rectTransform.localScale;
+
+        if (bpmPulseCoroutine != null) StopCoroutine(bpmPulseCoroutine);
+        bpmPulseCoroutine = StartCoroutine(BpmPulse());
+
+        leftOriginalPos = leftPulseObject.anchoredPosition;
+        rightOriginalPos = rightPulseObject.anchoredPosition;
+
+        tempAttempts = attempts; //should always be the number set in engine
+        StartCoroutine(CrosshairSprite());
+
     }
 
     private void Update()
     {
+        if(playerCooldown.cooldown || !startedRiff)
+        {
+            leftNotePrefab.GetComponent<Image>().material.color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
+            rightNotePrefab.GetComponent<Image>().material.color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
+        }
+        else
+        {
+            leftNotePrefab.GetComponent<Image>().material.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+            rightNotePrefab.GetComponent<Image>().material.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+        }
+        
 
-        if (audioSource.isPlaying)
+
+        if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            ShootPulse(true);
+            ShootPulse(false);// Left click
+        }
+
+        if (audioSource.isPlaying && !ended)
         {
             // Left Note Spawn Check
             if (leftNoteIndex < leftNoteTimes.Count && AudioSourceTime >= leftNoteTimes[leftNoteIndex] - noteTravelTimeSeconds)
             {
                 SpawnNote(leftNoteIndex++, true); // Spawn left side note
+                
             }
 
             // Right Note Spawn Check
@@ -97,26 +163,83 @@ public class NoteManager : MonoBehaviour
             }
 
             // Player Left Click Check
-            if (Input.GetMouseButtonDown(0) && playerController.canDash && guitarController.GetCooldown() == false)
+            if (Input.GetMouseButtonDown(0) && playerController.CanDash && playerCooldown.GetCooldown() == false)
             {
                 bool hit = CollisionCheck(true);
                 activeLeftNotes.Dequeue().gameObject.SetActive(false);
-                Debug.Log($"Hit = {hit}"); // Output hit true or false on left note
+                //Debug.Log($"Hit = {hit}"); // Output hit true or false on left note
 
                 if(hit) { Hit(); }
                 else { Miss(); }
             }
 
             // Player Right Click Check
-            if (Input.GetMouseButtonDown(1) && playerController.canDash && guitarController.GetCooldown() == false)
+            if (Input.GetMouseButtonDown(1) && playerController.CanDash && playerCooldown.GetCooldown() == false)
             {
                 bool hit = CollisionCheck(false);
                 activeRightNotes.Dequeue().gameObject.SetActive(false);
-                Debug.Log($"Hit = {hit}"); // Output hit true or false on right note
+                //Debug.Log($"Hit = {hit}"); // Output hit true or false on right note
 
                 if (hit) { Hit(); }
                 else { Miss(); }
             }
+
+            if((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.Space)) && playerController.CanDash)
+            {
+                bool leftHit = CollisionCheck(true);
+                bool rightHit = CollisionCheck(false);
+                if (leftHit)
+                {
+                    activeLeftNotes.Dequeue().gameObject.SetActive(false);
+                    if (leftHit) { HitDash(); }
+                    else { Miss(); }
+                }
+                if(rightHit)
+                {
+                    activeRightNotes.Dequeue().gameObject.SetActive(false);
+                    if (rightHit) { HitDash(); }
+                    else { Miss(); }
+                }
+            }
+        }
+        else
+        {
+            music.volume = 1f;
+        }
+        Debug.Log(leftNoteIndex);
+        if ((leftNoteIndex == leftNotes.Count && rightNoteIndex == rightNotes.Count) && activeLeftNotes.Count == 0 && activeRightNotes.Count == 0)
+        {
+            started = false;
+        }
+    }
+
+    private IEnumerator FadeAudio(bool fadeIn)
+    {
+        float startVolume = fadeIn ? 0f : audioSource.volume;
+        float targetVolume = fadeIn ? 1f : 0f;
+        float elapsedTime = 0f;
+
+        if (fadeIn && !audioSource.isPlaying)
+        {
+            audioSource.volume = 0f;
+            audioSource.Play();
+        }
+
+        while (elapsedTime < fadeDuration)
+        {
+            audioSource.volume = Mathf.Lerp(startVolume, targetVolume, elapsedTime / fadeDuration);
+            music.volume = Mathf.Lerp(1f, 0.5f, elapsedTime / fadeDuration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        audioSource.volume = targetVolume;
+        music.volume = 0.5f;
+
+        if (!fadeIn)
+        {
+            music.volume = 1f;
+            audioSource.Stop();
         }
     }
 
@@ -125,69 +248,96 @@ public class NoteManager : MonoBehaviour
         guitarController.Shoot();
     }
 
-    public void Miss()
+    public void HitDash()
     {
-        audioSource.Stop();
-        missSFX.Play();
-        StartCoroutine(guitarController.MissCooldown());
-        while (activeLeftNotes.Count > 0)
-        {
-            activeLeftNotes.Dequeue().gameObject.SetActive(false);
-        }
 
-        while (activeRightNotes.Count > 0)
-        {
-            activeRightNotes.Dequeue().gameObject.SetActive(false);
-        }
     }
 
-    
+    public void Miss()
+    {
+        if(startedRiff)
+        {
+            attempts--;
+            missSFX.Play();
+            noteCombo = 0;
+            
+        }
+        if (attempts <= 0)
+        {
+            reloadRefresh.Play();
+            playerCooldown.StartCooldown();
+            while (activeLeftNotes.Count > 0)
+            {
+                activeLeftNotes.Dequeue().gameObject.SetActive(false);
+            }
+
+            while (activeRightNotes.Count > 0)
+            {
+                activeRightNotes.Dequeue().gameObject.SetActive(false);
+            }
+            attempts = tempAttempts;
+            startedRiff = false;
+        }
+
+    }
+
     // Creates time lists for right notes and left notes from Midi file
     private void LoadMidiFile()
     {
         MidiFile midiFile = MidiFile.Read($"{Application.streamingAssetsPath}/{midiFilePath}");
+        TempoMap tempoMap = midiFile.GetTempoMap();
+
+        // Get the first tempo event (assuming constant tempo for simplicity)
+        var tempoChanges = tempoMap.GetTempoChanges();
+        foreach (var tempo in tempoChanges)
+        {
+            double microsecondsPerQuarterNote = tempo.Value.MicrosecondsPerQuarterNote;
+            bpm = 60000000f / (float)microsecondsPerQuarterNote;
+            Debug.Log($"Detected BPM: {bpm}");
+            break; // Assuming only the first tempo for simplicity
+        }
+
         foreach (Note note in midiFile.GetNotes())
         {
-            var metricTimeSpan = TimeConverter.ConvertTo<MetricTimeSpan>(note.Time, midiFile.GetTempoMap());
-            if (note.NoteName == Melanchall.DryWetMidi.MusicTheory.NoteName.F) // F note for left
-            {
-                // Add time to left list
-                leftNoteTimes.Add((double)metricTimeSpan.Minutes * 60f + metricTimeSpan.Seconds + (double)metricTimeSpan.Milliseconds / 1000f);
+            var metricTimeSpan = TimeConverter.ConvertTo<MetricTimeSpan>(note.Time, tempoMap);
+            double noteTime = metricTimeSpan.Minutes * 60 + metricTimeSpan.Seconds + metricTimeSpan.Milliseconds / 1000f;
 
-                // Create gameobject for this note ahead of time
+            if (note.NoteName == Melanchall.DryWetMidi.MusicTheory.NoteName.F)
+            {
+                leftNoteTimes.Add(noteTime);
                 GameObject g = Instantiate(leftNotePrefab, notebar);
                 g.SetActive(false);
                 leftNotes.Add(g);
             }
-            else if (note.NoteName == Melanchall.DryWetMidi.MusicTheory.NoteName.FSharp) // FSharp note for right
+            else if (note.NoteName == Melanchall.DryWetMidi.MusicTheory.NoteName.FSharp)
             {
-                // Add time to right list
-                rightNoteTimes.Add((double)metricTimeSpan.Minutes * 60f + metricTimeSpan.Seconds + (double)metricTimeSpan.Milliseconds / 1000f);
-
-                // Create gameobject for this note ahead of time
+                rightNoteTimes.Add(noteTime);
                 GameObject g = Instantiate(rightNotePrefab, notebar);
                 g.SetActive(false);
                 rightNotes.Add(g);
             }
         }
-
     }
 
     // Call this to start the song and the node spawning after the delay
     public void StartSong()
     {
         if (started || audioSource.isPlaying) return; // Prevent user from starting song if already running
+
+
         started = true;
+        ended = false;
         leftNoteIndex = 0; // Reset left and right node indexes for new run
         rightNoteIndex = 0;
+        attempts = tempAttempts;
         Invoke(nameof(StartSongHelper), startSongDelaySeconds);
     }
 
     // Helper function to call after delay
     private void StartSongHelper()
     {
-        audioSource.Play();
-        started = false;
+        fadeCoroutine = StartCoroutine(FadeAudio(true));
+        //started = false;
     }
            
     // Spawns a note in
@@ -238,6 +388,22 @@ public class NoteManager : MonoBehaviour
         noteImage.color = noteOpacity;
     }
 
+    private IEnumerator CrosshairSprite()
+    {
+        if (sprite < playerUI.crosshairSprites.Length)
+        {
+            sprite++;
+        }
+
+        else
+        {
+            sprite = 0;
+        }
+        playerUI.crosshairSprite = playerUI.crosshairSprites[sprite];
+        yield return new WaitForSeconds((60f / bpm) / 6);
+        
+    }
+
     private bool CollisionCheck(bool isLeftSide)
     {
         if (isLeftSide) // Left side code
@@ -261,5 +427,64 @@ public class NoteManager : MonoBehaviour
             }
         }
         return false;
+    }
+
+    private IEnumerator BpmPulse()
+    {
+        float pulseInterval = 60f / bpm;
+
+        while (true)
+        {
+            // Instantly enlarge
+            mainCircle.rectTransform.localScale = originalScale * (1f + pulseAmount);
+            playerUI.healthBar.transform.localScale = originalScale * (1f + pulseAmount);
+            float elapsedTime = 0f;
+
+            // Smooth shrink phase
+            while (elapsedTime < pulseInterval)
+            {
+                
+                float t = elapsedTime / pulseInterval;
+                startSongDelaySeconds = t;
+                float scale = 1f + pulseAmount * (1f - Mathf.SmoothStep(0f, 1f, t));
+                mainCircle.rectTransform.localScale = originalScale * scale;
+                playerUI.healthBar.transform.localScale = originalScale * scale;
+                elapsedTime += Time.deltaTime;
+                yield return null;
+
+            }
+
+            // Ensure it's at the original size after shrinking
+            mainCircle.rectTransform.localScale = originalScale;
+            playerUI.healthBar.transform.localScale = originalScale;
+            yield return null;
+        }
+    }
+
+    public void ShootPulse(bool isLeft)
+    {
+        StartCoroutine(SmoothPulse(isLeft));
+    }
+
+    private IEnumerator SmoothPulse(bool isLeft)
+    {
+        RectTransform pulseObject = isLeft ? leftPulseObject : rightPulseObject;
+        Vector2 originalPos = isLeft ? leftOriginalPos : rightOriginalPos;
+        Vector2 targetPos = originalPos + (isLeft ? Vector2.left : Vector2.right) * pulseDistance;
+
+        float elapsedTime = 0f;
+
+        // Smooth pulse out and back
+        while (elapsedTime < pulseDuration)
+        {
+            float t = elapsedTime / pulseDuration;
+            float smoothT = Mathf.SmoothStep(0f, 1f, t <= 0.5f ? t * 2f : (1f - t) * 2f); // Out and back
+            pulseObject.anchoredPosition = Vector2.Lerp(originalPos, targetPos, smoothT);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        // Ensure it snaps back
+        pulseObject.anchoredPosition = originalPos;
     }
 }

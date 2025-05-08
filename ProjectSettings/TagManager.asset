@@ -2,9 +2,11 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!78 &1
 TagManager:
-  serializedVersion: 2
+  serializedVersion: 3
   tags:
   - Enemy
+  - DetectionCollider
+  - Projectile
   layers:
   - Default
   - TransparentFX
@@ -12,13 +14,13 @@ TagManager:
   - Enemies
   - Water
   - UI
-  - Character
+  - Player
   - Bullets
   - Props and Furniture
   - Wall
-  - 
-  - 
-  - 
+  - Floor
+  - DetectionCollider
+  - CollisionBullets
   - 
   - 
   - 
@@ -60,3 +62,5 @@ TagManager:
   - name: Crosshair
     uniqueID: 1204339069
     locked: 0
+  m_RenderingLayers:
+  - Default
