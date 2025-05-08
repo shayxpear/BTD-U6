@@ -34,6 +34,11 @@ public class TrackHolder : MonoBehaviour
                 guitarRiff.clip = guitarRiffClip[1];
                 Debug.Log("Successful switch case");
                 break;
+            case "hit and run":
+                midiPath = "test.mid";
+                guitarRiff.clip = guitarRiffClip[2];
+                Debug.Log("Successful switch case");
+                break;
         }
 
         guitarRiff.clip = guitarRiffClip[noteManager.levelsBeaten];
