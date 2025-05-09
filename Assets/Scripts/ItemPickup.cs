@@ -6,12 +6,14 @@ public class ItemPickup : MonoBehaviour
     //private bool playerInRange = false;  // Whether the player is in range of the item
     private ItemInstance itemData;  // Reference to the item's data (item name, icon, type)
     public GameObject inventoryManager;
+    public GameObject HeartStickerUI;
+    public Slot[] slots;
 
     private void Start()
     {
         // Automatically find the inventory in the scene
         inventoryManager = GameObject.Find("InventoryManager");
-        inventory =  inventoryManager.GetComponent<InventoryManager>();
+        //inventory =  inventoryManager.GetComponent<InventoryManager>();
         if (inventory == null)
         {
             Debug.LogError("Inventory not found in the scene.");
@@ -53,6 +55,7 @@ public class ItemPickup : MonoBehaviour
 
             if (added)
             {
+                Instantiate(HeartStickerUI, slots[0].transform);
                 Debug.Log("Item added to inventory: " + itemData.itemName);
                 Destroy(gameObject);  // Remove the item from the world
             }

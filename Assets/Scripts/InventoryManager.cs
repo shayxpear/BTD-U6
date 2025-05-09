@@ -37,7 +37,7 @@ public class InventoryManager : MonoBehaviour
                 newItemData.Initialize(itemData.itemName, itemData.icon, itemData.itemType);  // Copy data from the ItemInstance
 
                 newItem.transform.SetParent(slot.transform);
-                newItem.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+                //newItem.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
 
                 slot.currentItem = newItem;  // Set the slot to hold the new item
                 return true;
