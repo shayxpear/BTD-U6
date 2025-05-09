@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -83,7 +83,7 @@ public class NoteManager : MonoBehaviour
 
     [Header("Crosshair")]
     [SerializeField] private SpriteRenderer crosshairRenderer;
-
+    
     private void Start()
     {
         // Load Midi File on start
@@ -98,12 +98,11 @@ public class NoteManager : MonoBehaviour
 
         tempAttempts = attempts; //should always be the number set in engine
         
-
     }
 
     private void Update()
     {
-        if(playerCooldown.cooldown || !startedRiff)
+        if (playerCooldown.cooldown || !startedRiff)
         {
             leftNotePrefab.GetComponent<Image>().material.color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
             rightNotePrefab.GetComponent<Image>().material.color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
@@ -292,6 +291,8 @@ public class NoteManager : MonoBehaviour
     // Creates time lists for right notes and left notes from Midi file
     private void LoadMidiFile()
     {
+        leftNoteTimes.Clear();
+        rightNoteTimes.Clear();
         MidiFile midiFile = MidiFile.Read($"{Application.streamingAssetsPath}/{trackHolder.midiPath}");
         TempoMap tempoMap = midiFile.GetTempoMap();
 
@@ -345,7 +346,6 @@ public class NoteManager : MonoBehaviour
     {
         fadeCoroutine = StartCoroutine(FadeAudio(true));
         StartCoroutine(CrosshairSprite());
-        //started = false;
     }
            
     // Spawns a note in
@@ -398,54 +398,43 @@ public class NoteManager : MonoBehaviour
 
     private IEnumerator CrosshairSprite()
     {
-        // Sort the note times
+        // Merge & sort
         var sortedNoteTimes = new List<double>(leftNoteTimes);
         sortedNoteTimes.AddRange(rightNoteTimes);
         sortedNoteTimes.Sort();
+        // Add a starting point for the crosshair sprite
+        sortedNoteTimes.Insert(0, 0.0);
 
-        //load initial note time
-        sortedNoteTimes.Insert(0,0.0);
-
-        int spriteIndex = 0;
         int totalSprites = playerUI.crosshairSprites.Length;
+        int currentSprite = 0;
 
-        // Loop through the sorted note times
         for (int i = 0; i < sortedNoteTimes.Count - 1; i++)
         {
             double currentNoteTime = sortedNoteTimes[i];
             double nextNoteTime = sortedNoteTimes[i + 1];
 
-            // Wait until current note time arrives
-            while (AudioSourceTime < currentNoteTime)
+            // Wait until the audio reaches the current note time
+            yield return new WaitUntil(() => AudioSourceTime >= currentNoteTime);
+
+           
+            while (AudioSourceTime < nextNoteTime)
             {
+                // Calculate the progress between the current note and the next note
+                float progress = (float)((AudioSourceTime - currentNoteTime) / (nextNoteTime - currentNoteTime));
+                int newSprite = Mathf.Clamp(Mathf.FloorToInt(progress * totalSprites), 0, totalSprites - 1);
+
+                if (newSprite != currentSprite)
+                {
+                    currentSprite = newSprite;
+                    crosshairRenderer.sprite = playerUI.crosshairSprites[currentSprite];
+                }
                 yield return null;
             }
-
-            // Calculate time between these two notes
-            float interval = (float)(nextNoteTime - currentNoteTime);
-            float timePerSprite = interval / totalSprites;
-
-            // Cycle through all sprites during this interval
-            for (int j = 0; j < totalSprites; j++)
-            {
-                crosshairRenderer.sprite = playerUI.crosshairSprites[spriteIndex];
-                spriteIndex = (spriteIndex + 1) % totalSprites; // Loop back to the first sprite
-                yield return new WaitForSeconds(timePerSprite);
-            }
         }
-
-        // After all notes, reset to first sprite
-        if (sortedNoteTimes.Count > 0)
-        {
-            // Wait until final note time passes
-            double finalNoteTime = sortedNoteTimes[^1]; //Retrieve last note time
-            while (AudioSourceTime < finalNoteTime)
-            {
-                yield return null;
-            }
-
-            crosshairRenderer.sprite = playerUI.crosshairSprites[0];
-        }
+        // Wait until the audio reaches the last note
+        yield return new WaitUntil(() => AudioSourceTime >= sortedNoteTimes[^1]);
+        // Reset the crosshair sprite to the first one
+        crosshairRenderer.sprite = playerUI.crosshairSprites[0];
     }
     private bool CollisionCheck(bool isLeftSide)
     {

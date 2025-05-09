@@ -16292,7 +16292,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nextScene: Tutorial 2
-  noteManager: {fileID: 1066390108290444808}
+  noteManager: {fileID: 0}
   noteManagerGameObject: {fileID: 0}
 --- !u!61 &1664205541
 BoxCollider2D:
