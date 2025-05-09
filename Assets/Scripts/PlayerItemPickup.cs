@@ -1,40 +1,67 @@
 using UnityEngine;
 
-public class PickupItem : MonoBehaviour
+public class ItemPickup : MonoBehaviour
 {
-    public GameObject itemPrefab;
-    public Inventory inventory;
+    public Inventory inventory;  // Reference to the player's inventory
+    private bool playerInRange = false;  // Whether the player is in range of the item
+    private ItemInstance itemData;  // Reference to the item's data (item name, icon, type)
 
-    private bool playerInRange = false;
+    private void Start()
+    {
+        // Automatically find the inventory in the scene
+        inventory = FindObjectOfType<Inventory>();
+        if (inventory == null)
+        {
+            Debug.LogError("Inventory not found in the scene.");
+        }
+    }
 
+    // Called when the player enters the trigger area
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player"))  // Check if the player enters the item trigger
         {
+            Debug.Log("Player entered item trigger.");
             playerInRange = true;
+            itemData = GetComponent<ItemInstance>();  // Get the ItemInstance data from the pickup object
+
+            // Automatically pick up the item when entering the trigger
+            PickupItem();
         }
     }
 
+    // Called when the player exits the trigger area
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player"))  // If the player leaves the trigger zone
         {
+            Debug.Log("Player left item trigger.");
             playerInRange = false;
+            itemData = null;  // Clear the itemData reference
         }
     }
 
-    private void Update()
+    // Function to handle the item pickup logic
+    private void PickupItem()
     {
-        if (playerInRange && Input.GetKeyDown(KeyCode.E))
+        if (inventory != null && itemData != null)
         {
-            if (inventory != null)
+            Debug.Log("Attempting to add item to inventory: " + itemData.itemName);
+            bool added = inventory.AddItem(itemData);  // Add the item to the inventory
+
+            if (added)
             {
-                bool added = inventory.AddItem(itemPrefab);
-                if (added)
-                {
-                    Destroy(gameObject); // Remove item from world
-                }
+                Debug.Log("Item added to inventory: " + itemData.itemName);
+                Destroy(gameObject);  // Remove the item from the world
             }
+            else
+            {
+                Debug.Log("Inventory is full or unable to pick up the item.");
+            }
+        }
+        else
+        {
+            Debug.LogError("Inventory or ItemData is not set.");
         }
     }
 }

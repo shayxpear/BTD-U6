@@ -24,25 +24,22 @@ public class Inventory : MonoBehaviour
         isInventoryOpen = !isInventoryOpen;  // Toggle the inventory state
         inventoryPanel.SetActive(isInventoryOpen);  // Show or hide the inventory UI
     }
-    public bool AddItem(GameObject itemPrefab)
+    public bool AddItem(ItemInstance itemData)
     {
-        ItemInstance itemData = itemPrefab.GetComponent<ItemInstance>();
-        if (itemData == null)
-        {
-            Debug.LogWarning("Item prefab missing ItemInstance.");
-            return false;
-        }
-
+        // Find an empty slot that can hold the item type
         foreach (Slot slot in slots)
         {
             if (slot.currentItem == null && slot.allowedType == itemData.itemType)
             {
-                GameObject newItem = Instantiate(itemPrefab, slot.transform);
-                RectTransform rect = newItem.GetComponent<RectTransform>();
-                if (rect != null)
-                    rect.anchoredPosition = Vector2.zero;
+                // Create the item in the inventory
+                GameObject newItem = new GameObject(itemData.itemName);  // Create a new GameObject for the item
+                ItemInstance newItemData = newItem.AddComponent<ItemInstance>();
+                newItemData.Initialize(itemData.itemName, itemData.icon, itemData.itemType);  // Copy data from the ItemInstance
 
-                slot.currentItem = newItem;
+                newItem.transform.SetParent(slot.transform);
+                newItem.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+
+                slot.currentItem = newItem;  // Set the slot to hold the new item
                 return true;
             }
         }
@@ -50,4 +47,4 @@ public class Inventory : MonoBehaviour
         Debug.Log("No available slot for type: " + itemData.itemType);
         return false;
     }
-}
+    }
