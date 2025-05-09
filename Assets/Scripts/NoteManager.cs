@@ -84,6 +84,11 @@ public class NoteManager : MonoBehaviour
     [Header("Crosshair")]
     [SerializeField] private SpriteRenderer crosshairRenderer;
     
+    [Header("Crosshair Sprite Sheets")]
+    [SerializeField] private Sprite[] redCrosshairSprites;  // For left notes
+    [SerializeField] private Sprite[] blueCrosshairSprites; // For right notes
+    [SerializeField] private Sprite[] whiteCrosshairSprites; // For when the song is finished
+
     private void Start()
     {
         // Load Midi File on start
@@ -398,43 +403,84 @@ public class NoteManager : MonoBehaviour
 
     private IEnumerator CrosshairSprite()
     {
-        // Merge & sort
+        // Merge & sort note times
         var sortedNoteTimes = new List<double>(leftNoteTimes);
         sortedNoteTimes.AddRange(rightNoteTimes);
         sortedNoteTimes.Sort();
-        // Add a starting point for the crosshair sprite
-        sortedNoteTimes.Insert(0, 0.0);
 
-        int totalSprites = playerUI.crosshairSprites.Length;
+        sortedNoteTimes.Insert(0,0.0);
+
+        Sprite[] currentSpriteSheet = null;
         int currentSprite = 0;
 
+        // Loop through all note segments
         for (int i = 0; i < sortedNoteTimes.Count - 1; i++)
         {
             double currentNoteTime = sortedNoteTimes[i];
             double nextNoteTime = sortedNoteTimes[i + 1];
 
             // Wait until the audio reaches the current note time
-            yield return new WaitUntil(() => AudioSourceTime >= currentNoteTime);
+            yield return new WaitUntil(() => AudioSourceTime >= currentNoteTime || !trackHolder.guitarRiff.isPlaying);
 
-           
-            while (AudioSourceTime < nextNoteTime)
+            // If the song ends, reset to white
+            if (!trackHolder.guitarRiff.isPlaying)
             {
-                // Calculate the progress between the current note and the next note
+                ResetToWhiteCrosshair();
+                yield break;
+            }
+
+            // Use the note time of the next note to decide the color
+            if (leftNoteTimes.Contains(nextNoteTime))
+            {
+                currentSpriteSheet = redCrosshairSprites;
+            }
+            else if (rightNoteTimes.Contains(nextNoteTime))
+            {
+                currentSpriteSheet = blueCrosshairSprites;
+            }
+            else
+            {
+                currentSpriteSheet = playerUI.crosshairSprites;
+            }
+
+            int totalSprites = currentSpriteSheet.Length;
+            currentSprite = 0;
+
+            // Update sprite during the segment
+            while (AudioSourceTime < nextNoteTime && trackHolder.guitarRiff.isPlaying)
+            {
+                // Calculate progress and update sprite
                 float progress = (float)((AudioSourceTime - currentNoteTime) / (nextNoteTime - currentNoteTime));
-                int newSprite = Mathf.Clamp(Mathf.FloorToInt(progress * totalSprites), 0, totalSprites - 1);
+                int newSprite = Mathf.Clamp(Mathf.FloorToInt(progress * (totalSprites - 1)), 0, totalSprites - 1);
 
                 if (newSprite != currentSprite)
                 {
                     currentSprite = newSprite;
-                    crosshairRenderer.sprite = playerUI.crosshairSprites[currentSprite];
+                    crosshairRenderer.sprite = currentSpriteSheet[currentSprite];
                 }
                 yield return null;
             }
+
+            // If the song ends during the segment, reset to white
+            if (!trackHolder.guitarRiff.isPlaying)
+            {
+                ResetToWhiteCrosshair();
+                yield break;
+            }
         }
-        // Wait until the audio reaches the last note
-        yield return new WaitUntil(() => AudioSourceTime >= sortedNoteTimes[^1]);
-        // Reset the crosshair sprite to the first one
-        crosshairRenderer.sprite = playerUI.crosshairSprites[0];
+
+        // Wait until the audio completes playing before resetting to white
+        yield return new WaitUntil(() => !trackHolder.guitarRiff.isPlaying);
+
+        ResetToWhiteCrosshair();
+    }
+
+    private void ResetToWhiteCrosshair()
+    {
+        if (whiteCrosshairSprites != null && whiteCrosshairSprites.Length > 0)
+        {
+            crosshairRenderer.sprite = whiteCrosshairSprites[0];
+        }
     }
     private bool CollisionCheck(bool isLeftSide)
     {
@@ -483,7 +529,6 @@ public class NoteManager : MonoBehaviour
                 playerUI.healthBar.transform.localScale = originalScale * scale;
                 elapsedTime += Time.deltaTime;
                 yield return null;
-
             }
 
             // Ensure it's at the original size after shrinking
