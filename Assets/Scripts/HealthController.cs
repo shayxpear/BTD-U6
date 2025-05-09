@@ -31,11 +31,11 @@ public class HealthController : MonoBehaviour
 
         if (playerController != null)
         {
-            Debug.Log($"Player took {damage} damage. Current Health: {currentHealth}");
+            //Debug.Log($"Player took {damage} damage. Current Health: {currentHealth}");
         }
         else if (enemyController != null)
         {
-            Debug.Log($"Enemy took {damage} damage. Current Health: {currentHealth}");
+            //Debug.Log($"Enemy took {damage} damage. Current Health: {currentHealth}");
         }
 
         if (currentHealth <= 0)
@@ -48,12 +48,12 @@ public class HealthController : MonoBehaviour
     {
         if (playerController != null)
         {
-            Debug.Log("Player has died.");
+            //Debug.Log("Player has died.");
             // Add player death logic here.
         }
         else if (enemyController != null)
         {
-            Debug.Log("Enemy has died.");
+            //Debug.Log("Enemy has died.");
             // Add enemy death logic here.
         }
 

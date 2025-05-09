@@ -2,14 +2,16 @@ using UnityEngine;
 
 public class ItemPickup : MonoBehaviour
 {
-    public Inventory inventory;  // Reference to the player's inventory
-    private bool playerInRange = false;  // Whether the player is in range of the item
+    public InventoryManager inventory;  // Reference to the player's inventory
+    //private bool playerInRange = false;  // Whether the player is in range of the item
     private ItemInstance itemData;  // Reference to the item's data (item name, icon, type)
+    public GameObject inventoryManager;
 
     private void Start()
     {
         // Automatically find the inventory in the scene
-        inventory = FindObjectOfType<Inventory>();
+        inventoryManager = GameObject.Find("InventoryManager");
+        inventory =  inventoryManager.GetComponent<InventoryManager>();
         if (inventory == null)
         {
             Debug.LogError("Inventory not found in the scene.");
@@ -22,7 +24,7 @@ public class ItemPickup : MonoBehaviour
         if (other.CompareTag("Player"))  // Check if the player enters the item trigger
         {
             Debug.Log("Player entered item trigger.");
-            playerInRange = true;
+            //playerInRange = true;
             itemData = GetComponent<ItemInstance>();  // Get the ItemInstance data from the pickup object
 
             // Automatically pick up the item when entering the trigger
@@ -36,7 +38,7 @@ public class ItemPickup : MonoBehaviour
         if (other.CompareTag("Player"))  // If the player leaves the trigger zone
         {
             Debug.Log("Player left item trigger.");
-            playerInRange = false;
+            //playerInRange = false;
             itemData = null;  // Clear the itemData reference
         }
     }

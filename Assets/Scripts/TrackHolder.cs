@@ -27,17 +27,14 @@ public class TrackHolder : MonoBehaviour
             case "guitar riff":
                 midiPath = "test1.mid";
                 guitarRiff.clip = guitarRiffClip[0];
-                Debug.Log("Successful switch case");
                 break;
             case "battle song finished":
                 midiPath = "test.mid";
                 guitarRiff.clip = guitarRiffClip[1];
-                Debug.Log("Successful switch case");
                 break;
             case "hit and run":
                 midiPath = "test.mid";
                 guitarRiff.clip = guitarRiffClip[2];
-                Debug.Log("Successful switch case");
                 break;
         }
 

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Inventory : MonoBehaviour
+public class InventoryManager : MonoBehaviour
 {
     public Slot[] slots;
     public GameObject inventoryPanel;

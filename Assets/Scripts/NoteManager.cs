@@ -214,7 +214,6 @@ public class NoteManager : MonoBehaviour
             trackHolder.guitarRiff.Stop();
         }
 
-        Debug.Log(leftNoteIndex);
         if ((leftNoteIndex == leftNotes.Count && rightNoteIndex == rightNotes.Count) && activeLeftNotes.Count == 0 && activeRightNotes.Count == 0)
         {
             started = false;
