@@ -18,6 +18,10 @@ public class ItemPickup : MonoBehaviour
         {
             Debug.LogError("Inventory not found in the scene.");
         }
+        if (HeartStickerUI != null)
+        {
+            HeartStickerUI.SetActive(false);  // Hide the sticker UI initially
+        }
     }
 
     // Called when the player enters the trigger area
@@ -55,7 +59,18 @@ public class ItemPickup : MonoBehaviour
 
             if (added)
             {
-                Instantiate(HeartStickerUI, slots[0].transform);
+                //Instantiate(HeartStickerUI, slots[0].transform);
+                //Debug.Log("Item added to inventory: " + itemData.itemName);
+                //Destroy(gameObject);  // Remove the item from the world
+
+                // Show the HeartStickerUI when the item is picked up
+                if (HeartStickerUI != null)
+                {
+                    // Instantiate HeartStickerUI as a child of the first slot
+                    Instantiate(HeartStickerUI, slots[0].transform);
+                    HeartStickerUI.SetActive(true);  // Make sure it is active
+                }
+
                 Debug.Log("Item added to inventory: " + itemData.itemName);
                 Destroy(gameObject);  // Remove the item from the world
             }
