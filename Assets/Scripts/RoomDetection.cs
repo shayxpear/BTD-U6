@@ -16,6 +16,15 @@ public class RoomDetection : MonoBehaviour
         noteManager.startedRiff = false;
     }
 
+    public void AddEnemy()
+    {
+        enemiesInRange++;
+    }
+
+    public void RemoveEnemy()
+    {
+        enemiesInRange = Mathf.Max(0, enemiesInRange - 1);
+    }
     public void Update()
     {
         if (playerInRange && enemiesInRange > 0)

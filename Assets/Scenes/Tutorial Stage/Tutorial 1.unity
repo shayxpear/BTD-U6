@@ -15612,17 +15612,37 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1481380888689757616, guid: 7613e229596329840af7786148b431c2, type: 3}
+      propertyPath: m_Constraints
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3084389835335469489, guid: 7613e229596329840af7786148b431c2, type: 3}
+      propertyPath: m_Radius
+      value: 1.99
+      objectReference: {fileID: 0}
+    - target: {fileID: 5097328921293578819, guid: 7613e229596329840af7786148b431c2, type: 3}
+      propertyPath: blobbyMiniPrefabs.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5097328921293578819, guid: 7613e229596329840af7786148b431c2, type: 3}
+      propertyPath: 'blobbyMiniPrefabs.Array.data[0]'
+      value: 
+      objectReference: {fileID: 8634360676460631067, guid: d872300cc5db5494b84be8180260c2d6, type: 3}
+    - target: {fileID: 5097328921293578819, guid: 7613e229596329840af7786148b431c2, type: 3}
+      propertyPath: 'blobbyMiniPrefabs.Array.data[1]'
+      value: 
+      objectReference: {fileID: 5977027083766145921, guid: 362b6196f35da6c4d8bea63e18825726, type: 3}
     - target: {fileID: 7888501527499802821, guid: 7613e229596329840af7786148b431c2, type: 3}
       propertyPath: m_Name
       value: Blobby(Large)
       objectReference: {fileID: 0}
     - target: {fileID: 8697827403517021887, guid: 7613e229596329840af7786148b431c2, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.45153
+      value: 0.619
       objectReference: {fileID: 0}
     - target: {fileID: 8697827403517021887, guid: 7613e229596329840af7786148b431c2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.6376876
+      value: -0.818
       objectReference: {fileID: 0}
     - target: {fileID: 8697827403517021887, guid: 7613e229596329840af7786148b431c2, type: 3}
       propertyPath: m_LocalPosition.z
@@ -16154,6 +16174,11 @@ Transform:
 --- !u!4 &1627466905 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8517268546449587133, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
+  m_PrefabInstance: {fileID: 173020713507543303}
+  m_PrefabAsset: {fileID: 0}
+--- !u!58 &1627466906 stripped
+CircleCollider2D:
+  m_CorrespondingSourceObject: {fileID: 5427231530552088281, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
   m_PrefabInstance: {fileID: 173020713507543303}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &1642879842 stripped
@@ -20557,7 +20582,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1245844833172599066, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
       propertyPath: speed
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1245844833172599066, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
       propertyPath: damage
@@ -20573,7 +20598,7 @@ PrefabInstance:
       objectReference: {fileID: 524521857}
     - target: {fileID: 1245844833172599066, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
       propertyPath: enemyType
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1245844833172599066, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
       propertyPath: laserLine
@@ -20589,7 +20614,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1245844833172599066, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
       propertyPath: attackType
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1245844833172599066, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
       propertyPath: projPrefab
@@ -20601,7 +20626,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1245844833172599066, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
       propertyPath: laserDamage
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1245844833172599066, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
       propertyPath: leapCooldown
@@ -20625,7 +20650,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1245844833172599066, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
       propertyPath: lastEnemyType
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1245844833172599066, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
       propertyPath: rotationSpeed
@@ -20641,7 +20666,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1245844833172599066, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
       propertyPath: rangedAttackRange
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1245844833172599066, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
       propertyPath: leapChargeDuration
@@ -20652,12 +20677,36 @@ PrefabInstance:
       value: 64
       objectReference: {fileID: 0}
     - target: {fileID: 1245844833172599066, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
+      propertyPath: projPos.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1245844833172599066, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
+      propertyPath: attackTriggerCollider
+      value: 
+      objectReference: {fileID: 1627466906}
+    - target: {fileID: 1245844833172599066, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
       propertyPath: laserHitLayers.m_Bits
       value: 832
       objectReference: {fileID: 0}
+    - target: {fileID: 1245844833172599066, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
+      propertyPath: laserLines.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1245844833172599066, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
+      propertyPath: 'projPos.Array.data[0]'
+      value: 
+      objectReference: {fileID: 524521857}
+    - target: {fileID: 1245844833172599066, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
+      propertyPath: 'laserLines.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1347885675}
     - target: {fileID: 7576607333861121549, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
       propertyPath: m_Name
       value: Rat
+      objectReference: {fileID: 0}
+    - target: {fileID: 7576607333861121549, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8517268546449587133, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
       propertyPath: m_LocalScale.x
