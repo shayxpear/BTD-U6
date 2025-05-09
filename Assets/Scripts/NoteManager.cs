@@ -399,6 +399,7 @@ public class NoteManager : MonoBehaviour
         sortedNoteTimes.AddRange(rightNoteTimes);
         sortedNoteTimes.Sort();
 
+        //load initial note time
         sortedNoteTimes.Insert(0,0.0);
 
         int spriteIndex = 0;
