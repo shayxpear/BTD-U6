@@ -17203,7 +17203,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nextScene: Tutorial 2
-  noteManager: {fileID: 1066390108290444808}
+  noteManager: {fileID: 0}
   noteManagerGameObject: {fileID: 0}
 --- !u!61 &1664205541
 BoxCollider2D:
@@ -21942,6 +21942,27 @@ MonoBehaviour:
   started: 0
   levelsBeaten: 0
   crosshairRenderer: {fileID: 3820910120167366493}
+  redCrosshairSprites:
+  - {fileID: 8166710274925509176, guid: 3510b0872b8d8ce42956a31a9c84a436, type: 3}
+  - {fileID: -523259844147669826, guid: 3510b0872b8d8ce42956a31a9c84a436, type: 3}
+  - {fileID: -310230559402417971, guid: 3510b0872b8d8ce42956a31a9c84a436, type: 3}
+  - {fileID: -7891666902058575860, guid: 3510b0872b8d8ce42956a31a9c84a436, type: 3}
+  - {fileID: 5051859853793176799, guid: 3510b0872b8d8ce42956a31a9c84a436, type: 3}
+  - {fileID: 7483015456981230869, guid: 3510b0872b8d8ce42956a31a9c84a436, type: 3}
+  blueCrosshairSprites:
+  - {fileID: -2615874204119335, guid: c99ad390d57925f4fa87233ca2f930ff, type: 3}
+  - {fileID: 717144221660794061, guid: c99ad390d57925f4fa87233ca2f930ff, type: 3}
+  - {fileID: -3167441482169377092, guid: c99ad390d57925f4fa87233ca2f930ff, type: 3}
+  - {fileID: 8592466800823992071, guid: c99ad390d57925f4fa87233ca2f930ff, type: 3}
+  - {fileID: -3949692458917061792, guid: c99ad390d57925f4fa87233ca2f930ff, type: 3}
+  - {fileID: 4304036159774962699, guid: c99ad390d57925f4fa87233ca2f930ff, type: 3}
+  whiteCrosshairSprites:
+  - {fileID: 4966732595609684114, guid: c5402d680a07d744dafadbafe0af1a64, type: 3}
+  - {fileID: 5601268591370290413, guid: c5402d680a07d744dafadbafe0af1a64, type: 3}
+  - {fileID: -3990371613155470165, guid: c5402d680a07d744dafadbafe0af1a64, type: 3}
+  - {fileID: -9119037557031223073, guid: c5402d680a07d744dafadbafe0af1a64, type: 3}
+  - {fileID: 7409738783602005691, guid: c5402d680a07d744dafadbafe0af1a64, type: 3}
+  - {fileID: -6096600657829275671, guid: c5402d680a07d744dafadbafe0af1a64, type: 3}
 --- !u!212 &1072807480227111939
 SpriteRenderer:
   m_ObjectHideFlags: 0

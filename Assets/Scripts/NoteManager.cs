@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -83,6 +83,11 @@ public class NoteManager : MonoBehaviour
 
     [Header("Crosshair")]
     [SerializeField] private SpriteRenderer crosshairRenderer;
+    
+    [Header("Crosshair Sprite Sheets")]
+    [SerializeField] private Sprite[] redCrosshairSprites;  // For left notes
+    [SerializeField] private Sprite[] blueCrosshairSprites; // For right notes
+    [SerializeField] private Sprite[] whiteCrosshairSprites; // For when the song is finished
 
     private void Start()
     {
@@ -98,12 +103,11 @@ public class NoteManager : MonoBehaviour
 
         tempAttempts = attempts; //should always be the number set in engine
         
-
     }
 
     private void Update()
     {
-        if(playerCooldown.cooldown || !startedRiff)
+        if (playerCooldown.cooldown || !startedRiff)
         {
             leftNotePrefab.GetComponent<Image>().material.color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
             rightNotePrefab.GetComponent<Image>().material.color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
@@ -291,6 +295,8 @@ public class NoteManager : MonoBehaviour
     // Creates time lists for right notes and left notes from Midi file
     private void LoadMidiFile()
     {
+        leftNoteTimes.Clear();
+        rightNoteTimes.Clear();
         MidiFile midiFile = MidiFile.Read($"{Application.streamingAssetsPath}/{trackHolder.midiPath}");
         TempoMap tempoMap = midiFile.GetTempoMap();
 
@@ -344,7 +350,6 @@ public class NoteManager : MonoBehaviour
     {
         fadeCoroutine = StartCoroutine(FadeAudio(true));
         StartCoroutine(CrosshairSprite());
-        //started = false;
     }
            
     // Spawns a note in
@@ -397,53 +402,83 @@ public class NoteManager : MonoBehaviour
 
     private IEnumerator CrosshairSprite()
     {
-        // Sort the note times
+        // Merge & sort note times
         var sortedNoteTimes = new List<double>(leftNoteTimes);
         sortedNoteTimes.AddRange(rightNoteTimes);
         sortedNoteTimes.Sort();
 
-        //load initial note time
         sortedNoteTimes.Insert(0,0.0);
 
-        int spriteIndex = 0;
-        int totalSprites = playerUI.crosshairSprites.Length;
+        Sprite[] currentSpriteSheet = null;
+        int currentSprite = 0;
 
-        // Loop through the sorted note times
+        // Loop through all note segments
         for (int i = 0; i < sortedNoteTimes.Count - 1; i++)
         {
             double currentNoteTime = sortedNoteTimes[i];
             double nextNoteTime = sortedNoteTimes[i + 1];
 
-            // Wait until current note time arrives
-            while (AudioSourceTime < currentNoteTime)
+            // Wait until the audio reaches the current note time
+            yield return new WaitUntil(() => AudioSourceTime >= currentNoteTime || !trackHolder.guitarRiff.isPlaying);
+
+            // If the song ends, reset to white
+            if (!trackHolder.guitarRiff.isPlaying)
             {
+                ResetToWhiteCrosshair();
+                yield break;
+            }
+
+            // Use the note time of the next note to decide the color
+            if (leftNoteTimes.Contains(nextNoteTime))
+            {
+                currentSpriteSheet = redCrosshairSprites;
+            }
+            else if (rightNoteTimes.Contains(nextNoteTime))
+            {
+                currentSpriteSheet = blueCrosshairSprites;
+            }
+            else
+            {
+                currentSpriteSheet = playerUI.crosshairSprites;
+            }
+
+            int totalSprites = currentSpriteSheet.Length;
+            currentSprite = 0;
+
+            // Update sprite during the segment
+            while (AudioSourceTime < nextNoteTime && trackHolder.guitarRiff.isPlaying)
+            {
+                // Calculate progress and update sprite
+                float progress = (float)((AudioSourceTime - currentNoteTime) / (nextNoteTime - currentNoteTime));
+                int newSprite = Mathf.Clamp(Mathf.FloorToInt(progress * (totalSprites - 1)), 0, totalSprites - 1);
+
+                if (newSprite != currentSprite)
+                {
+                    currentSprite = newSprite;
+                    crosshairRenderer.sprite = currentSpriteSheet[currentSprite];
+                }
                 yield return null;
             }
 
-            // Calculate time between these two notes
-            float interval = (float)(nextNoteTime - currentNoteTime);
-            float timePerSprite = interval / totalSprites;
-
-            // Cycle through all sprites during this interval
-            for (int j = 0; j < totalSprites; j++)
+            // If the song ends during the segment, reset to white
+            if (!trackHolder.guitarRiff.isPlaying)
             {
-                crosshairRenderer.sprite = playerUI.crosshairSprites[spriteIndex];
-                spriteIndex = (spriteIndex + 1) % totalSprites; // Loop back to the first sprite
-                yield return new WaitForSeconds(timePerSprite);
+                ResetToWhiteCrosshair();
+                yield break;
             }
         }
 
-        // After all notes, reset to first sprite
-        if (sortedNoteTimes.Count > 0)
-        {
-            // Wait until final note time passes
-            double finalNoteTime = sortedNoteTimes[^1]; //Retrieve last note time
-            while (AudioSourceTime < finalNoteTime)
-            {
-                yield return null;
-            }
+        // Wait until the audio completes playing before resetting to white
+        yield return new WaitUntil(() => !trackHolder.guitarRiff.isPlaying);
 
-            crosshairRenderer.sprite = playerUI.crosshairSprites[0];
+        ResetToWhiteCrosshair();
+    }
+
+    private void ResetToWhiteCrosshair()
+    {
+        if (whiteCrosshairSprites != null && whiteCrosshairSprites.Length > 0)
+        {
+            crosshairRenderer.sprite = whiteCrosshairSprites[0];
         }
     }
     private bool CollisionCheck(bool isLeftSide)
@@ -493,7 +528,6 @@ public class NoteManager : MonoBehaviour
                 playerUI.healthBar.transform.localScale = originalScale * scale;
                 elapsedTime += Time.deltaTime;
                 yield return null;
-
             }
 
             // Ensure it's at the original size after shrinking
