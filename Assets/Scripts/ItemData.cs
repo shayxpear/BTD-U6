@@ -1,25 +1,18 @@
-using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.UI;
 
 public enum ItemType
 {
     Sticker,
-    Consumable,
+    Consumable
 }
+
 public class ItemInstance : MonoBehaviour
 {
     public string itemName;
     public Sprite icon;
     public ItemType itemType;
-
     public Image iconImage;
-
-    private void Start()
-    {
-        if (iconImage != null && icon != null)
-            iconImage.sprite = icon;
-    }
 
     public void Initialize(string name, Sprite newIcon, ItemType type)
     {
@@ -28,6 +21,9 @@ public class ItemInstance : MonoBehaviour
         itemType = type;
 
         if (iconImage != null)
-            iconImage.sprite = icon;
+        {
+            iconImage.sprite = icon;  // Set the UI icon image
+        }
     }
 }
+

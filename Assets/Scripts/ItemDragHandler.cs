@@ -1,59 +1,76 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class ItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    Transform originalParent;
-    CanvasGroup canvasGroup;
+    private Canvas canvas;
+    private RectTransform rectTransform;
+    private CanvasGroup canvasGroup;
 
-    void Start()
+    private Transform originalParent;
+    private Slot originalSlot;
+
+    private ItemInstance itemInstance;
+
+    private void Awake()
     {
-        // Initialize canvasGroup (if not already attached)
+        rectTransform = GetComponent<RectTransform>();
         canvasGroup = GetComponent<CanvasGroup>();
+        canvas = GetComponentInParent<Canvas>();
+        itemInstance = GetComponent<ItemInstance>();
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        // Save the original parent when drag starts
         originalParent = transform.parent;
-        transform.SetParent(transform.root); // Move item to the root canvas for dragging
-        canvasGroup.blocksRaycasts = false; // Disable raycasting to allow for drop targets
-        canvasGroup.alpha = 0.6f; // Make the item semi-transparent while dragging
+        originalSlot = originalParent.GetComponent<Slot>();
+
+        transform.SetParent(canvas.transform, true);
+        canvasGroup.blocksRaycasts = false;
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        // Update the item's position as it is being dragged
-        transform.position = eventData.position;
+        rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        canvasGroup.blocksRaycasts = true; // Re-enable raycasting after the drag ends
-        canvasGroup.alpha = 1f; // Reset the alpha (opacity) of the item
+        canvasGroup.blocksRaycasts = true;
 
-        // Get the drop slot (where the item is dropped)
-        Slot dropSlot = eventData.pointerEnter?.GetComponent<Slot>();
+        GameObject targetObject = eventData.pointerEnter;
+        Slot targetSlot = null;
 
-        // If item is dropped on a valid slot
-        if (dropSlot != null)
+        if (targetObject != null)
         {
-            // If the drop slot already has an item, destroy the old item
-            if (dropSlot.currentItem != null)
+            targetSlot = targetObject.GetComponent<Slot>() ?? targetObject.GetComponentInParent<Slot>();
+        }
+
+        if (targetSlot != null && targetSlot.currentItem == null && targetSlot.allowedType == itemInstance.itemType)
+        {
+            // Valid drop
+            transform.SetParent(targetSlot.transform);
+            rectTransform.anchoredPosition = Vector2.zero;
+
+            targetSlot.currentItem = gameObject;
+            if (originalSlot != null) originalSlot.currentItem = null;
+        }
+        else if (targetSlot == null)
+        {
+            // Dropped in the void — destroy item
+            if (originalSlot != null)
             {
-                Destroy(dropSlot.currentItem);
+                originalSlot.currentItem = null;
             }
 
-            // Move the dragged item to the new slot
-            transform.SetParent(dropSlot.transform);
-            transform.localPosition = Vector3.zero; // Position the item inside the slot
-            dropSlot.currentItem = gameObject; // Update the slot's current item to the dragged item
+            Destroy(gameObject);
         }
         else
         {
-            // If dropped outside of a valid slot, return the item to its original parent
+            // Invalid drop — return to original slot
             transform.SetParent(originalParent);
-            transform.localPosition = Vector3.zero; // Position the item in its original slot
+            rectTransform.anchoredPosition = Vector2.zero;
         }
     }
 }

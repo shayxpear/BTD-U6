@@ -1,60 +1,53 @@
-using System.Collections.Generic;
 using UnityEngine;
 
-public class InventoryManager : MonoBehaviour
+public class Inventory : MonoBehaviour
 {
-    public static InventoryManager Instance;
-
-    public GameObject inventoryUI;
-    public GameObject itemPrefab; // Prefab with ItemInstance
-    public List<Slot> slots = new List<Slot>(); // Assign slots in Inspector
-    
+    public Slot[] slots;
+    public GameObject inventoryPanel;
 
     private bool isInventoryOpen = false;
 
-    private void Awake()
+    // Update is called once per frame
+    void Update()
     {
-        if (Instance == null)
-            Instance = this;
-        else
-            Destroy(gameObject);
-    }
-
-    private void Update()
-    {
+        // Listen for the Tab key press
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            ToggleInventory();
+            ToggleInventory();  // Toggle the inventory on Tab press
+            Debug.Log("Tab key pressed");
         }
     }
 
-    public void ToggleInventory()
+    // Toggle the visibility of the inventory
+    void ToggleInventory()
     {
-        isInventoryOpen = !isInventoryOpen;
-        inventoryUI.SetActive(isInventoryOpen);
-
-        Time.timeScale = isInventoryOpen ? 0f : 1f;
+        isInventoryOpen = !isInventoryOpen;  // Toggle the inventory state
+        inventoryPanel.SetActive(isInventoryOpen);  // Show or hide the inventory UI
     }
-
-    public bool AddItem(string itemName, Sprite icon)
+    public bool AddItem(GameObject itemPrefab)
     {
+        ItemInstance itemData = itemPrefab.GetComponent<ItemInstance>();
+        if (itemData == null)
+        {
+            Debug.LogWarning("Item prefab missing ItemInstance.");
+            return false;
+        }
+
         foreach (Slot slot in slots)
         {
-            if (slot.currentItem == null)
+            if (slot.currentItem == null && slot.allowedType == itemData.itemType)
             {
                 GameObject newItem = Instantiate(itemPrefab, slot.transform);
-                ItemInstance itemInstance = newItem.GetComponent<ItemInstance>();
-
-                itemInstance.itemName = itemName;
-                itemInstance.icon = icon;
+                RectTransform rect = newItem.GetComponent<RectTransform>();
+                if (rect != null)
+                    rect.anchoredPosition = Vector2.zero;
 
                 slot.currentItem = newItem;
-
                 return true;
             }
         }
 
-        Debug.Log("Inventory is full.");
+        Debug.Log("No available slot for type: " + itemData.itemType);
         return false;
     }
 }
