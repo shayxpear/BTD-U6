@@ -20873,6 +20873,7 @@ MonoBehaviour:
   startedRiff: 0
   started: 0
   levelsBeaten: 0
+  crosshairRenderer: {fileID: 3820910120167366493}
 --- !u!212 &1072807480227111939
 SpriteRenderer:
   m_ObjectHideFlags: 0
