@@ -8,7 +8,6 @@ using Melanchall.DryWetMidi.Interaction;
 public class NoteManager : MonoBehaviour
 {
     [Header("Control Panel")]
-    [SerializeField] private string midiFilePath; // Path to midi file inside streaming asset path
     [SerializeField] private float hitTolerance; // Tolerance for collision of hitting note [0 = exact match only, 0.1 = 90% overlap, 0.9 = 10% overlap]
     [SerializeField] private float noteDespawnPastDistance; // Distance for a note to go past hitting the center before despawning
     [SerializeField] private float startSongDelaySeconds; // Delay before starting song after calling StartSong
@@ -32,7 +31,6 @@ public class NoteManager : MonoBehaviour
     [SerializeField] private Image mainCircle; // Main circle for the player to hit the notes with
 
     [Header("Audio")]
-    [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioSource music;
     [SerializeField] private AudioSource missSFX;
     [SerializeField] private AudioSource reloadRefresh;
@@ -43,7 +41,7 @@ public class NoteManager : MonoBehaviour
     {
         get
         {
-            return (double)audioSource.timeSamples / audioSource.clip.frequency;
+            return (double)trackHolder.guitarRiff.timeSamples / trackHolder.guitarRiff.clip.frequency;
         }
     }
 
@@ -54,6 +52,7 @@ public class NoteManager : MonoBehaviour
     [SerializeField] private PlayerController playerController;
     [SerializeField] private PlayerUI playerUI;
     [SerializeField] private PlayerCooldown playerCooldown;
+    [SerializeField] private TrackHolder trackHolder;
 
     private readonly List<double> leftNoteTimes = new();
     private readonly List<double> rightNoteTimes = new();
@@ -63,9 +62,7 @@ public class NoteManager : MonoBehaviour
     private readonly Queue<RectTransform> activeRightNotes = new();
     private int leftNoteIndex = 0;
     private int rightNoteIndex = 0;
-    
-    bool cooldown = false;
-    bool ended;
+
     [HideInInspector] public float pulsePhase;
 
     [Header("BPM")]
@@ -77,10 +74,15 @@ public class NoteManager : MonoBehaviour
 
     [Header("Debug")]
     [SerializeField] public int noteCombo;
+    public bool ended;
     private int sprite;
     private bool canStartSong;
     public bool startedRiff;
     public bool started = false;
+    public int levelsBeaten;
+
+    [Header("Crosshair")]
+    [SerializeField] private SpriteRenderer crosshairRenderer;
 
     private void Start()
     {
@@ -95,7 +97,7 @@ public class NoteManager : MonoBehaviour
         rightOriginalPos = rightPulseObject.anchoredPosition;
 
         tempAttempts = attempts; //should always be the number set in engine
-        StartCoroutine(CrosshairSprite());
+        
 
     }
 
@@ -120,7 +122,7 @@ public class NoteManager : MonoBehaviour
             ShootPulse(false);// Left click
         }
 
-        if (audioSource.isPlaying && !ended)
+        if (trackHolder.guitarRiff.isPlaying && !ended)
         {
             // Left Note Spawn Check
             if (leftNoteIndex < leftNoteTimes.Count && AudioSourceTime >= leftNoteTimes[leftNoteIndex] - noteTravelTimeSeconds)
@@ -202,10 +204,16 @@ public class NoteManager : MonoBehaviour
                 }
             }
         }
-        else
+        else if(ended)
         {
-            music.volume = 1f;
+            music.volume = 1;
+            if(activeLeftNotes.Count > 0)
+                activeLeftNotes.Dequeue().gameObject.SetActive(false);
+            if(activeRightNotes.Count > 0)
+                activeRightNotes.Dequeue().gameObject.SetActive(false);
+            trackHolder.guitarRiff.Stop();
         }
+
         Debug.Log(leftNoteIndex);
         if ((leftNoteIndex == leftNotes.Count && rightNoteIndex == rightNotes.Count) && activeLeftNotes.Count == 0 && activeRightNotes.Count == 0)
         {
@@ -215,31 +223,31 @@ public class NoteManager : MonoBehaviour
 
     private IEnumerator FadeAudio(bool fadeIn)
     {
-        float startVolume = fadeIn ? 0f : audioSource.volume;
+        float startVolume = fadeIn ? 0f : trackHolder.guitarRiff.volume;
         float targetVolume = fadeIn ? 1f : 0f;
         float elapsedTime = 0f;
 
-        if (fadeIn && !audioSource.isPlaying)
+        if (fadeIn && !trackHolder.guitarRiff.isPlaying)
         {
-            audioSource.volume = 0f;
-            audioSource.Play();
+            trackHolder.guitarRiff.volume = 0f;
+            trackHolder.guitarRiff.Play();
         }
 
         while (elapsedTime < fadeDuration)
         {
-            audioSource.volume = Mathf.Lerp(startVolume, targetVolume, elapsedTime / fadeDuration);
+            trackHolder.guitarRiff.volume = Mathf.Lerp(startVolume, targetVolume, elapsedTime / fadeDuration);
             music.volume = Mathf.Lerp(1f, 0.5f, elapsedTime / fadeDuration);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
 
-        audioSource.volume = targetVolume;
-        music.volume = 0.5f;
+        trackHolder.guitarRiff.volume = targetVolume;
+        music.volume = 0f;
 
         if (!fadeIn)
         {
             music.volume = 1f;
-            audioSource.Stop();
+            trackHolder.guitarRiff.Stop();
         }
     }
 
@@ -284,7 +292,7 @@ public class NoteManager : MonoBehaviour
     // Creates time lists for right notes and left notes from Midi file
     private void LoadMidiFile()
     {
-        MidiFile midiFile = MidiFile.Read($"{Application.streamingAssetsPath}/{midiFilePath}");
+        MidiFile midiFile = MidiFile.Read($"{Application.streamingAssetsPath}/{trackHolder.midiPath}");
         TempoMap tempoMap = midiFile.GetTempoMap();
 
         // Get the first tempo event (assuming constant tempo for simplicity)
@@ -322,11 +330,10 @@ public class NoteManager : MonoBehaviour
     // Call this to start the song and the node spawning after the delay
     public void StartSong()
     {
-        if (started || audioSource.isPlaying) return; // Prevent user from starting song if already running
+        if (started || trackHolder.guitarRiff.isPlaying) return; // Prevent user from starting song if already running
 
-
+        trackHolder.guitarRiff.Play();
         started = true;
-        ended = false;
         leftNoteIndex = 0; // Reset left and right node indexes for new run
         rightNoteIndex = 0;
         attempts = tempAttempts;
@@ -337,6 +344,7 @@ public class NoteManager : MonoBehaviour
     private void StartSongHelper()
     {
         fadeCoroutine = StartCoroutine(FadeAudio(true));
+        StartCoroutine(CrosshairSprite());
         //started = false;
     }
            
@@ -390,20 +398,55 @@ public class NoteManager : MonoBehaviour
 
     private IEnumerator CrosshairSprite()
     {
-        if (sprite < playerUI.crosshairSprites.Length)
+        // Sort the note times
+        var sortedNoteTimes = new List<double>(leftNoteTimes);
+        sortedNoteTimes.AddRange(rightNoteTimes);
+        sortedNoteTimes.Sort();
+
+        //load initial note time
+        sortedNoteTimes.Insert(0,0.0);
+
+        int spriteIndex = 0;
+        int totalSprites = playerUI.crosshairSprites.Length;
+
+        // Loop through the sorted note times
+        for (int i = 0; i < sortedNoteTimes.Count - 1; i++)
         {
-            sprite++;
+            double currentNoteTime = sortedNoteTimes[i];
+            double nextNoteTime = sortedNoteTimes[i + 1];
+
+            // Wait until current note time arrives
+            while (AudioSourceTime < currentNoteTime)
+            {
+                yield return null;
+            }
+
+            // Calculate time between these two notes
+            float interval = (float)(nextNoteTime - currentNoteTime);
+            float timePerSprite = interval / totalSprites;
+
+            // Cycle through all sprites during this interval
+            for (int j = 0; j < totalSprites; j++)
+            {
+                crosshairRenderer.sprite = playerUI.crosshairSprites[spriteIndex];
+                spriteIndex = (spriteIndex + 1) % totalSprites; // Loop back to the first sprite
+                yield return new WaitForSeconds(timePerSprite);
+            }
         }
 
-        else
+        // After all notes, reset to first sprite
+        if (sortedNoteTimes.Count > 0)
         {
-            sprite = 0;
+            // Wait until final note time passes
+            double finalNoteTime = sortedNoteTimes[^1]; //Retrieve last note time
+            while (AudioSourceTime < finalNoteTime)
+            {
+                yield return null;
+            }
+
+            crosshairRenderer.sprite = playerUI.crosshairSprites[0];
         }
-        playerUI.crosshairSprite = playerUI.crosshairSprites[sprite];
-        yield return new WaitForSeconds((60f / bpm) / 6);
-        
     }
-
     private bool CollisionCheck(bool isLeftSide)
     {
         if (isLeftSide) // Left side code

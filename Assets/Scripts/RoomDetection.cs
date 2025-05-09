@@ -5,8 +5,16 @@ public class RoomDetection : MonoBehaviour
     public bool playerInRange;
     public GameObject Doors;
     public NoteManager noteManager;
+    public GameObject noteManagerGameObject;
 
     private int enemiesInRange = 0;
+    public void Start()
+    {
+        noteManagerGameObject = GameObject.Find("NoteManager");
+        noteManager = noteManagerGameObject.GetComponent<NoteManager>();
+        noteManager.started = false;
+        noteManager.startedRiff = false;
+    }
 
     public void Update()
     {
@@ -21,12 +29,13 @@ public class RoomDetection : MonoBehaviour
             {
                 noteManager.StartSong();
             }
-           
 
+            noteManager.ended = false;
         }
         else
         {
             Doors.SetActive(false);
+            noteManager.ended = true;
         }
     }
 
