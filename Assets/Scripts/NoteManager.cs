@@ -442,7 +442,7 @@ public class NoteManager : MonoBehaviour
                 currentSpriteSheet = playerUI.crosshairSprites;
             }
 
-            int totalSprites = currentSpriteSheet.Length;
+            int totalSprites = currentSpriteSheet.Length + 1;
             currentSprite = 0;
 
             // Update sprite during the segment
