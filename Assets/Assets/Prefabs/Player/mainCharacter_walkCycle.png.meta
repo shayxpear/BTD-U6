@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 369f512668f39104e9057d325efb2b6d
+guid: b152983c52dbd2e48aec4bfcd35cca9d
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -67,7 +67,7 @@ TextureImporter:
   swizzle: 50462976
   cookieLightType: 0
   platformSettings:
-  - serializedVersion: 3
+  - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -80,7 +80,7 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
+  - serializedVersion: 4
     buildTarget: Standalone
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -97,321 +97,315 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: mainCharacter_dash_0
+      name: mainCharacter_walkCycle_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 24
+        width: 22
         height: 28
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f0e4d5b059c6cde44b24279a136791c3
-      internalID: 1036918867
+      spriteID: d92bbdefc76f687489dcc5924b43c5dd
+      internalID: -1803149903
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: mainCharacter_dash_1
+      name: mainCharacter_walkCycle_1
       rect:
         serializedVersion: 2
-        x: 24
+        x: 22
         y: 0
-        width: 24
+        width: 22
         height: 28
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cff30b0d95648564782ec78c6d0d2878
-      internalID: 1063063624
+      spriteID: 69e6fa6a83a3e57449a2ed3939a1168a
+      internalID: 1619643425
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: mainCharacter_dash_2
+      name: mainCharacter_walkCycle_2
       rect:
         serializedVersion: 2
-        x: 48
+        x: 44
         y: 0
-        width: 24
+        width: 22
         height: 28
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 62f8eb33547168740b7fd4fe044cdb48
-      internalID: -417028397
+      spriteID: 93f54951c7386dd4da4cba24008d6c70
+      internalID: -2117248184
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: mainCharacter_dash_3
+      name: mainCharacter_walkCycle_3
       rect:
         serializedVersion: 2
-        x: 72
+        x: 66
         y: 0
-        width: 24
+        width: 22
         height: 28
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8847e4598eb53094db23ca7365d50f2e
-      internalID: -1495566001
+      spriteID: c79a846ee0383324bba73915b667e1dc
+      internalID: -315657082
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: mainCharacter_dash_4
+      name: mainCharacter_walkCycle_4
       rect:
         serializedVersion: 2
-        x: 96
+        x: 88
         y: 0
-        width: 24
+        width: 22
         height: 28
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 62d69e1379b79524ab2df51add64b7ee
-      internalID: -50938930
+      spriteID: a80e66a08b231ca41aa271f8cde88bbe
+      internalID: -1977015317
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: mainCharacter_dash_5
+      name: mainCharacter_walkCycle_5
       rect:
         serializedVersion: 2
-        x: 120
+        x: 110
         y: 0
-        width: 24
+        width: 22
         height: 28
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 60a6443b7eacdf84bae7edd2cf0113bf
-      internalID: -1376706726
+      spriteID: 319fca04eb95a804cb722ed67b424e78
+      internalID: -714002878
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: mainCharacter_dash_6
+      name: mainCharacter_walkCycle_6
       rect:
         serializedVersion: 2
-        x: 144
+        x: 132
         y: 0
-        width: 24
+        width: 22
         height: 28
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f5b219d3e7a92114781912236b4c1d2a
-      internalID: 1450373184
+      spriteID: 49feb8c6c60a920468ddbd149977f45e
+      internalID: 1477113199
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: mainCharacter_dash_7
+      name: mainCharacter_walkCycle_7
       rect:
         serializedVersion: 2
-        x: 168
+        x: 154
         y: 0
-        width: 24
+        width: 22
         height: 28
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2b0df1b6f0e3ea14ebe498f995a50d30
-      internalID: 1459467690
+      spriteID: 4ebf1ffe8a16dab46bdd9d643823b10f
+      internalID: -781542927
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: mainCharacter_dash_8
+      name: mainCharacter_walkCycle_8
       rect:
         serializedVersion: 2
-        x: 192
+        x: 176
         y: 0
-        width: 24
+        width: 22
         height: 28
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 90f1a75d1f4977448a6e41b024e8b331
-      internalID: -867410
+      spriteID: d30f34ed35f262449ba161050819dc57
+      internalID: -708525889
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: mainCharacter_dash_9
+      name: mainCharacter_walkCycle_9
       rect:
         serializedVersion: 2
-        x: 216
+        x: 198
         y: 0
-        width: 24
+        width: 22
         height: 28
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 72b3e4c0c0ccb9349968bb2ad30d7f0b
-      internalID: 629558487
+      spriteID: 881fb1e4d29acb74a9459547a05bd2af
+      internalID: -944648747
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: mainCharacter_dash_10
+      name: mainCharacter_walkCycle_10
       rect:
         serializedVersion: 2
-        x: 240
+        x: 220
         y: 0
-        width: 24
+        width: 22
         height: 28
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f93021dad0b5b204ba25938d03690888
-      internalID: 1532706681
+      spriteID: d2f2f4cdb27252249aae9b235e86ee0b
+      internalID: -52953390
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: mainCharacter_dash_11
+      name: mainCharacter_walkCycle_11
+      rect:
+        serializedVersion: 2
+        x: 242
+        y: 0
+        width: 22
+        height: 28
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3bc073bba95e6f247b7247ecc11e21d4
+      internalID: 3737882
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mainCharacter_walkCycle_12
       rect:
         serializedVersion: 2
         x: 264
         y: 0
-        width: 24
+        width: 22
         height: 28
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ec3b4582bc8e81f4fb2121de3b2cad77
-      internalID: -1501903651
+      spriteID: 177dc170262672f43823e8e0bbeec8b2
+      internalID: -1148491477
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: mainCharacter_dash_12
+      name: mainCharacter_walkCycle_13
       rect:
         serializedVersion: 2
-        x: 288
+        x: 286
         y: 0
-        width: 24
+        width: 22
         height: 28
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f9c2f71884cff6d4a9f55e59bdcf4605
-      internalID: 641358106
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: mainCharacter_dash_13
-      rect:
-        serializedVersion: 2
-        x: 312
-        y: 0
-        width: 24
-        height: 28
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 1e96529a62481b248bfcefe022ae6b4c
-      internalID: 1965647529
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: mainCharacter_dash_14
-      rect:
-        serializedVersion: 2
-        x: 336
-        y: 0
-        width: 24
-        height: 28
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 641eb016a29045d41ac5bbbb973d34f8
-      internalID: -1932167544
+      spriteID: fa781cd98b498694182620e95580d99b
+      internalID: -1643362861
       vertices: []
       indices: 
       edges: []
       weights: []
     outline: []
+    customData: 
     physicsShape: []
     bones: []
     spriteID: 5e97eb03825dee720800000000000000
@@ -421,22 +415,23 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
     nameFileIdTable:
-      mainCharacter_dash_0: 1036918867
-      mainCharacter_dash_1: 1063063624
-      mainCharacter_dash_10: 1532706681
-      mainCharacter_dash_11: -1501903651
-      mainCharacter_dash_12: 641358106
-      mainCharacter_dash_13: 1965647529
-      mainCharacter_dash_14: -1932167544
-      mainCharacter_dash_2: -417028397
-      mainCharacter_dash_3: -1495566001
-      mainCharacter_dash_4: -50938930
-      mainCharacter_dash_5: -1376706726
-      mainCharacter_dash_6: 1450373184
-      mainCharacter_dash_7: 1459467690
-      mainCharacter_dash_8: -867410
-      mainCharacter_dash_9: 629558487
+      mainCharacter_walkCycle_0: -1803149903
+      mainCharacter_walkCycle_1: 1619643425
+      mainCharacter_walkCycle_10: -52953390
+      mainCharacter_walkCycle_11: 3737882
+      mainCharacter_walkCycle_12: -1148491477
+      mainCharacter_walkCycle_13: -1643362861
+      mainCharacter_walkCycle_2: -2117248184
+      mainCharacter_walkCycle_3: -315657082
+      mainCharacter_walkCycle_4: -1977015317
+      mainCharacter_walkCycle_5: -714002878
+      mainCharacter_walkCycle_6: 1477113199
+      mainCharacter_walkCycle_7: -781542927
+      mainCharacter_walkCycle_8: -708525889
+      mainCharacter_walkCycle_9: -944648747
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
