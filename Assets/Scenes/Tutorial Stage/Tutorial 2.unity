@@ -5979,7 +5979,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1245844833172599066, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
       propertyPath: speed
-      value: 0.7
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1245844833172599066, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
       propertyPath: damage
@@ -6049,6 +6049,22 @@ PrefabInstance:
       propertyPath: leapChargeDuration
       value: 0.95
       objectReference: {fileID: 0}
+    - target: {fileID: 1245844833172599066, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
+      propertyPath: projPos.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1245844833172599066, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
+      propertyPath: attackTriggerCollider
+      value: 
+      objectReference: {fileID: 1136367773}
+    - target: {fileID: 1245844833172599066, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
+      propertyPath: 'projPos.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1484065839}
+    - target: {fileID: 5427231530552088281, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
+      propertyPath: m_Radius
+      value: 2.05
+      objectReference: {fileID: 0}
     - target: {fileID: 7576607333861121549, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
       propertyPath: m_Name
       value: Rat (2)
@@ -6112,6 +6128,11 @@ PrefabInstance:
 --- !u!4 &1136367772 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8517268546449587133, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
+  m_PrefabInstance: {fileID: 1136367771}
+  m_PrefabAsset: {fileID: 0}
+--- !u!58 &1136367773 stripped
+CircleCollider2D:
+  m_CorrespondingSourceObject: {fileID: 5427231530552088281, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
   m_PrefabInstance: {fileID: 1136367771}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1145415272
@@ -6786,6 +6807,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerInRange: 0
   Doors: {fileID: 1002378576}
+  noteManager: {fileID: 0}
+  noteManagerGameObject: {fileID: 0}
 --- !u!61 &1222356374
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -13102,6 +13125,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nextScene: Tutorial 3
+  noteManager: {fileID: 0}
+  noteManagerGameObject: {fileID: 0}
 --- !u!61 &2045635682
 BoxCollider2D:
   m_ObjectHideFlags: 0
