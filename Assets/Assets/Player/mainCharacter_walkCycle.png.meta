@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 128ceacb81f5f2d448e37b2740d95ba3
+guid: b152983c52dbd2e48aec4bfcd35cca9d
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -67,7 +67,7 @@ TextureImporter:
   swizzle: 50462976
   cookieLightType: 0
   platformSettings:
-  - serializedVersion: 4
+  - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -80,7 +80,7 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
+  - serializedVersion: 3
     buildTarget: Standalone
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -97,7 +97,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: mainCharacter_idleCycle_0
+      name: mainCharacter_walkCycle_0
       rect:
         serializedVersion: 2
         x: 0
@@ -107,19 +107,18 @@ TextureImporter:
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a4e18669327f8dd47b34b3bddef2dfe4
-      internalID: -1453614977
+      spriteID: d92bbdefc76f687489dcc5924b43c5dd
+      internalID: -1803149903
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: mainCharacter_idleCycle_1
+      name: mainCharacter_walkCycle_1
       rect:
         serializedVersion: 2
         x: 22
@@ -129,19 +128,18 @@ TextureImporter:
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: de27753c4ddf7174c9f4884d274d1e3d
-      internalID: 709630611
+      spriteID: 69e6fa6a83a3e57449a2ed3939a1168a
+      internalID: 1619643425
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: mainCharacter_idleCycle_2
+      name: mainCharacter_walkCycle_2
       rect:
         serializedVersion: 2
         x: 44
@@ -151,19 +149,18 @@ TextureImporter:
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a5d53fd833b38254c9b239da94a20ef8
-      internalID: 1270500532
+      spriteID: 93f54951c7386dd4da4cba24008d6c70
+      internalID: -2117248184
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: mainCharacter_idleCycle_3
+      name: mainCharacter_walkCycle_3
       rect:
         serializedVersion: 2
         x: 66
@@ -173,19 +170,18 @@ TextureImporter:
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d761e44052c8eb348b3f839c7dd9dbc4
-      internalID: 836088883
+      spriteID: c79a846ee0383324bba73915b667e1dc
+      internalID: -315657082
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: mainCharacter_idleCycle_4
+      name: mainCharacter_walkCycle_4
       rect:
         serializedVersion: 2
         x: 88
@@ -195,19 +191,18 @@ TextureImporter:
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 364682a13ed7ad84e8b16651587839af
-      internalID: 1930615127
+      spriteID: a80e66a08b231ca41aa271f8cde88bbe
+      internalID: -1977015317
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: mainCharacter_idleCycle_5
+      name: mainCharacter_walkCycle_5
       rect:
         serializedVersion: 2
         x: 110
@@ -217,19 +212,18 @@ TextureImporter:
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2ec61d2f14f8c1745bd4e4825630610c
-      internalID: 77899047
+      spriteID: 319fca04eb95a804cb722ed67b424e78
+      internalID: -714002878
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: mainCharacter_idleCycle_6
+      name: mainCharacter_walkCycle_6
       rect:
         serializedVersion: 2
         x: 132
@@ -239,19 +233,18 @@ TextureImporter:
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ddeaca06e42308445935c4ae2e53bcae
-      internalID: 39216868
+      spriteID: 49feb8c6c60a920468ddbd149977f45e
+      internalID: 1477113199
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: mainCharacter_idleCycle_7
+      name: mainCharacter_walkCycle_7
       rect:
         serializedVersion: 2
         x: 154
@@ -261,19 +254,143 @@ TextureImporter:
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: bc343b89a8114354caf447e01a931104
-      internalID: 1286187496
+      spriteID: 4ebf1ffe8a16dab46bdd9d643823b10f
+      internalID: -781542927
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mainCharacter_walkCycle_8
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 0
+        width: 22
+        height: 28
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d30f34ed35f262449ba161050819dc57
+      internalID: -708525889
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mainCharacter_walkCycle_9
+      rect:
+        serializedVersion: 2
+        x: 198
+        y: 0
+        width: 22
+        height: 28
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 881fb1e4d29acb74a9459547a05bd2af
+      internalID: -944648747
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mainCharacter_walkCycle_10
+      rect:
+        serializedVersion: 2
+        x: 220
+        y: 0
+        width: 22
+        height: 28
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d2f2f4cdb27252249aae9b235e86ee0b
+      internalID: -52953390
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mainCharacter_walkCycle_11
+      rect:
+        serializedVersion: 2
+        x: 242
+        y: 0
+        width: 22
+        height: 28
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3bc073bba95e6f247b7247ecc11e21d4
+      internalID: 3737882
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mainCharacter_walkCycle_12
+      rect:
+        serializedVersion: 2
+        x: 264
+        y: 0
+        width: 22
+        height: 28
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 177dc170262672f43823e8e0bbeec8b2
+      internalID: -1148491477
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mainCharacter_walkCycle_13
+      rect:
+        serializedVersion: 2
+        x: 286
+        y: 0
+        width: 22
+        height: 28
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fa781cd98b498694182620e95580d99b
+      internalID: -1643362861
       vertices: []
       indices: 
       edges: []
       weights: []
     outline: []
-    customData: 
     physicsShape: []
     bones: []
     spriteID: 5e97eb03825dee720800000000000000
@@ -283,17 +400,21 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    spriteCustomMetadata:
-      entries: []
     nameFileIdTable:
-      mainCharacter_idleCycle_0: -1453614977
-      mainCharacter_idleCycle_1: 709630611
-      mainCharacter_idleCycle_2: 1270500532
-      mainCharacter_idleCycle_3: 836088883
-      mainCharacter_idleCycle_4: 1930615127
-      mainCharacter_idleCycle_5: 77899047
-      mainCharacter_idleCycle_6: 39216868
-      mainCharacter_idleCycle_7: 1286187496
+      mainCharacter_walkCycle_0: -1803149903
+      mainCharacter_walkCycle_1: 1619643425
+      mainCharacter_walkCycle_10: -52953390
+      mainCharacter_walkCycle_11: 3737882
+      mainCharacter_walkCycle_12: -1148491477
+      mainCharacter_walkCycle_13: -1643362861
+      mainCharacter_walkCycle_2: -2117248184
+      mainCharacter_walkCycle_3: -315657082
+      mainCharacter_walkCycle_4: -1977015317
+      mainCharacter_walkCycle_5: -714002878
+      mainCharacter_walkCycle_6: 1477113199
+      mainCharacter_walkCycle_7: -781542927
+      mainCharacter_walkCycle_8: -708525889
+      mainCharacter_walkCycle_9: -944648747
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

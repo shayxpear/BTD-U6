@@ -18814,7 +18814,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1245844833172599066, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
       propertyPath: speed
-      value: 0
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 1245844833172599066, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
       propertyPath: damage
@@ -18884,22 +18884,6 @@ PrefabInstance:
       propertyPath: leapChargeDuration
       value: 0.95
       objectReference: {fileID: 0}
-    - target: {fileID: 1245844833172599066, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
-      propertyPath: projPos.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1245844833172599066, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
-      propertyPath: attackTriggerCollider
-      value: 
-      objectReference: {fileID: 708228269}
-    - target: {fileID: 1245844833172599066, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
-      propertyPath: 'projPos.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2035826111}
-    - target: {fileID: 5427231530552088281, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
-      propertyPath: m_Radius
-      value: 4.18
-      objectReference: {fileID: 0}
     - target: {fileID: 7576607333861121549, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
       propertyPath: m_Name
       value: Rat (6)
@@ -18963,11 +18947,6 @@ PrefabInstance:
 --- !u!4 &708228268 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8517268546449587133, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
-  m_PrefabInstance: {fileID: 708228267}
-  m_PrefabAsset: {fileID: 0}
---- !u!58 &708228269 stripped
-CircleCollider2D:
-  m_CorrespondingSourceObject: {fileID: 5427231530552088281, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
   m_PrefabInstance: {fileID: 708228267}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &914532745
@@ -25180,7 +25159,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1245844833172599066, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
       propertyPath: speed
-      value: 0
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 1245844833172599066, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
       propertyPath: damage
@@ -25250,22 +25229,6 @@ PrefabInstance:
       propertyPath: leapChargeDuration
       value: 0.95
       objectReference: {fileID: 0}
-    - target: {fileID: 1245844833172599066, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
-      propertyPath: projPos.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1245844833172599066, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
-      propertyPath: attackTriggerCollider
-      value: 
-      objectReference: {fileID: 1575940937}
-    - target: {fileID: 1245844833172599066, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
-      propertyPath: 'projPos.Array.data[0]'
-      value: 
-      objectReference: {fileID: 479598826}
-    - target: {fileID: 5427231530552088281, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
-      propertyPath: m_Radius
-      value: 4.25
-      objectReference: {fileID: 0}
     - target: {fileID: 7576607333861121549, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
       propertyPath: m_Name
       value: Rat (5)
@@ -25329,11 +25292,6 @@ PrefabInstance:
 --- !u!4 &1575940936 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8517268546449587133, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
-  m_PrefabInstance: {fileID: 1575940935}
-  m_PrefabAsset: {fileID: 0}
---- !u!58 &1575940937 stripped
-CircleCollider2D:
-  m_CorrespondingSourceObject: {fileID: 5427231530552088281, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
   m_PrefabInstance: {fileID: 1575940935}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1738963453
