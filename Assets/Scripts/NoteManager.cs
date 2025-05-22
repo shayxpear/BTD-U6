@@ -144,14 +144,23 @@ public class NoteManager : MonoBehaviour
             // Move Left Notes
             foreach (RectTransform activeNote in activeLeftNotes)
             {
-                activeNote.anchoredPosition += new Vector2(notebar.rect.width / 2 * Time.deltaTime / noteTravelTimeSeconds, 0);
-                
+
+                if(activeNote.anchoredPosition.x < (notebar.rect.width / 2))
+                {
+                    activeNote.anchoredPosition += new Vector2(notebar.rect.width / 2 * Time.deltaTime / noteTravelTimeSeconds, 0);
+                }
+
             }
 
             // Move Right Notes
             foreach (RectTransform activeNote in activeRightNotes)
             {
-                activeNote.anchoredPosition -= new Vector2(notebar.rect.width / 2 * Time.deltaTime / noteTravelTimeSeconds, 0);
+                Debug.Log(notebar.rect.width / 2); 
+                if (Mathf.Abs(activeNote.anchoredPosition.x) < notebar.rect.width / 2) 
+                {
+                    Mathf.Abs(activeNote.anchoredPosition) -= new Vector2(notebar.rect.width / 2 * Time.deltaTime / noteTravelTimeSeconds, 0);
+
+                }
             }
 
             // Left Note Despawn Check
