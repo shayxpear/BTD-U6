@@ -5,7 +5,8 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour
 {
     public enum AttackType {Melee, Ranged, Laser}
-    public enum EnemyType {Rat, Sumelse, Laser}
+    public enum EnemyType {Rat, Blobby, Laser, BlobbyMini}
+    public EnemyType CurrentEnemyType => enemyType;
 
     [Header("Enemy Type")]
     [SerializeField] private EnemyType enemyType;
@@ -49,6 +50,12 @@ public class EnemyController : MonoBehaviour
 
     [Header("Collider Settings")]
     [SerializeField] private CircleCollider2D attackTriggerCollider;
+
+    [Header("Split-On-Death Settings")]
+    [SerializeField] private GameObject[] blobbyMiniPrefabs;
+    [SerializeField] private float miniSpawnRadius = 0.5f;
+    [SerializeField] private float miniExplosionForce = 5f;
+
 
     private bool isFiring;
     private bool isLeaping;
@@ -100,7 +107,7 @@ public class EnemyController : MonoBehaviour
         {
             StartCoroutine(FireLaser());
         }
-        
+
     }
 
 
@@ -229,7 +236,7 @@ public class EnemyController : MonoBehaviour
         if (collision.CompareTag("Player") && attackType == AttackType.Ranged && isCooldown)
         {
             AnimatorStateInfo animState = enemyAnimator.GetCurrentAnimatorStateInfo(0);
-            if (!animState.IsName("blob_attack")) // Replace with your ranged attack animation name if different
+            if (!animState.IsName("blob_attack"))
             {
                 PlayEnemyWalkingAnimation();
             }
@@ -315,74 +322,65 @@ public class EnemyController : MonoBehaviour
     //Player detection for laser
     private bool PlayerDetected()
     {
-        foreach (Transform pos in projPos)
-        {
-            RaycastHit2D hit = Physics2D.Raycast(pos.position, pos.up, Mathf.Infinity, playerLayer);
-            if (hit.collider != null && hit.collider.CompareTag("Player"))
-            {
-                Debug.Log("Player Detected from position: " + pos.name);
-                return true;
-            }
-        }
-        return false;
+        Debug.Log("Player Detected");
+        RaycastHit2D hit = Physics2D.Raycast(projPos[0].position, projPos[0].up, Mathf.Infinity, playerLayer);
+        return hit.collider != null;
     }
 
     private IEnumerator FireLaser()
     {
         isFiring = true;
-        foreach (LineRenderer line in laserLines) // Enable all laser lines
-        {
-            line.enabled = true;
-        }
-
+        laserLines[0].enabled = true;
         float startTime = Time.time;
+        float damageTickInterval = 0.5f;
+        float tickTimer = 0f;
 
         while (Time.time < startTime + laserDuration)
         {
-            for (int i = 0; i < projPos.Length; i++)
-            {
-                Transform pos = projPos[i];
-                LineRenderer line = laserLines[i];
-                // Set the laser line's start and end positions
-                Vector3 startPos = pos.position;
-                startPos.z = 0;
-                RaycastHit2D hit = Physics2D.Raycast(startPos, pos.up, Mathf.Infinity, laserHitLayers);
+            Vector3 startPos = projPos[0].position;
+            startPos.z = 0;
 
-                Vector3 endPos;
-                // Check if the raycast hit something
-                if (hit.collider != null)
+            // Cast a ray against all layers in laserHitLayers.
+            RaycastHit2D hit = Physics2D.Raycast(startPos, projPos[0].up, Mathf.Infinity, laserHitLayers);
+            Vector3 endPos;
+
+            if (hit.collider != null)
+            {
+                endPos = hit.point;
+                endPos.z = 0;
+            }
+            else
+            {
+                endPos = startPos + projPos[0].up * 100f;
+                endPos.z = 0;
+            }
+
+            laserLines[0].SetPosition(0, startPos);
+            laserLines[0].SetPosition(1, endPos);
+
+            // Accumulate time and do damage tick when interval is met.
+            tickTimer += Time.deltaTime;
+            if (tickTimer >= damageTickInterval)
+            {
+                if (hit.collider != null && hit.collider.CompareTag("Player"))
                 {
-                    endPos = hit.point;
-                    endPos.z = 0;
-                    if (hit.collider.CompareTag("Player"))
+                    HealthController hc = hit.collider.GetComponent<HealthController>();
+                    if (hc != null)
                     {
-                        // Player hit and apply damage
-                        HealthController hc = hit.collider.GetComponent<HealthController>();
-                        if (hc != null)
-                        {
-                            hc.TakeDamage(laserDamage);
-                        }
+                        hc.TakeDamage(laserDamage);
                     }
                 }
-                else
-                {
-                    endPos = startPos + pos.up * 100f;
-                    endPos.z = 0;
-                }
-
-                line.SetPosition(0, startPos);
-                line.SetPosition(1, endPos);
+                tickTimer = 0f;
             }
+
             yield return null;
         }
-
-        foreach (LineRenderer line in laserLines) // Disable all laser lines
-        {
-            line.enabled = false;
-        }
-
+        //Disable the laser after the duration
+        laserLines[0].enabled = false;
+        PlayEnemyWalkingAnimation();
         isFiring = false;
         isCooldown = true;
+        //Start cooldown
         yield return new WaitForSeconds(laserCooldown);
         isCooldown = false;
     }
@@ -414,6 +412,58 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        // Find the RoomDetection instance in the scene.
+        RoomDetection roomDetection = Object.FindAnyObjectByType<RoomDetection>();
+
+        // Determine if this enemy is inside the room detection area.
+        bool isInsideRoom = false;
+        if (roomDetection != null)
+        {
+            Collider2D roomCollider = roomDetection.GetComponent<Collider2D>();
+            if (roomCollider != null && roomCollider.OverlapPoint(transform.position))
+            {
+                isInsideRoom = true;
+            }
+        }
+
+        // If this is a bigblob, spawn mini blobs.
+        if (enemyType == EnemyType.Blobby && blobbyMiniPrefabs != null && blobbyMiniPrefabs.Length > 0)
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                Debug.Log("Spawning mini blobs");
+                var prefabToSpawn = blobbyMiniPrefabs[i % blobbyMiniPrefabs.Length];
+                var spawnDirection = Random.insideUnitCircle.normalized;
+                var spawnPosition = (Vector2)transform.position + spawnDirection * miniSpawnRadius;
+                GameObject miniBlob = Instantiate(prefabToSpawn, spawnPosition, Quaternion.identity);
+                Rigidbody2D rbMini = miniBlob.GetComponent<Rigidbody2D>();
+                if (rbMini != null)
+                {
+                    rbMini.AddForce(spawnDirection * miniExplosionForce, ForceMode2D.Impulse);
+                }
+
+                // If the mini blob spawns inside the room, update the enemy count.
+                if (roomDetection != null)
+                {
+                    Collider2D roomCollider = roomDetection.GetComponent<Collider2D>();
+                    if (roomCollider != null && roomCollider.OverlapPoint(miniBlob.transform.position))
+                    {
+                        roomDetection.AddEnemy();
+                    }
+                }
+            }
+        }
+
+        
+        if (roomDetection != null && isInsideRoom && enemyType == EnemyType.Blobby)
+        {
+            roomDetection.RemoveEnemy();
+        }
+    }
+
+
     //Holds Stats for enemy Types
     private void SetEnemyType(EnemyType preset)
     {
@@ -437,14 +487,14 @@ public class EnemyController : MonoBehaviour
                 leapChargeDuration = 0.95f;
                 leapCooldown = 1f;
                 break;
-            case EnemyType.Sumelse:
+            case EnemyType.Blobby:
                 health = 3;
                 damage = 1;
-                speed = 0.5f;
-                attackCooldown = 1;
-                rotationSpeed = 500;
+                speed = 0f;
+                attackCooldown = 2;
+                rotationSpeed = 0;
                 rangedAttackRange = 2f;
-                projSpeed = 3f;
+                projSpeed = 2f;
                 attackType = AttackType.Ranged;
                 bulletCollision = false;
                 break;
@@ -461,7 +511,17 @@ public class EnemyController : MonoBehaviour
                 laserDuration = 2f;
                 laserCooldown = 3f;
                 laserDamage = 2;
-                
+                break;
+            case EnemyType.BlobbyMini:
+                health = 3;
+                damage = 1;
+                speed = 0f;
+                attackCooldown = 2;
+                rotationSpeed = 0;
+                rangedAttackRange = 2f;
+                projSpeed = 3f;
+                attackType = AttackType.Ranged;
+                bulletCollision = false;
                 break;
         }
     }
@@ -474,8 +534,14 @@ public class EnemyController : MonoBehaviour
             case EnemyType.Rat:
                 enemyAnimator.Play("rat_walk");
                 break;
-            case EnemyType.Sumelse:
+            case EnemyType.Blobby:
                 enemyAnimator.Play("blob_idle");
+                break;
+            case EnemyType.BlobbyMini:
+                enemyAnimator.Play("blob_walk");
+                break;
+            case EnemyType.Laser:
+                enemyAnimator.Play("rat_walk");
                 break;
         }
     }
@@ -487,8 +553,14 @@ public class EnemyController : MonoBehaviour
             case EnemyType.Rat:
                 enemyAnimator.Play("rat_attack");
                 break;
-            case EnemyType.Sumelse:
+            case EnemyType.Blobby:
                 enemyAnimator.Play("blob_attack");
+                break;
+            case EnemyType.BlobbyMini:
+                enemyAnimator.Play("blob_attack");
+                break;
+            case EnemyType.Laser:
+                enemyAnimator.Play("rat_attack");
                 break;
         }
     }
