@@ -6761,7 +6761,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerInRange: 0
   Doors: {fileID: 1002378576}
-  noteManager: {fileID: 1066390108290444808}
+  noteManager: {fileID: 0}
   noteManagerGameObject: {fileID: 0}
 --- !u!4 &87015442 stripped
 Transform:
@@ -10630,7 +10630,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1000935758
 RectTransform:
   m_ObjectHideFlags: 0
@@ -21898,71 +21898,6 @@ MonoBehaviour:
   - {fileID: 7409738783602005691, guid: c5402d680a07d744dafadbafe0af1a64, type: 3}
   - {fileID: -6096600657829275671, guid: c5402d680a07d744dafadbafe0af1a64, type: 3}
   crosshairSprite: {fileID: 4966732595609684114, guid: c5402d680a07d744dafadbafe0af1a64, type: 3}
---- !u!114 &1066390108290444808
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2902845093215128339}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9241f7f3f9aebae4ab7f1c1847423653, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hitTolerance: 25
-  noteDespawnPastDistance: 0
-  startSongDelaySeconds: 0
-  noteTravelTimeSeconds: 1
-  attempts: 3
-  leftPulseObject: {fileID: 2823836399500507727}
-  rightPulseObject: {fileID: 2391399429899123323}
-  pulseDistance: -30
-  pulseDuration: 0.3
-  notebar: {fileID: 4315506749363859661}
-  mainCircle: {fileID: 6492864688097953953}
-  music: {fileID: 4012422445143729197}
-  missSFX: {fileID: 5007386461095583610}
-  reloadRefresh: {fileID: 8660193523167772552}
-  fadeDuration: 0
-  leftNotePrefab: {fileID: 7883400903560103422, guid: c09d6579ef905f24192a42755e51d5c1, type: 3}
-  rightNotePrefab: {fileID: 796594625953969667, guid: e1e89f7e268b7204d83710dd0f8bc660, type: 3}
-  guitarController: {fileID: 8403176677395653958}
-  playerController: {fileID: 5490831414920916292}
-  playerUI: {fileID: 966633497016133035}
-  playerCooldown: {fileID: 1000935763}
-  trackHolder: {fileID: 239965322}
-  pulsePhase: 0
-  bpm: 100
-  pulseAmount: 0.1
-  smoothTime: 0.05
-  noteCombo: 0
-  ended: 0
-  startedRiff: 0
-  started: 0
-  levelsBeaten: 0
-  crosshairRenderer: {fileID: 3820910120167366493}
-  redCrosshairSprites:
-  - {fileID: 8166710274925509176, guid: 3510b0872b8d8ce42956a31a9c84a436, type: 3}
-  - {fileID: -523259844147669826, guid: 3510b0872b8d8ce42956a31a9c84a436, type: 3}
-  - {fileID: -310230559402417971, guid: 3510b0872b8d8ce42956a31a9c84a436, type: 3}
-  - {fileID: -7891666902058575860, guid: 3510b0872b8d8ce42956a31a9c84a436, type: 3}
-  - {fileID: 5051859853793176799, guid: 3510b0872b8d8ce42956a31a9c84a436, type: 3}
-  - {fileID: 7483015456981230869, guid: 3510b0872b8d8ce42956a31a9c84a436, type: 3}
-  blueCrosshairSprites:
-  - {fileID: -2615874204119335, guid: c99ad390d57925f4fa87233ca2f930ff, type: 3}
-  - {fileID: 717144221660794061, guid: c99ad390d57925f4fa87233ca2f930ff, type: 3}
-  - {fileID: -3167441482169377092, guid: c99ad390d57925f4fa87233ca2f930ff, type: 3}
-  - {fileID: 8592466800823992071, guid: c99ad390d57925f4fa87233ca2f930ff, type: 3}
-  - {fileID: -3949692458917061792, guid: c99ad390d57925f4fa87233ca2f930ff, type: 3}
-  - {fileID: 4304036159774962699, guid: c99ad390d57925f4fa87233ca2f930ff, type: 3}
-  whiteCrosshairSprites:
-  - {fileID: 4966732595609684114, guid: c5402d680a07d744dafadbafe0af1a64, type: 3}
-  - {fileID: 5601268591370290413, guid: c5402d680a07d744dafadbafe0af1a64, type: 3}
-  - {fileID: -3990371613155470165, guid: c5402d680a07d744dafadbafe0af1a64, type: 3}
-  - {fileID: -9119037557031223073, guid: c5402d680a07d744dafadbafe0af1a64, type: 3}
-  - {fileID: 7409738783602005691, guid: c5402d680a07d744dafadbafe0af1a64, type: 3}
-  - {fileID: -6096600657829275671, guid: c5402d680a07d744dafadbafe0af1a64, type: 3}
 --- !u!212 &1072807480227111939
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -22441,7 +22376,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3117210891246884321}
-  - component: {fileID: 1066390108290444808}
+  - component: {fileID: 3117210891246884322}
   m_Layer: 0
   m_Name: NoteManager
   m_TagString: Untagged
@@ -22482,6 +22417,62 @@ Transform:
   m_Children: []
   m_Father: {fileID: 409929095378527321}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3117210891246884322
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2902845093215128339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2be2a9cacf8c4a3438250847c2384ea6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitTolerance: 0
+  bpm: 0
+  notebar: {fileID: 4315506749363859661}
+  mainCircle: {fileID: 6492864688097953953}
+  music: {fileID: 4012422445143729197}
+  miss: {fileID: 5007386461095583610}
+  cooldown: {fileID: 8660193523167772552}
+  crosshairRenderer: {fileID: 3820910120167366493}
+  redCrosshairSprites:
+  - {fileID: 8166710274925509176, guid: 3510b0872b8d8ce42956a31a9c84a436, type: 3}
+  - {fileID: -523259844147669826, guid: 3510b0872b8d8ce42956a31a9c84a436, type: 3}
+  - {fileID: -310230559402417971, guid: 3510b0872b8d8ce42956a31a9c84a436, type: 3}
+  - {fileID: -7891666902058575860, guid: 3510b0872b8d8ce42956a31a9c84a436, type: 3}
+  - {fileID: 5051859853793176799, guid: 3510b0872b8d8ce42956a31a9c84a436, type: 3}
+  - {fileID: 7483015456981230869, guid: 3510b0872b8d8ce42956a31a9c84a436, type: 3}
+  blueCrosshairSprites:
+  - {fileID: -2615874204119335, guid: c99ad390d57925f4fa87233ca2f930ff, type: 3}
+  - {fileID: 717144221660794061, guid: c99ad390d57925f4fa87233ca2f930ff, type: 3}
+  - {fileID: -3167441482169377092, guid: c99ad390d57925f4fa87233ca2f930ff, type: 3}
+  - {fileID: 8592466800823992071, guid: c99ad390d57925f4fa87233ca2f930ff, type: 3}
+  - {fileID: -3949692458917061792, guid: c99ad390d57925f4fa87233ca2f930ff, type: 3}
+  - {fileID: 4304036159774962699, guid: c99ad390d57925f4fa87233ca2f930ff, type: 3}
+  whiteCrosshairSprites:
+  - {fileID: 4966732595609684114, guid: c5402d680a07d744dafadbafe0af1a64, type: 3}
+  - {fileID: 5601268591370290413, guid: c5402d680a07d744dafadbafe0af1a64, type: 3}
+  - {fileID: -3990371613155470165, guid: c5402d680a07d744dafadbafe0af1a64, type: 3}
+  - {fileID: -9119037557031223073, guid: c5402d680a07d744dafadbafe0af1a64, type: 3}
+  - {fileID: 7409738783602005691, guid: c5402d680a07d744dafadbafe0af1a64, type: 3}
+  - {fileID: -6096600657829275671, guid: c5402d680a07d744dafadbafe0af1a64, type: 3}
+  leftNotePrefab: {fileID: 7883400903560103422, guid: c09d6579ef905f24192a42755e51d5c1, type: 3}
+  rightNotePrefab: {fileID: 796594625953969667, guid: e1e89f7e268b7204d83710dd0f8bc660, type: 3}
+  guitarController: {fileID: 8403176677395653958}
+  playerController: {fileID: 5490831414920916292}
+  playerUI: {fileID: 966633497016133035}
+  playerCooldown: {fileID: 1000935763}
+  trackHolder: {fileID: 239965322}
+  attempts: 3
+  noteCombo: 0
+  sprite: 0
+  canStartSong: 0
+  ended: 0
+  startedRiff: 0
+  started: 0
+  levelsBeaten: 0
 --- !u!50 &3256099295749082782
 Rigidbody2D:
   serializedVersion: 5

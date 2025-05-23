@@ -107,6 +107,8 @@ public class NoteManager : MonoBehaviour
 
     private void Update()
     {
+
+        //BUG: Not suppose to turn the entire ui transparent just the discs and tnd the rhythm bar
         if (playerCooldown.cooldown || !startedRiff)
         {
             leftNotePrefab.GetComponent<Image>().material.color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
@@ -144,23 +146,14 @@ public class NoteManager : MonoBehaviour
             // Move Left Notes
             foreach (RectTransform activeNote in activeLeftNotes)
             {
-
-                if(activeNote.anchoredPosition.x < (notebar.rect.width / 2))
-                {
-                    activeNote.anchoredPosition += new Vector2(notebar.rect.width / 2 * Time.deltaTime / noteTravelTimeSeconds, 0);
-                }
+                activeNote.anchoredPosition += new Vector2(notebar.rect.width / 2 * Time.deltaTime / noteTravelTimeSeconds, 0);
 
             }
 
             // Move Right Notes
             foreach (RectTransform activeNote in activeRightNotes)
             {
-                Debug.Log(notebar.rect.width / 2); 
-                if (Mathf.Abs(activeNote.anchoredPosition.x) < notebar.rect.width / 2) 
-                {
-                    Mathf.Abs(activeNote.anchoredPosition) -= new Vector2(notebar.rect.width / 2 * Time.deltaTime / noteTravelTimeSeconds, 0);
-
-                }
+                activeNote.anchoredPosition -= new Vector2(notebar.rect.width / 2 * Time.deltaTime / noteTravelTimeSeconds, 0);
             }
 
             // Left Note Despawn Check

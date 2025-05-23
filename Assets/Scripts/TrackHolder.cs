@@ -6,13 +6,13 @@ public class TrackHolder : MonoBehaviour
     public AudioClip[] guitarRiffClip;
     public AudioSource guitarRiff;
 
-    private NoteManager noteManager;
+    private BetterNoteManager noteManager;
     private GameObject noteManagerGameObject;
 
     public void Start()
     {
         noteManagerGameObject = GameObject.Find("NoteManager");
-        noteManager = noteManagerGameObject.GetComponent<NoteManager>();
+        noteManager = noteManagerGameObject.GetComponent<BetterNoteManager>();
     }
 
     void Update()
