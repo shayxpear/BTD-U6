@@ -9501,6 +9501,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 972d5d7e6d5f60848b217c17755cb87b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPaused: 0
   audioSource: {fileID: 5738475202501010321}
 --- !u!1 &770910904
 GameObject:
@@ -22133,6 +22134,7 @@ GameObject:
   - component: {fileID: 3820910120167366492}
   - component: {fileID: 707933553319791542}
   - component: {fileID: 3820910120167366493}
+  - component: {fileID: 3820910120167366494}
   m_Layer: 6
   m_Name: CrosshairController
   m_TagString: Untagged
@@ -22530,33 +22532,12 @@ MonoBehaviour:
   mainCircle: {fileID: 6492864688097953953}
   miss: {fileID: 5007386461095583610}
   cooldown: {fileID: 8660193523167772552}
-  crosshairRenderer: {fileID: 3820910120167366493}
-  redCrosshairSprites:
-  - {fileID: 8166710274925509176, guid: 3510b0872b8d8ce42956a31a9c84a436, type: 3}
-  - {fileID: -523259844147669826, guid: 3510b0872b8d8ce42956a31a9c84a436, type: 3}
-  - {fileID: -310230559402417971, guid: 3510b0872b8d8ce42956a31a9c84a436, type: 3}
-  - {fileID: -7891666902058575860, guid: 3510b0872b8d8ce42956a31a9c84a436, type: 3}
-  - {fileID: 5051859853793176799, guid: 3510b0872b8d8ce42956a31a9c84a436, type: 3}
-  - {fileID: 7483015456981230869, guid: 3510b0872b8d8ce42956a31a9c84a436, type: 3}
-  blueCrosshairSprites:
-  - {fileID: -2615874204119335, guid: c99ad390d57925f4fa87233ca2f930ff, type: 3}
-  - {fileID: 717144221660794061, guid: c99ad390d57925f4fa87233ca2f930ff, type: 3}
-  - {fileID: -3167441482169377092, guid: c99ad390d57925f4fa87233ca2f930ff, type: 3}
-  - {fileID: 8592466800823992071, guid: c99ad390d57925f4fa87233ca2f930ff, type: 3}
-  - {fileID: -3949692458917061792, guid: c99ad390d57925f4fa87233ca2f930ff, type: 3}
-  - {fileID: 4304036159774962699, guid: c99ad390d57925f4fa87233ca2f930ff, type: 3}
-  whiteCrosshairSprites:
-  - {fileID: 4966732595609684114, guid: c5402d680a07d744dafadbafe0af1a64, type: 3}
-  - {fileID: 5601268591370290413, guid: c5402d680a07d744dafadbafe0af1a64, type: 3}
-  - {fileID: -3990371613155470165, guid: c5402d680a07d744dafadbafe0af1a64, type: 3}
-  - {fileID: -9119037557031223073, guid: c5402d680a07d744dafadbafe0af1a64, type: 3}
-  - {fileID: 7409738783602005691, guid: c5402d680a07d744dafadbafe0af1a64, type: 3}
-  - {fileID: -6096600657829275671, guid: c5402d680a07d744dafadbafe0af1a64, type: 3}
   leftNotePrefab: {fileID: 7883400903560103422, guid: c09d6579ef905f24192a42755e51d5c1, type: 3}
   rightNotePrefab: {fileID: 796594625953969667, guid: e1e89f7e268b7204d83710dd0f8bc660, type: 3}
   guitarController: {fileID: 8403176677395653958}
   playerController: {fileID: 5490831414920916292}
   playerUI: {fileID: 966633497016133035}
+  crosshairSpriteController: {fileID: 3820910120167366494}
   playerCooldown: {fileID: 1000935763}
   trackHolder: {fileID: 239965322}
   attempts: 3
@@ -22568,6 +22549,7 @@ MonoBehaviour:
   started: 0
   levelsBeaten: 0
   successfulHit: 0
+  gameManager: {fileID: 762805479}
 --- !u!50 &3256099295749082782
 Rigidbody2D:
   serializedVersion: 5
@@ -22750,6 +22732,43 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &3820910120167366494
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1489195158508505531}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca8c2619130088d478f017018a9a502c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  crosshairRenderer: {fileID: 3820910120167366493}
+  redCrosshairSprites:
+  - {fileID: 8166710274925509176, guid: 3510b0872b8d8ce42956a31a9c84a436, type: 3}
+  - {fileID: -523259844147669826, guid: 3510b0872b8d8ce42956a31a9c84a436, type: 3}
+  - {fileID: -310230559402417971, guid: 3510b0872b8d8ce42956a31a9c84a436, type: 3}
+  - {fileID: -7891666902058575860, guid: 3510b0872b8d8ce42956a31a9c84a436, type: 3}
+  - {fileID: 5051859853793176799, guid: 3510b0872b8d8ce42956a31a9c84a436, type: 3}
+  - {fileID: 7483015456981230869, guid: 3510b0872b8d8ce42956a31a9c84a436, type: 3}
+  blueCrosshairSprites:
+  - {fileID: -2615874204119335, guid: c99ad390d57925f4fa87233ca2f930ff, type: 3}
+  - {fileID: 717144221660794061, guid: c99ad390d57925f4fa87233ca2f930ff, type: 3}
+  - {fileID: -3167441482169377092, guid: c99ad390d57925f4fa87233ca2f930ff, type: 3}
+  - {fileID: 8592466800823992071, guid: c99ad390d57925f4fa87233ca2f930ff, type: 3}
+  - {fileID: -3949692458917061792, guid: c99ad390d57925f4fa87233ca2f930ff, type: 3}
+  - {fileID: 4304036159774962699, guid: c99ad390d57925f4fa87233ca2f930ff, type: 3}
+  whiteCrosshairSprites:
+  - {fileID: 4966732595609684114, guid: c5402d680a07d744dafadbafe0af1a64, type: 3}
+  - {fileID: 5601268591370290413, guid: c5402d680a07d744dafadbafe0af1a64, type: 3}
+  - {fileID: -3990371613155470165, guid: c5402d680a07d744dafadbafe0af1a64, type: 3}
+  - {fileID: -9119037557031223073, guid: c5402d680a07d744dafadbafe0af1a64, type: 3}
+  - {fileID: 7409738783602005691, guid: c5402d680a07d744dafadbafe0af1a64, type: 3}
+  - {fileID: -6096600657829275671, guid: c5402d680a07d744dafadbafe0af1a64, type: 3}
+  playerUI: {fileID: 966633497016133035}
+  trackHolder: {fileID: 239965322}
+  gameManager: {fileID: 762805479}
 --- !u!1 &3912818395318386472
 GameObject:
   m_ObjectHideFlags: 0
