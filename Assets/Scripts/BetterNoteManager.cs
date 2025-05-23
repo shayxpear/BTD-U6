@@ -48,6 +48,7 @@ public class BetterNoteManager : MonoBehaviour
     public bool startedRiff;
     public bool started = false;
     public int levelsBeaten;
+    public bool successfulHit;
 
 
     //Temp Vars
@@ -146,20 +147,28 @@ public class BetterNoteManager : MonoBehaviour
             // Move Left Notes
             foreach (RectTransform activeNote in activeLeftNotes)
             {
-                if (Mathf.Abs(activeNote.anchoredPosition.x - (notebar.rect.width / 2)) >= mainCircle.rectTransform.rect.width)
-                {
-                    activeNote.anchoredPosition += new Vector2(notebar.rect.width / 2 * Time.deltaTime, 0);
-                }
+                activeNote.anchoredPosition += new Vector2(notebar.rect.width / 2 * Time.deltaTime, 0);
+
             }
 
             // Move Right Notes
             foreach (RectTransform activeNote in activeRightNotes)
             {
-                if (Mathf.Abs((activeNote.anchoredPosition.x * -1) - (notebar.rect.width / 2)) >= mainCircle.rectTransform.rect.width)
-                {
-                    activeNote.anchoredPosition -= new Vector2(notebar.rect.width / 2 * Time.deltaTime, 0);
-                }
+                activeNote.anchoredPosition -= new Vector2(notebar.rect.width / 2 * Time.deltaTime, 0);
+            }
 
+            // Left Note Despawn Check
+            if (activeLeftNotes.Count > 0 && activeLeftNotes.Peek().anchoredPosition.x > notebar.rect.width / 2)
+            {
+                activeLeftNotes.Dequeue().gameObject.SetActive(false); // Despawn note
+                Miss();
+            }
+
+            // Right Note Despawn Check
+            if (activeRightNotes.Count > 0 && -1 * activeRightNotes.Peek().anchoredPosition.x > notebar.rect.width / 2)
+            {
+                activeRightNotes.Dequeue().gameObject.SetActive(false); // Despawn note
+                Miss();
             }
 
             // Player Left Click Check
@@ -235,12 +244,7 @@ public class BetterNoteManager : MonoBehaviour
         {
             if (Mathf.Abs(note.anchoredPosition.x - (notebar.rect.width / 2)) < mainCircle.rectTransform.rect.width + hitDistance)
             {
-                Debug.Log("Left Hit");
                 leftSideCollided = true;
-            }
-            else
-            {
-                StartCoroutine(LeftNoteHitTolerance());
             }
         }
 
@@ -248,12 +252,7 @@ public class BetterNoteManager : MonoBehaviour
         {
             if (Mathf.Abs((note.anchoredPosition.x * -1) - (notebar.rect.width / 2)) < mainCircle.rectTransform.rect.width + hitDistance)
             {
-                Debug.Log("Right Hit");
                 rightSideCollided = true;
-            }
-            else
-            {
-                StartCoroutine(RightNoteHitTolerance());
             }
         }
         
@@ -296,23 +295,36 @@ public class BetterNoteManager : MonoBehaviour
         attempts = tempAttempts;
     }
 
+    /**
     public IEnumerator LeftNoteHitTolerance()
     {
         yield return new WaitForSeconds(hitTolerance);
-        leftSideCollided = false;
-        activeLeftNotes.Dequeue().gameObject.SetActive(false); // Despawn note
-        Debug.Log("Left Miss");
+
+        if(!successfulHit)
+        {
+            leftSideCollided = false;
+            activeLeftNotes.Dequeue().gameObject.SetActive(false);
+        }
+        
     }
 
     public IEnumerator RightNoteHitTolerance()
     {
         yield return new WaitForSeconds(hitTolerance);
-        rightSideCollided = false;
-        activeRightNotes.Dequeue().gameObject.SetActive(false); // Despawn note
-        Debug.Log("Right Miss");
+
+        if(!successfulHit)
+        {
+            rightSideCollided = false;
+            activeRightNotes.Dequeue().gameObject.SetActive(false);
+        }
+        successfulHit = false;
+       
     }
+
+    **/
     public void Hit()
     {
+        //successfulHit = true;
         guitarController.Shoot();
     }
 
@@ -328,6 +340,7 @@ public class BetterNoteManager : MonoBehaviour
             attempts--;
             miss.Play();
             noteCombo = 0;
+            //successfulHit = false;
         }
 
         if (attempts <= 0)
