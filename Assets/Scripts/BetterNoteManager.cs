@@ -43,6 +43,7 @@ public class BetterNoteManager : MonoBehaviour
     [SerializeField] private int attempts;
     [SerializeField] public int noteCombo;
     [SerializeField] private int sprite;
+    [SerializeField] private float noteTravelTimeSeconds;
     public bool ended;
     public bool startedRiff;
     public bool started = false;
@@ -133,14 +134,14 @@ public class BetterNoteManager : MonoBehaviour
         if (trackHolder.guitarRiff.isPlaying && !ended)
         {
             // Left Note Spawn Check
-            if (leftNoteIndex < leftNoteTimes.Count && AudioSourceTime >= leftNoteTimes[leftNoteIndex])
+            if (leftNoteIndex < leftNoteTimes.Count && AudioSourceTime >= leftNoteTimes[leftNoteIndex] - noteTravelTimeSeconds)
             {
                 SpawnNote(leftNoteIndex++, SIDE.LEFT_SIDE); // Spawn left side note
 
             }
 
             // Right Note Spawn Check
-            if (rightNoteIndex < rightNoteTimes.Count && AudioSourceTime >= rightNoteTimes[rightNoteIndex])
+            if (rightNoteIndex < rightNoteTimes.Count && AudioSourceTime >= rightNoteTimes[rightNoteIndex] - noteTravelTimeSeconds)
             {
                 SpawnNote(rightNoteIndex++, SIDE.RIGHT_SIDE); // Spawn right side note
             }
@@ -149,14 +150,14 @@ public class BetterNoteManager : MonoBehaviour
             foreach (RectTransform activeNote in activeLeftNotes)
             {
                 if (activeNote.anchoredPosition.x < notebar.rect.width / 2)
-                    activeNote.anchoredPosition += Vector2.right * (notebar.rect.width / 2) * Time.deltaTime;
+                    activeNote.anchoredPosition += new Vector2(notebar.rect.width / 2 * Time.deltaTime / noteTravelTimeSeconds, 0);
             }
 
             // Move Right Notes
             foreach (RectTransform activeNote in activeRightNotes)
             {
                 if (-activeNote.anchoredPosition.x < notebar.rect.width / 2)
-                    activeNote.anchoredPosition -= new Vector2(notebar.rect.width / 2 * Time.deltaTime, 0);
+                    activeNote.anchoredPosition -= new Vector2(notebar.rect.width / 2 * Time.deltaTime / noteTravelTimeSeconds, 0);
             }
 
             // Left Note Despawn Check
@@ -231,7 +232,6 @@ public class BetterNoteManager : MonoBehaviour
         }
         else if (ended)
         {
-            music.volume = 1;
             if (activeLeftNotes.Count > 0)
                 activeLeftNotes.Dequeue().gameObject.SetActive(false);
             if (activeRightNotes.Count > 0)
@@ -298,13 +298,14 @@ public class BetterNoteManager : MonoBehaviour
     {
         if (started || trackHolder.guitarRiff.isPlaying) return; // Prevent user from starting song if already running
 
+
         trackHolder.guitarRiff.Play();
         started = true;
         leftNoteIndex = 0; // Reset left and right node indexes for new run
         rightNoteIndex = 0;
         attempts = tempAttempts;
+        
     }
-
    
     public IEnumerator LeftNoteHitTolerance()
     {
