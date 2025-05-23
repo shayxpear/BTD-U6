@@ -103,13 +103,13 @@ TextureImporter:
       name: UI_px_bar1_CIRCLE_SHADOW_0
       rect:
         serializedVersion: 2
-        x: 9
-        y: 19
-        width: 99
-        height: 27
+        x: 54
+        y: 21
+        width: 21
+        height: 21
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 21, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 90ca2e0fb70660b48a2f8662206a20e8
     internalID: 0
     vertices: []
     indices: 
