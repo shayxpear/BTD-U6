@@ -22538,6 +22538,7 @@ MonoBehaviour:
   playerController: {fileID: 5490831414920916292}
   playerUI: {fileID: 966633497016133035}
   crosshairSpriteController: {fileID: 3820910120167366494}
+  gameManager: {fileID: 762805479}
   playerCooldown: {fileID: 1000935763}
   trackHolder: {fileID: 239965322}
   attempts: 3
@@ -22549,7 +22550,6 @@ MonoBehaviour:
   started: 0
   levelsBeaten: 0
   successfulHit: 0
-  gameManager: {fileID: 762805479}
 --- !u!50 &3256099295749082782
 Rigidbody2D:
   serializedVersion: 5

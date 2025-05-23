@@ -29,6 +29,7 @@ public class BetterNoteManager : MonoBehaviour
     [SerializeField] private PlayerController playerController;
     [SerializeField] private PlayerUI playerUI;
     [SerializeField] private CrosshairSpriteController crosshairSpriteController;
+    [SerializeField] private GameManager gameManager;
     [SerializeField] private PlayerCooldown playerCooldown;
     [SerializeField] private TrackHolder trackHolder;
 
@@ -42,7 +43,7 @@ public class BetterNoteManager : MonoBehaviour
     public bool started = false;
     public int levelsBeaten;
     public bool successfulHit;
-    public GameManager gameManager;
+    
 
     //Temp Vars
     private int tempAttempts; //prevents hardcoding reset for attempts
