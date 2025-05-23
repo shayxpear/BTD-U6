@@ -198,7 +198,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 2.39
+  m_Radius: 2
 --- !u!50 &1050061554441536239
 Rigidbody2D:
   serializedVersion: 5
@@ -256,7 +256,7 @@ MonoBehaviour:
   enemyAnimator: {fileID: 4135844367241942924}
   health: 3
   damage: 1
-  speed: 0
+  speed: 1
   attackCooldown: 2
   rotationSpeed: 500
   rangedAttackRange: 2

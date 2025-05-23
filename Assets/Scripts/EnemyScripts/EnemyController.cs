@@ -145,7 +145,10 @@ public class EnemyController : MonoBehaviour
 
     private void SetVelocity()
     {
-        if(leapRest || isFiring || isLeaping || targetDirection == Vector2.zero || (attackType == AttackType.Ranged && isCooldown))
+        AnimatorStateInfo animState = enemyAnimator.GetCurrentAnimatorStateInfo(0);
+        if (leapRest || isFiring || isLeaping || targetDirection == Vector2.zero 
+            || (attackType == AttackType.Ranged && animState.IsName("attack") 
+            || (attackType == AttackType.Ranged && animState.IsName("walk") && isCooldown)))
         {
             rb.linearVelocity = Vector2.zero;
         }
@@ -236,7 +239,7 @@ public class EnemyController : MonoBehaviour
         if (collision.CompareTag("Player") && attackType == AttackType.Ranged && isCooldown)
         {
             AnimatorStateInfo animState = enemyAnimator.GetCurrentAnimatorStateInfo(0);
-            if (!animState.IsName("blob_attack") || !animState.IsName("bigrat_throw"))
+            if (!animState.IsName("blob_attack") || !animState.IsName("attack"))
             {
                 PlayEnemyWalkingAnimation();
             }
@@ -543,19 +546,15 @@ public class EnemyController : MonoBehaviour
         switch (enemyType)
         {
             case EnemyType.Rat:
-                enemyAnimator.Play("rat_walk");
+            case EnemyType.Laser:
+            case EnemyType.BigRat:
+                enemyAnimator.Play("walk");
                 break;
             case EnemyType.Blobby:
                 enemyAnimator.Play("blob_idle");
                 break;
             case EnemyType.BlobbyMini:
                 enemyAnimator.Play("blob_walk");
-                break;
-            case EnemyType.Laser:
-                enemyAnimator.Play("rat_walk");
-                break;
-            case EnemyType.BigRat:
-                enemyAnimator.Play("bigrat_idle");
                 break;
         }
     }
@@ -565,7 +564,9 @@ public class EnemyController : MonoBehaviour
         switch (enemyType)
         {
             case EnemyType.Rat:
-                enemyAnimator.Play("rat_attack");
+            case EnemyType.BigRat:
+            case EnemyType.Laser:
+                enemyAnimator.Play("attack");
                 break;
             case EnemyType.Blobby:
                 enemyAnimator.Play("blob_attack");
@@ -573,12 +574,7 @@ public class EnemyController : MonoBehaviour
             case EnemyType.BlobbyMini:
                 enemyAnimator.Play("blob_attack");
                 break;
-            case EnemyType.Laser:
-                enemyAnimator.Play("rat_attack");
-                break;
-            case EnemyType.BigRat:
-                enemyAnimator.Play("bigrat_throw");
-                break;
+            
         }
     }
 }
