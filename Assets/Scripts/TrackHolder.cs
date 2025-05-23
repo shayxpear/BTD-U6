@@ -3,7 +3,10 @@ using UnityEngine;
 public class TrackHolder : MonoBehaviour
 {
     public string midiPath;
+    public AudioClip[] backgroundSongClip;
     public AudioClip[] guitarRiffClip;
+
+    public AudioSource backgroundSong;
     public AudioSource guitarRiff;
 
     private BetterNoteManager noteManager;
@@ -22,25 +25,10 @@ public class TrackHolder : MonoBehaviour
             noteManager.levelsBeaten = 0;
         }
 
-        switch (guitarRiff.clip.name)
-        {
-            case "guitar riff":
-                midiPath = "test1.mid";
-                guitarRiff.clip = guitarRiffClip[0];
-                break;
-            case "battle song finished":
-                midiPath = "test.mid";
-                guitarRiff.clip = guitarRiffClip[1];
-                break;
-            case "hit and run":
-                midiPath = "test.mid";
-                guitarRiff.clip = guitarRiffClip[2];
-                break;
-        }
-
         guitarRiff.clip = guitarRiffClip[noteManager.levelsBeaten];
+        backgroundSong.clip = backgroundSongClip[noteManager.levelsBeaten];
 
-        
+
 
     }
 }
