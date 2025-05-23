@@ -9,6 +9,7 @@ public class BetterNoteManager : MonoBehaviour
 {
     [Header("Hit Tolerance")]
     [SerializeField] private float hitTolerance; //Based off of seconds
+    [SerializeField] private float hitDistance; //Based off of the extra width of the mainCircle
 
     [Header("BPM")]
     [SerializeField] private float bpm; // Set this in the inspector or calculate from MIDI
@@ -43,12 +44,13 @@ public class BetterNoteManager : MonoBehaviour
     [SerializeField] private int attempts;
     [SerializeField] public int noteCombo;
     [SerializeField] private int sprite;
-    [SerializeField] private bool canStartSong;
     public bool ended;
     public bool startedRiff;
     public bool started = false;
     public int levelsBeaten;
 
+
+    //Temp Vars
     private int tempAttempts; //prevents hardcoding reset for attempts
 
     //Note Variables
@@ -81,6 +83,9 @@ public class BetterNoteManager : MonoBehaviour
     {
         NoteChecker();
         CollisionCheck();
+
+        
+
     }
     private void LoadMidiFile()
     {
@@ -141,64 +146,50 @@ public class BetterNoteManager : MonoBehaviour
             // Move Left Notes
             foreach (RectTransform activeNote in activeLeftNotes)
             {
-                activeNote.anchoredPosition += new Vector2(notebar.rect.width / 2 * Time.deltaTime, 0);
-
+                if (Mathf.Abs(activeNote.anchoredPosition.x - (notebar.rect.width / 2)) >= mainCircle.rectTransform.rect.width)
+                {
+                    activeNote.anchoredPosition += new Vector2(notebar.rect.width / 2 * Time.deltaTime, 0);
+                }
             }
 
             // Move Right Notes
             foreach (RectTransform activeNote in activeRightNotes)
             {
-                activeNote.anchoredPosition -= new Vector2(notebar.rect.width / 2 * Time.deltaTime, 0);
-            }
+                if (Mathf.Abs((activeNote.anchoredPosition.x * -1) - (notebar.rect.width / 2)) >= mainCircle.rectTransform.rect.width)
+                {
+                    activeNote.anchoredPosition -= new Vector2(notebar.rect.width / 2 * Time.deltaTime, 0);
+                }
 
-            // Left Note Despawn Check
-            if (activeLeftNotes.Count > 0 && activeLeftNotes.Peek().anchoredPosition.x > notebar.rect.width / 2)
-            {
-                activeLeftNotes.Dequeue().gameObject.SetActive(false); // Despawn note
-                Miss();
-            }
-
-            // Right Note Despawn Check
-            if (activeRightNotes.Count > 0 && -1 * activeRightNotes.Peek().anchoredPosition.x > notebar.rect.width / 2)
-            {
-                activeRightNotes.Dequeue().gameObject.SetActive(false); // Despawn note
-                Miss();
             }
 
             // Player Left Click Check
             if (Input.GetMouseButtonDown(0) && playerController.CanDash && playerCooldown.GetCooldown() == false)
             {
-                bool hit = leftSideCollided;
-                activeLeftNotes.Dequeue().gameObject.SetActive(false);
-                //Debug.Log($"Hit = {hit}"); // Output hit true or false on left note
 
-                if (hit) { Hit(); }
-                else { Miss(); }
+                if (leftSideCollided)
+                {
+                    activeLeftNotes.Dequeue().gameObject.SetActive(false);
+                    Hit();
+                }
+                else
+                {
+                    Miss();
+                }
             }
 
             // Player Right Click Check
             if (Input.GetMouseButtonDown(1) && playerController.CanDash && playerCooldown.GetCooldown() == false)
             {
-                bool hit = rightSideCollided;
-                activeRightNotes.Dequeue().gameObject.SetActive(false);
-                //Debug.Log($"Hit = {hit}"); // Output hit true or false on right note
-
-                if (hit) { Hit(); }
-                else { Miss(); }
+                if (rightSideCollided)
+                {
+                    activeRightNotes.Dequeue().gameObject.SetActive(false);
+                    Hit();
+                }
+                else
+                {
+                    Miss();
+                }
             }
-
-            //Player Clicks Both Sides Check
-            if (Input.GetMouseButtonDown(0) && Input.GetMouseButtonDown(1) && playerController.CanDash && playerCooldown.GetCooldown() == false)
-            {
-                bool hit = bothSideCollided;
-                activeRightNotes.Dequeue().gameObject.SetActive(false);
-                //Debug.Log($"Hit = {hit}"); // Output hit true or false on right note
-
-                if (hit) { Hit(); }
-                else { Miss(); }
-            }
-
-
 
             if ((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.Space)) && playerController.CanDash)
             {
@@ -230,6 +221,7 @@ public class BetterNoteManager : MonoBehaviour
             trackHolder.guitarRiff.Stop();
         }
 
+        //Checks if the MIDI is done
         if ((leftNoteIndex == leftNotes.Count && rightNoteIndex == rightNotes.Count) && activeLeftNotes.Count == 0 && activeRightNotes.Count == 0)
         {
             started = false;
@@ -238,66 +230,44 @@ public class BetterNoteManager : MonoBehaviour
 
     private void CollisionCheck()
     {
-        switch(side)
-        {
-            case SIDE.LEFT_SIDE:
-                foreach (RectTransform note in activeLeftNotes)
-                {
-                    if (Mathf.Abs(note.anchoredPosition.x - (notebar.rect.width / 2)) < mainCircle.rectTransform.rect.width + hitTolerance)
-                    {
-                        leftSideCollided = true;
-                    }
-                    else
-                    {
-                        leftSideCollided = false;
-                    }
-                }
-                break;
 
-            case SIDE.RIGHT_SIDE:
-                foreach (RectTransform note in activeRightNotes)
-                {
-                    if (Mathf.Abs((note.anchoredPosition.x * -1) - (notebar.rect.width / 2)) < mainCircle.rectTransform.rect.width + hitTolerance)
-                    {
-                        rightSideCollided = true;
-                    }
-                    else
-                    {
-                        rightSideCollided = false;
-                    }
-                }
-                break;
-            case SIDE.BOTH_SIDES:
-                foreach (RectTransform note in activeRightNotes)
-                {
-                    if ((Mathf.Abs(note.anchoredPosition.x - (notebar.rect.width / 2)) < mainCircle.rectTransform.rect.width + hitTolerance) && (Mathf.Abs((note.anchoredPosition.x * -1) - (notebar.rect.width / 2)) < mainCircle.rectTransform.rect.width + hitTolerance))
-                    {
-                        rightSideCollided = true;
-                        leftSideCollided = true;
-                    }
-                    else
-                    {
-                        rightSideCollided = false;
-                        leftSideCollided = false;
-                    }
-                }
-                break;
+        foreach (RectTransform note in activeLeftNotes)
+        {
+            if (Mathf.Abs(note.anchoredPosition.x - (notebar.rect.width / 2)) < mainCircle.rectTransform.rect.width + hitDistance)
+            {
+                Debug.Log("Left Hit");
+                leftSideCollided = true;
+            }
+            else
+            {
+                StartCoroutine(LeftNoteHitTolerance());
+            }
         }
+
+        foreach (RectTransform note in activeRightNotes)
+        {
+            if (Mathf.Abs((note.anchoredPosition.x * -1) - (notebar.rect.width / 2)) < mainCircle.rectTransform.rect.width + hitDistance)
+            {
+                Debug.Log("Right Hit");
+                rightSideCollided = true;
+            }
+            else
+            {
+                StartCoroutine(RightNoteHitTolerance());
+            }
+        }
+        
     }
 
     private void SpawnNote(int index, SIDE spawnSide)
     {
         RectTransform note;
-        Image noteImage;
-        Color noteOpacity;
 
         switch(spawnSide)
         {
             case SIDE.LEFT_SIDE:
                 {
                     note = leftNotes[index].GetComponent<RectTransform>();
-                    noteImage = leftNotes[index].GetComponent<Image>();
-                    noteOpacity = new Color(1, 1, 1, 0);
                     note.anchoredPosition = new Vector2(0, 0); // Move it to left (anchored to left of parent)
                     activeLeftNotes.Enqueue(note); // Track note on active note queue
                     note.gameObject.SetActive(true); // Make the note visible
@@ -306,9 +276,6 @@ public class BetterNoteManager : MonoBehaviour
 
             case SIDE.RIGHT_SIDE:
                 {
-                    note = rightNotes[index].GetComponent<RectTransform>();
-                    noteImage = rightNotes[index].GetComponent<Image>();
-                    noteOpacity = new Color(1, 1, 1, 0);
                     note = rightNotes[index].GetComponent<RectTransform>();
                     note.anchoredPosition = new Vector2(0, 0); // Move it to right (anchored to right of parent)
                     activeRightNotes.Enqueue(note); // Track note on active note queue
@@ -329,6 +296,21 @@ public class BetterNoteManager : MonoBehaviour
         attempts = tempAttempts;
     }
 
+    public IEnumerator LeftNoteHitTolerance()
+    {
+        yield return new WaitForSeconds(hitTolerance);
+        leftSideCollided = false;
+        activeLeftNotes.Dequeue().gameObject.SetActive(false); // Despawn note
+        Debug.Log("Left Miss");
+    }
+
+    public IEnumerator RightNoteHitTolerance()
+    {
+        yield return new WaitForSeconds(hitTolerance);
+        rightSideCollided = false;
+        activeRightNotes.Dequeue().gameObject.SetActive(false); // Despawn note
+        Debug.Log("Right Miss");
+    }
     public void Hit()
     {
         guitarController.Shoot();
@@ -346,8 +328,8 @@ public class BetterNoteManager : MonoBehaviour
             attempts--;
             miss.Play();
             noteCombo = 0;
-
         }
+
         if (attempts <= 0)
         {
             cooldown.Play();
@@ -364,6 +346,5 @@ public class BetterNoteManager : MonoBehaviour
             attempts = tempAttempts;
             startedRiff = false;
         }
-
     }
 }

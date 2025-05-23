@@ -76,7 +76,7 @@ public class NoteManager : MonoBehaviour
     [SerializeField] public int noteCombo;
     public bool ended;
     private int sprite;
-    private bool canStartSong;
+    //private bool canStartSong;
     public bool startedRiff;
     public bool started = false;
     public int levelsBeaten;
