@@ -19,7 +19,6 @@ public class BetterNoteManager : MonoBehaviour
     [SerializeField] private Image mainCircle; // Main circle for the player to hit the notes with
 
     [Header("Audio")]
-    [SerializeField] private AudioSource music;
     [SerializeField] private AudioSource miss;
     [SerializeField] private AudioSource cooldown;
 
@@ -71,6 +70,8 @@ public class BetterNoteManager : MonoBehaviour
     private bool leftSideCollided;
     private bool rightSideCollided;
     private bool bothSideCollided;
+    private bool isLeftToleranceActive = false;
+    private bool isRightToleranceActive = false;
 
     private double AudioSourceTime { get { return (double)trackHolder.guitarRiff.timeSamples / trackHolder.guitarRiff.clip.frequency; } }
 
@@ -147,28 +148,36 @@ public class BetterNoteManager : MonoBehaviour
             // Move Left Notes
             foreach (RectTransform activeNote in activeLeftNotes)
             {
-                activeNote.anchoredPosition += new Vector2(notebar.rect.width / 2 * Time.deltaTime, 0);
-
+                if (activeNote.anchoredPosition.x < notebar.rect.width / 2)
+                    activeNote.anchoredPosition += Vector2.right * (notebar.rect.width / 2) * Time.deltaTime;
             }
 
             // Move Right Notes
             foreach (RectTransform activeNote in activeRightNotes)
             {
-                activeNote.anchoredPosition -= new Vector2(notebar.rect.width / 2 * Time.deltaTime, 0);
+                if (-activeNote.anchoredPosition.x < notebar.rect.width / 2)
+                    activeNote.anchoredPosition -= new Vector2(notebar.rect.width / 2 * Time.deltaTime, 0);
             }
 
             // Left Note Despawn Check
-            if (activeLeftNotes.Count > 0 && activeLeftNotes.Peek().anchoredPosition.x > notebar.rect.width / 2)
+            if (activeLeftNotes.Count > 0)
             {
-                activeLeftNotes.Dequeue().gameObject.SetActive(false); // Despawn note
-                Miss();
+                var front = activeLeftNotes.Peek();
+                if (!isLeftToleranceActive && front.anchoredPosition.x >= notebar.rect.width / 2)
+                {
+                    isLeftToleranceActive = true;
+                    StartCoroutine(LeftNoteHitTolerance());
+                }
             }
-
             // Right Note Despawn Check
-            if (activeRightNotes.Count > 0 && -1 * activeRightNotes.Peek().anchoredPosition.x > notebar.rect.width / 2)
+            if(activeRightNotes.Count > 0)
             {
-                activeRightNotes.Dequeue().gameObject.SetActive(false); // Despawn note
-                Miss();
+                var front = activeRightNotes.Peek();
+                if (!isRightToleranceActive && -front.anchoredPosition.x >= notebar.rect.width / 2)
+                {
+                    isRightToleranceActive = true;
+                    StartCoroutine(RightNoteHitTolerance());
+                }
             }
 
             // Player Left Click Check
@@ -240,9 +249,10 @@ public class BetterNoteManager : MonoBehaviour
     private void CollisionCheck()
     {
 
+
         foreach (RectTransform note in activeLeftNotes)
         {
-            if (Mathf.Abs(note.anchoredPosition.x - (notebar.rect.width / 2)) < mainCircle.rectTransform.rect.width + hitDistance)
+            if (Mathf.Abs(note.anchoredPosition.x - (notebar.rect.width / 2)) < mainCircle.rectTransform.rect.width)
             {
                 leftSideCollided = true;
             }
@@ -250,7 +260,7 @@ public class BetterNoteManager : MonoBehaviour
 
         foreach (RectTransform note in activeRightNotes)
         {
-            if (Mathf.Abs((note.anchoredPosition.x * -1) - (notebar.rect.width / 2)) < mainCircle.rectTransform.rect.width + hitDistance)
+            if (Mathf.Abs((note.anchoredPosition.x * -1) - (notebar.rect.width / 2)) < mainCircle.rectTransform.rect.width)
             {
                 rightSideCollided = true;
             }
@@ -295,36 +305,37 @@ public class BetterNoteManager : MonoBehaviour
         attempts = tempAttempts;
     }
 
-    /**
+   
     public IEnumerator LeftNoteHitTolerance()
     {
-        yield return new WaitForSeconds(hitTolerance);
-
-        if(!successfulHit)
+       yield return new WaitForSeconds(hitTolerance);
+        if (!successfulHit && activeLeftNotes.Count > 0)
         {
-            leftSideCollided = false;
             activeLeftNotes.Dequeue().gameObject.SetActive(false);
+            Miss();
         }
-        
+        successfulHit = false;
+        leftSideCollided = false;
+        isLeftToleranceActive = false;
     }
 
     public IEnumerator RightNoteHitTolerance()
     {
         yield return new WaitForSeconds(hitTolerance);
-
-        if(!successfulHit)
+        if (!successfulHit && activeRightNotes.Count > 0)
         {
-            rightSideCollided = false;
             activeRightNotes.Dequeue().gameObject.SetActive(false);
+            Miss();
         }
         successfulHit = false;
-       
+        rightSideCollided = false;
+        isRightToleranceActive = false;
     }
 
-    **/
+
     public void Hit()
     {
-        //successfulHit = true;
+        successfulHit = true;
         guitarController.Shoot();
     }
 
@@ -340,7 +351,7 @@ public class BetterNoteManager : MonoBehaviour
             attempts--;
             miss.Play();
             noteCombo = 0;
-            //successfulHit = false;
+            successfulHit = false;
         }
 
         if (attempts <= 0)
