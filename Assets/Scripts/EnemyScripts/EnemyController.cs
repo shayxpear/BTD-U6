@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour
 {
     public enum AttackType {Melee, Ranged, Laser}
-    public enum EnemyType {Rat, Blobby, Laser, BlobbyMini}
+    public enum EnemyType {Rat, Blobby, Laser, BlobbyMini, BigRat}
     public EnemyType CurrentEnemyType => enemyType;
 
     [Header("Enemy Type")]
@@ -236,7 +236,7 @@ public class EnemyController : MonoBehaviour
         if (collision.CompareTag("Player") && attackType == AttackType.Ranged && isCooldown)
         {
             AnimatorStateInfo animState = enemyAnimator.GetCurrentAnimatorStateInfo(0);
-            if (!animState.IsName("blob_attack"))
+            if (!animState.IsName("blob_attack") || !animState.IsName("bigrat_throw"))
             {
                 PlayEnemyWalkingAnimation();
             }
@@ -498,6 +498,17 @@ public class EnemyController : MonoBehaviour
                 attackType = AttackType.Ranged;
                 bulletCollision = false;
                 break;
+            case EnemyType.BigRat:
+                health = 3;
+                damage = 1;
+                speed = 0f;
+                attackCooldown = 2;
+                rotationSpeed = 500;
+                rangedAttackRange = 2f;
+                projSpeed = 2f;
+                attackType = AttackType.Ranged;
+                bulletCollision = false;
+                break;
             case EnemyType.Laser:
                 health = 3;
                 damage = 1;
@@ -543,6 +554,9 @@ public class EnemyController : MonoBehaviour
             case EnemyType.Laser:
                 enemyAnimator.Play("rat_walk");
                 break;
+            case EnemyType.BigRat:
+                enemyAnimator.Play("bigrat_idle");
+                break;
         }
     }
 
@@ -561,6 +575,9 @@ public class EnemyController : MonoBehaviour
                 break;
             case EnemyType.Laser:
                 enemyAnimator.Play("rat_attack");
+                break;
+            case EnemyType.BigRat:
+                enemyAnimator.Play("bigrat_throw");
                 break;
         }
     }

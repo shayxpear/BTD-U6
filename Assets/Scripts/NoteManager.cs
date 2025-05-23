@@ -83,7 +83,7 @@ public class NoteManager : MonoBehaviour
 
     [Header("Crosshair")]
     [SerializeField] private SpriteRenderer crosshairRenderer;
-    
+
     [Header("Crosshair Sprite Sheets")]
     [SerializeField] private Sprite[] redCrosshairSprites;  // For left notes
     [SerializeField] private Sprite[] blueCrosshairSprites; // For right notes
@@ -102,11 +102,13 @@ public class NoteManager : MonoBehaviour
         rightOriginalPos = rightPulseObject.anchoredPosition;
 
         tempAttempts = attempts; //should always be the number set in engine
-        
+
     }
 
     private void Update()
     {
+
+        //BUG: Not suppose to turn the entire ui transparent just the discs and tnd the rhythm bar
         if (playerCooldown.cooldown || !startedRiff)
         {
             leftNotePrefab.GetComponent<Image>().material.color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
@@ -117,7 +119,7 @@ public class NoteManager : MonoBehaviour
             leftNotePrefab.GetComponent<Image>().material.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
             rightNotePrefab.GetComponent<Image>().material.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
         }
-        
+
 
 
         if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.LeftShift))
@@ -132,7 +134,7 @@ public class NoteManager : MonoBehaviour
             if (leftNoteIndex < leftNoteTimes.Count && AudioSourceTime >= leftNoteTimes[leftNoteIndex] - noteTravelTimeSeconds)
             {
                 SpawnNote(leftNoteIndex++, true); // Spawn left side note
-                
+
             }
 
             // Right Note Spawn Check
@@ -145,7 +147,7 @@ public class NoteManager : MonoBehaviour
             foreach (RectTransform activeNote in activeLeftNotes)
             {
                 activeNote.anchoredPosition += new Vector2(notebar.rect.width / 2 * Time.deltaTime / noteTravelTimeSeconds, 0);
-                
+
             }
 
             // Move Right Notes
@@ -175,7 +177,7 @@ public class NoteManager : MonoBehaviour
                 activeLeftNotes.Dequeue().gameObject.SetActive(false);
                 //Debug.Log($"Hit = {hit}"); // Output hit true or false on left note
 
-                if(hit) { Hit(); }
+                if (hit) { Hit(); }
                 else { Miss(); }
             }
 
@@ -190,7 +192,7 @@ public class NoteManager : MonoBehaviour
                 else { Miss(); }
             }
 
-            if((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.Space)) && playerController.CanDash)
+            if ((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.Space)) && playerController.CanDash)
             {
                 bool leftHit = CollisionCheck(true);
                 bool rightHit = CollisionCheck(false);
@@ -200,7 +202,7 @@ public class NoteManager : MonoBehaviour
                     if (leftHit) { HitDash(); }
                     else { Miss(); }
                 }
-                if(rightHit)
+                if (rightHit)
                 {
                     activeRightNotes.Dequeue().gameObject.SetActive(false);
                     if (rightHit) { HitDash(); }
@@ -208,12 +210,12 @@ public class NoteManager : MonoBehaviour
                 }
             }
         }
-        else if(ended)
+        else if (ended)
         {
             music.volume = 1;
-            if(activeLeftNotes.Count > 0)
+            if (activeLeftNotes.Count > 0)
                 activeLeftNotes.Dequeue().gameObject.SetActive(false);
-            if(activeRightNotes.Count > 0)
+            if (activeRightNotes.Count > 0)
                 activeRightNotes.Dequeue().gameObject.SetActive(false);
             trackHolder.guitarRiff.Stop();
         }
@@ -266,12 +268,12 @@ public class NoteManager : MonoBehaviour
 
     public void Miss()
     {
-        if(startedRiff)
+        if (startedRiff)
         {
             attempts--;
             missSFX.Play();
             noteCombo = 0;
-            
+
         }
         if (attempts <= 0)
         {
@@ -351,7 +353,7 @@ public class NoteManager : MonoBehaviour
         fadeCoroutine = StartCoroutine(FadeAudio(true));
         StartCoroutine(CrosshairSprite());
     }
-           
+
     // Spawns a note in
     private void SpawnNote(int index, bool isLeftSide)
     {
@@ -362,7 +364,7 @@ public class NoteManager : MonoBehaviour
         {
             note = leftNotes[index].GetComponent<RectTransform>();
             noteImage = leftNotes[index].GetComponent<Image>();
-            noteOpacity = new Color(1,1,1,0);
+            noteOpacity = new Color(1, 1, 1, 0);
             note.anchoredPosition = new Vector2(0, 0); // Move it to left (anchored to left of parent)
             activeLeftNotes.Enqueue(note); // Track note on active note queue
             note.gameObject.SetActive(true); // Make the note visible
@@ -407,7 +409,7 @@ public class NoteManager : MonoBehaviour
         sortedNoteTimes.AddRange(rightNoteTimes);
         sortedNoteTimes.Sort();
 
-        sortedNoteTimes.Insert(0,0.0);
+        sortedNoteTimes.Insert(0, 0.0);
 
         Sprite[] currentSpriteSheet = null;
         int currentSprite = 0;
@@ -520,7 +522,7 @@ public class NoteManager : MonoBehaviour
             // Smooth shrink phase
             while (elapsedTime < pulseInterval)
             {
-                
+
                 float t = elapsedTime / pulseInterval;
                 startSongDelaySeconds = t;
                 float scale = 1f + pulseAmount * (1f - Mathf.SmoothStep(0f, 1f, t));
