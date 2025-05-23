@@ -22,20 +22,13 @@ public class BetterNoteManager : MonoBehaviour
     [SerializeField] private AudioSource miss;
     [SerializeField] private AudioSource cooldown;
 
-    [Header("Crosshair")]
-    [SerializeField] private SpriteRenderer crosshairRenderer;
-
-    [Header("Crosshair Sprite Sheets")]
-    [SerializeField] private Sprite[] redCrosshairSprites;  // For left notes
-    [SerializeField] private Sprite[] blueCrosshairSprites; // For right notes
-    [SerializeField] private Sprite[] whiteCrosshairSprites; // For when the song is finished
-
     [Header("Prefabs")]
     [SerializeField] private GameObject leftNotePrefab;
     [SerializeField] private GameObject rightNotePrefab;
     [SerializeField] private GuitarController guitarController;
     [SerializeField] private PlayerController playerController;
     [SerializeField] private PlayerUI playerUI;
+    [SerializeField] private CrosshairSpriteController crosshairSpriteController;
     [SerializeField] private PlayerCooldown playerCooldown;
     [SerializeField] private TrackHolder trackHolder;
 
@@ -49,7 +42,7 @@ public class BetterNoteManager : MonoBehaviour
     public bool started = false;
     public int levelsBeaten;
     public bool successfulHit;
-
+    public GameManager gameManager;
 
     //Temp Vars
     private int tempAttempts; //prevents hardcoding reset for attempts
@@ -87,7 +80,7 @@ public class BetterNoteManager : MonoBehaviour
         NoteChecker();
         CollisionCheck();
 
-        
+
 
     }
     private void LoadMidiFile()
@@ -265,7 +258,7 @@ public class BetterNoteManager : MonoBehaviour
                 rightSideCollided = true;
             }
         }
-        
+
     }
 
     private void SpawnNote(int index, SIDE spawnSide)
@@ -304,12 +297,15 @@ public class BetterNoteManager : MonoBehaviour
         leftNoteIndex = 0; // Reset left and right node indexes for new run
         rightNoteIndex = 0;
         attempts = tempAttempts;
-        
+        crosshairSpriteController.StartCrosshairCoroutine(
+         leftNoteTimes, rightNoteTimes, () => AudioSourceTime
+     );
+
     }
-   
+
     public IEnumerator LeftNoteHitTolerance()
     {
-       yield return new WaitForSeconds(hitTolerance);
+        yield return new WaitForSeconds(hitTolerance);
         if (!successfulHit && activeLeftNotes.Count > 0)
         {
             activeLeftNotes.Dequeue().gameObject.SetActive(false);
