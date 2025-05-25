@@ -7440,14 +7440,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f02506f01013fa446aa0edbf6330ce91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  midiPath: test1.mid
+  midiPath: powerup.mid
   backgroundSongClip:
   - {fileID: 8300000, guid: 54fad184adbb7684b9d6658917c44f31, type: 3}
   - {fileID: 8300000, guid: 54fad184adbb7684b9d6658917c44f31, type: 3}
   - {fileID: 8300000, guid: 54fad184adbb7684b9d6658917c44f31, type: 3}
   guitarRiffClip:
-  - {fileID: 8300000, guid: 8497b353550c27c42a7996b36f9b149d, type: 3}
-  - {fileID: 8300000, guid: fafbc25524813bc4abeb3d2bad5435ca, type: 3}
+  - {fileID: 8300000, guid: 1ae41eb0035a3498b80c33cbbf356f0d, type: 3}
+  - {fileID: 8300000, guid: 1ae41eb0035a3498b80c33cbbf356f0d, type: 3}
   - {fileID: 8300000, guid: b7f63c2f2fd2d414aa6db14646bb7d68, type: 3}
   backgroundSong: {fileID: 963904841}
   guitarRiff: {fileID: 5738475202501010321}
@@ -23194,8 +23194,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 8497b353550c27c42a7996b36f9b149d, type: 3}
-  m_Resource: {fileID: 8300000, guid: 8497b353550c27c42a7996b36f9b149d, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 1ae41eb0035a3498b80c33cbbf356f0d, type: 3}
+  m_Resource: {fileID: 8300000, guid: 1ae41eb0035a3498b80c33cbbf356f0d, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
