@@ -26,7 +26,7 @@ public class GuitarController : MonoBehaviour
     GameObject firePointObject;
 
     PlayerController playerController;
-    NoteManager noteManager;
+    BetterNoteManager noteManager;
 
     public PlayerCooldown playerCooldown;
 
@@ -39,7 +39,7 @@ public class GuitarController : MonoBehaviour
         firePointObject = GameObject.Find("firingPoint");
 
         playerController = GetComponent<PlayerController>();
-        noteManager = noteManagerObject.GetComponent<NoteManager>();
+        noteManager = noteManagerObject.GetComponent<BetterNoteManager>();
         playerSpriteTransform = spriteController.GetComponent<Transform>();
         firePoint = firePointObject.GetComponent<Transform>();
         guitarAnimator = guitarController.GetComponent<Animator>();
@@ -78,17 +78,9 @@ public class GuitarController : MonoBehaviour
 
         if ((Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)) && playerController.CanDash && !playerCooldown.GetCooldown())
         {
-            if (noteManager.pulsePhase >= 0.9f || noteManager.pulsePhase <= 0.1f)
+            if (!noteManager.startedRiff)
             {
-                //noteManager.StartSong();
-                if (!noteManager.startedRiff)
-                {
-                    noteManager.startedRiff = true;
-                }
-            }
-            else
-            {
-                Debug.Log("Not on beat! Wait for the pulse.");
+                noteManager.startedRiff = true;
             }
         }
     }

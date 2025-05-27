@@ -103,13 +103,13 @@ TextureImporter:
       name: UI_px_bar1_BUTTHOLE_0
       rect:
         serializedVersion: 2
-        x: 9
-        y: 19
-        width: 99
-        height: 27
-      alignment: 0
+        x: 54
+        y: 21
+        width: 21
+        height: 21
+      alignment: 9
       pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 0, y: 0, z: 21, w: 0}
       customData: 
       outline: []
       physicsShape: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 

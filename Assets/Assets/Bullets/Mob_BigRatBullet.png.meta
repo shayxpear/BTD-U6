@@ -1,10 +1,13 @@
 fileFormatVersion: 2
-guid: 8012a4e9fa2462848b5f9c55e4e4fd22
+guid: 4ae91cc2861b41f42a1df2452713295a
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2480499593260771932
-    second: UI_px_bar1_DISC_0
+      213: -7917079640646260184
+    second: Mob_BigRatBullet_0
+  - first:
+      213: -5694578557614545017
+    second: Mob_BigRatBullet_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,23 +103,45 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: UI_px_bar1_DISC_0
+      name: Mob_BigRatBullet_0
       rect:
         serializedVersion: 2
-        x: 60
-        y: 28
-        width: 18
-        height: 18
+        x: 0
+        y: 0
+        width: 15
+        height: 21
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 18, w: 0}
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c5a2fc1ec318c6220800000000000000
-      internalID: 2480499593260771932
+      spriteID: 82a6dc86302e02290800000000000000
+      internalID: -7917079640646260184
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mob_BigRatBullet_1
+      rect:
+        serializedVersion: 2
+        x: 15
+        y: 0
+        width: 15
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 78724d719fac8f0b0800000000000000
+      internalID: -5694578557614545017
       vertices: []
       indices: 
       edges: []
@@ -125,7 +150,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: b4568e0135cf69e4f9ad7a6c6d8dfc66
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +160,8 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      UI_px_bar1_DISC_0: 2480499593260771932
+      Mob_BigRatBullet_0: -7917079640646260184
+      Mob_BigRatBullet_1: -5694578557614545017
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
