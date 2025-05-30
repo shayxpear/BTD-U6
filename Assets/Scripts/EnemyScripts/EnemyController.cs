@@ -486,7 +486,7 @@ public class EnemyController : MonoBehaviour
         }
 
         
-        if (roomDetection != null && isInsideRoom && enemyType == EnemyType.Blobby)
+        if (roomDetection != null && isInsideRoom)
         {
             roomDetection.RemoveEnemy();
         }

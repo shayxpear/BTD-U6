@@ -7,7 +7,7 @@ public class RoomDetection : MonoBehaviour
     private BetterNoteManager noteManager;
     private TrackHolder trackHolder;
 
-    private int enemiesInRange = 0;
+    public int enemiesInRange = 0;
     public void Start()
     {
 
