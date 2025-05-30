@@ -7406,7 +7406,7 @@ MonoBehaviour:
   introClip: []
   backgroundSong: {fileID: 963904841}
   guitarRiff: {fileID: 5738475202501010321}
-  introRiff: {fileID: 0}
+  introRiff: {fileID: 1519871727}
 --- !u!4 &268076068 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6913027357005846544, guid: 0e5e1450c431cbe44a459e1509ef51a1, type: 3}
@@ -14260,8 +14260,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 1ae41eb0035a3498b80c33cbbf356f0d, type: 3}
-  m_Resource: {fileID: 8300000, guid: 1ae41eb0035a3498b80c33cbbf356f0d, type: 3}
+  m_audioClip: {fileID: 8300000, guid: f8f60470b1850904bbcc50a27296ad8d, type: 3}
+  m_Resource: {fileID: 8300000, guid: f8f60470b1850904bbcc50a27296ad8d, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -22800,7 +22800,7 @@ MonoBehaviour:
   noteCombo: 0
   sprite: 0
   noteTravelTimeSeconds: 1
-  playingIntro: 0
+  playedIntro: 0
   ended: 0
   startedRiff: 0
   started: 0

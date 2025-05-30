@@ -38,7 +38,7 @@ public class BetterNoteManager : MonoBehaviour
     [SerializeField] public int noteCombo;
     [SerializeField] private int sprite;
     [SerializeField] private float noteTravelTimeSeconds;
-    [SerializeField] private bool playingIntro;
+    [SerializeField] private bool playedIntro;
     public bool ended;
     public bool startedRiff;
     public bool started = false;
@@ -232,6 +232,8 @@ public class BetterNoteManager : MonoBehaviour
             if (activeRightNotes.Count > 0)
                 activeRightNotes.Dequeue().gameObject.SetActive(false);
             trackHolder.guitarRiff.Stop();
+
+            playedIntro = false;
         }
 
         //Checks if the MIDI is done
@@ -293,15 +295,24 @@ public class BetterNoteManager : MonoBehaviour
     {
         if (started || trackHolder.guitarRiff.isPlaying) return; // Prevent user from starting song if already running
 
+        if(!playedIntro)
+        {
+            trackHolder.introRiff.Play();
+            playedIntro = true;
+        }
 
-        trackHolder.guitarRiff.Play();
-        started = true;
-        leftNoteIndex = 0; // Reset left and right node indexes for new run
-        rightNoteIndex = 0;
-        attempts = tempAttempts;
-        crosshairSpriteController.StartCrosshairCoroutine(
-         leftNoteTimes, rightNoteTimes, () => AudioSourceTime
-     );
+        if(!trackHolder.introRiff.isPlaying)
+        {
+            trackHolder.guitarRiff.Play();
+            started = true;
+            leftNoteIndex = 0; // Reset left and right node indexes for new run
+            rightNoteIndex = 0;
+            attempts = tempAttempts;
+            crosshairSpriteController.StartCrosshairCoroutine(
+             leftNoteTimes, rightNoteTimes, () => AudioSourceTime
+         );
+        }
+        
 
     }
 
