@@ -38,6 +38,7 @@ public class BetterNoteManager : MonoBehaviour
     [SerializeField] public int noteCombo;
     [SerializeField] private int sprite;
     [SerializeField] private float noteTravelTimeSeconds;
+    [SerializeField] private bool playingIntro;
     public bool ended;
     public bool startedRiff;
     public bool started = false;

@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class RoomDetection : MonoBehaviour
 {
-    public bool playerInRange;
+    [HideInInspector] public bool playerInRange;
     public GameObject Doors;
-    public BetterNoteManager noteManager;
-    public TrackHolder trackHolder;
+    private BetterNoteManager noteManager;
+    private TrackHolder trackHolder;
 
     private int enemiesInRange = 0;
     public void Start()

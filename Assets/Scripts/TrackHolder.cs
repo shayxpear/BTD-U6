@@ -5,17 +5,17 @@ public class TrackHolder : MonoBehaviour
     public string midiPath;
     public AudioClip[] backgroundSongClip;
     public AudioClip[] guitarRiffClip;
+    public AudioClip[] introClip;
 
     public AudioSource backgroundSong;
     public AudioSource guitarRiff;
+    public AudioSource introRiff;
 
     private BetterNoteManager noteManager;
-    private GameObject noteManagerGameObject;
 
     public void Start()
     {
-        noteManagerGameObject = GameObject.Find("NoteManager");
-        noteManager = noteManagerGameObject.GetComponent<BetterNoteManager>();
+        noteManager = GameObject.Find("NoteManager").GetComponent<BetterNoteManager>();
     }
 
     void Update()
@@ -25,6 +25,7 @@ public class TrackHolder : MonoBehaviour
             noteManager.levelsBeaten = 0;
         }
 
+        introRiff.clip = introClip[noteManager.levelsBeaten];
         guitarRiff.clip = guitarRiffClip[noteManager.levelsBeaten];
         backgroundSong.clip = backgroundSongClip[noteManager.levelsBeaten];
 
@@ -32,3 +33,5 @@ public class TrackHolder : MonoBehaviour
 
     }
 }
+
+

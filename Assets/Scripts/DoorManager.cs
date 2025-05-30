@@ -4,13 +4,11 @@ using UnityEngine.SceneManagement;
 public class DoorManager : MonoBehaviour
 {
     public string nextScene;
-    public BetterNoteManager noteManager;
-    public GameObject noteManagerGameObject;
+    private BetterNoteManager noteManager;
 
     public void Start()
     {
-        noteManagerGameObject = GameObject.Find("NoteManager");
-        noteManager = noteManagerGameObject.GetComponent<BetterNoteManager>();
+        noteManager = GameObject.Find("NoteManager").GetComponent<BetterNoteManager>();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
