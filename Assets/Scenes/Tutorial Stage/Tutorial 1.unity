@@ -22932,7 +22932,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2be2a9cacf8c4a3438250847c2384ea6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitTolerance: 0.5
+  hitTolerance: 0.05
   hitDistance: 50
   bpm: 0
   notebar: {fileID: 4315506749363859661}
