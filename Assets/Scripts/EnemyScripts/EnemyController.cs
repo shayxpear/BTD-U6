@@ -56,11 +56,12 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private float miniSpawnRadius = 0.5f;
     [SerializeField] private float miniExplosionForce = 5f;
 
-
+    private BetterNoteManager noteManager;
     private bool isFiring;
     private bool isLeaping;
     private Rigidbody2D rb;
     private PlayerDetection playerDetection;
+
     private Vector2 targetDirection;
     private RaycastHit2D[] obstacleCollisions;
     private Transform player;
@@ -74,6 +75,10 @@ public class EnemyController : MonoBehaviour
 
     private void Awake()
     {
+        if (noteManager == null)
+        {
+            noteManager = GameObject.Find("NoteManager").GetComponent<BetterNoteManager>();
+        }
         rb = GetComponent<Rigidbody2D>();
         playerDetection = GetComponent<PlayerDetection>();
         obstacleCollisions = new RaycastHit2D[100];
@@ -100,14 +105,16 @@ public class EnemyController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        UpdateTargetDirection();
-        RotateTowardsTarget();
-        SetVelocity();
-        if (!isFiring && !isCooldown && PlayerDetected() && attackType == AttackType.Laser)
+        if (!noteManager.trackHolder.introRiff.isPlaying)
         {
-            StartCoroutine(FireLaser());
+            UpdateTargetDirection();
+            RotateTowardsTarget();
+            SetVelocity();
+            if (!isFiring && !isCooldown && PlayerDetected() && attackType == AttackType.Laser)
+            {
+                StartCoroutine(FireLaser());
+            }
         }
-
     }
 
 
@@ -390,18 +397,25 @@ public class EnemyController : MonoBehaviour
 
     public void Attack()
     {
-        switch (attackType)
+        if (!noteManager.trackHolder.introRiff.isPlaying)
         {
-            case AttackType.Melee:
-                Debug.Log("Melee Attack");
-                if (player != null && enemyCollided)
-                    player.GetComponent<HealthController>()?.TakeDamage(damage);
-                break;
-            case AttackType.Ranged:
-                Debug.Log("Ranged Attack");
-                if (player != null)
-                    ShootProjectile();
-                break;
+            switch (attackType)
+            {
+                case AttackType.Melee:
+                    Debug.Log("Melee Attack");
+                    if (player != null && enemyCollided)
+                        player.GetComponent<HealthController>()?.TakeDamage(damage);
+                    break;
+                case AttackType.Ranged:
+                    Debug.Log("Ranged Attack");
+                    if (player != null)
+                        ShootProjectile();
+                    break;
+            }
+        }
+        else
+        {
+            Debug.Log("Enemy cannot attack during intro riff");
         }
     }
 

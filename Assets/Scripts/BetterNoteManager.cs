@@ -31,7 +31,7 @@ public class BetterNoteManager : MonoBehaviour
     [SerializeField] private CrosshairSpriteController crosshairSpriteController;
     [SerializeField] private GameManager gameManager;
     [SerializeField] private PlayerCooldown playerCooldown;
-    [SerializeField] private TrackHolder trackHolder;
+    [SerializeField] public TrackHolder trackHolder;
 
     [Header("Debug")]
     [SerializeField] private int attempts;
