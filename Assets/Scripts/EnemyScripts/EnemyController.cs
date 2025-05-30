@@ -474,22 +474,22 @@ public class EnemyController : MonoBehaviour
                 }
 
                 // If the mini blob spawns inside the room, update the enemy count.
-                if (roomDetection != null)
-                {
-                    Collider2D roomCollider = roomDetection.GetComponent<Collider2D>();
-                    if (roomCollider != null && roomCollider.OverlapPoint(miniBlob.transform.position))
-                    {
-                        roomDetection.AddEnemy();
-                    }
-                }
+                //if (roomDetection != null)
+                //{
+                //    Collider2D roomCollider = roomDetection.GetComponent<Collider2D>();
+                //    //if (roomCollider != null && roomCollider.OverlapPoint(miniBlob.transform.position))
+                //    //{
+                //    //    roomDetection.AddEnemy();
+                //    //}
+                //}
             }
         }
 
         
-        if (roomDetection != null && isInsideRoom)
-        {
-            roomDetection.RemoveEnemy();
-        }
+        //if (roomDetection != null && isInsideRoom && enemyType == EnemyType.Blobby)
+        //{
+        //    roomDetection.RemoveEnemy();
+        //}
     }
 
 

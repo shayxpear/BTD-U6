@@ -43,7 +43,7 @@ public class EnemySpawnManager : MonoBehaviour
             noteManager = FindFirstObjectByType<BetterNoteManager>();
         }
     }
-    private void Update()
+    private void FixedUpdate()
     {
         if (roomDetection != null && !hasSpawnedEnemies)
         {
@@ -62,6 +62,8 @@ public class EnemySpawnManager : MonoBehaviour
         StartCoroutine(SpawnEnemies(enemiesToSpawn));
         if (roomDetection != null)
         {
+
+            roomDetection.enemiesInRange = 0;
             roomDetection.enemiesInRange = numberOfEnemiesSpawned; // Update the count of enemies in range
         }
     }
@@ -102,7 +104,7 @@ public class EnemySpawnManager : MonoBehaviour
 
             // Instantiate the enemy
             GameObject newEnemy = Instantiate(chosenEnemy.enemyPrefab, spawnPoint.position, Quaternion.identity);
-            numberOfEnemiesSpawned++;
+            //numberOfEnemiesSpawned++;
             
 
             // play intro animation

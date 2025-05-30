@@ -516,6 +516,11 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 832
   attackTriggerCollider: {fileID: 3084389835335469489}
+  blobbyMiniPrefabs:
+  - {fileID: 8634360676460631067, guid: d872300cc5db5494b84be8180260c2d6, type: 3}
+  - {fileID: 5977027083766145921, guid: 362b6196f35da6c4d8bea63e18825726, type: 3}
+  miniSpawnRadius: 0.5
+  miniExplosionForce: 5
 --- !u!114 &5335354982658061226
 MonoBehaviour:
   m_ObjectHideFlags: 0

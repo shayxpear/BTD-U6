@@ -59,7 +59,7 @@ public class RoomDetection : MonoBehaviour
             playerInRange = true;
         }
 
-        if (other.CompareTag("Enemy"))
+        if (other.CompareTag("Enemy") && other is BoxCollider2D)
         {
             enemiesInRange++;
         }
@@ -67,7 +67,7 @@ public class RoomDetection : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("Enemy"))
+        if (other.CompareTag("Enemy") && other is BoxCollider2D)
         {
             enemiesInRange = Mathf.Max(0, enemiesInRange - 1);
         }
