@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyController : MonoBehaviour
@@ -69,7 +70,7 @@ public class EnemyController : MonoBehaviour
     private bool enemyCollided;
     private bool hasLeaped = false;
     private bool leapRest = false;
-
+    private bool isAttacking;
 
     public int GetEnemyHealth => health;
 
@@ -152,11 +153,13 @@ public class EnemyController : MonoBehaviour
 
     private void SetVelocity()
     {
-        AnimatorStateInfo animState = enemyAnimator.GetCurrentAnimatorStateInfo(0);
-        if (leapRest || isFiring || isLeaping || targetDirection == Vector2.zero 
-            || (attackType == AttackType.Ranged && animState.IsName("attack") 
-            || (attackType == AttackType.Ranged && animState.IsName("walk") && isCooldown)))
+        if (attackType == AttackType.Ranged && isCooldown)
         {
+          rb.linearVelocity = Vector2.zero;
+           return;
+        }
+        if (leapRest || isFiring || isLeaping || targetDirection == Vector2.zero || (attackType == AttackType.Ranged && isAttacking))
+        { 
             rb.linearVelocity = Vector2.zero;
         }
         else if (hasLeaped)
@@ -321,6 +324,7 @@ public class EnemyController : MonoBehaviour
                 }
             }
             isCooldown = true;
+            isAttacking = false;
             PlayEnemyWalkingAnimation();
             if (rbProj != null)
             {
@@ -332,6 +336,14 @@ public class EnemyController : MonoBehaviour
     //Player detection for laser
     private bool PlayerDetected()
     {
+        if (player == null)
+            return false;
+
+        Vector2 startPos = projPos[0].position;
+        Vector2 direction = (player.position - projPos[0].position).normalized;
+
+        // Draw a ray in the editor view to visualize it
+        Debug.DrawRay(startPos, direction * 10f, Color.red);
         Debug.Log("Player Detected");
         RaycastHit2D hit = Physics2D.Raycast(projPos[0].position, projPos[0].up, Mathf.Infinity, playerLayer);
         return hit.collider != null;
@@ -575,20 +587,29 @@ public class EnemyController : MonoBehaviour
 
     public void PlayEnemyAttackAnimation()
     {
-        switch (enemyType)
+        if (!noteManager.trackHolder.introRiff.isPlaying)
         {
-            case EnemyType.Rat:
-            case EnemyType.BigRat:
-            case EnemyType.Laser:
-                enemyAnimator.Play("attack");
-                break;
-            case EnemyType.Blobby:
-                enemyAnimator.Play("blob_attack");
-                break;
-            case EnemyType.BlobbyMini:
-                enemyAnimator.Play("blob_attack");
-                break;
-            
+            isAttacking = true;
+
+            switch (enemyType)
+            {
+                case EnemyType.Rat:
+                case EnemyType.BigRat:
+                case EnemyType.Laser:
+                    enemyAnimator.Play("attack");
+                    break;
+                case EnemyType.Blobby:
+                    enemyAnimator.Play("blob_attack");
+                    break;
+                case EnemyType.BlobbyMini:
+                    enemyAnimator.Play("blob_attack");
+                    break;
+
+            }
+        }
+        else
+        {
+            Debug.Log("Enemy cannot attack during intro riff");
         }
     }
 }
