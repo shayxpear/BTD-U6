@@ -23,6 +23,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private float attackCooldown;
     [SerializeField] private float rotationSpeed;
     [SerializeField] private float rangedAttackRange;
+    [SerializeField] private int pointsOnDeath;
 
     [Header("Detection")]
     [SerializeField] private float obstacleCheckCircleRadius;
@@ -58,6 +59,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private float miniExplosionForce = 5f;
 
     private BetterNoteManager noteManager;
+    private ScoreManager scoreManager;
     private bool isFiring;
     private bool isLeaping;
     private Rigidbody2D rb;
@@ -78,7 +80,11 @@ public class EnemyController : MonoBehaviour
     {
         if (noteManager == null)
         {
-            noteManager = GameObject.Find("NoteManager").GetComponent<BetterNoteManager>();
+            noteManager = FindFirstObjectByType<BetterNoteManager>();
+        }
+        if (scoreManager == null)
+        {
+            scoreManager = FindFirstObjectByType<ScoreManager>();
         }
         rb = GetComponent<Rigidbody2D>();
         playerDetection = GetComponent<PlayerDetection>();
@@ -443,6 +449,8 @@ public class EnemyController : MonoBehaviour
 
     private void OnDestroy()
     {
+        Debug.Log("Enemy Destroyed");
+        scoreManager.AddScore(pointsOnDeath);
         // Find the RoomDetection instance in the scene.
         RoomDetection roomDetection = Object.FindAnyObjectByType<RoomDetection>();
 
@@ -485,7 +493,7 @@ public class EnemyController : MonoBehaviour
             }
         }
 
-        
+
         //if (roomDetection != null && isInsideRoom && enemyType == EnemyType.Blobby)
         //{
         //    roomDetection.RemoveEnemy();
@@ -509,6 +517,7 @@ public class EnemyController : MonoBehaviour
                 leapSpeed = 5f;
                 leapDuration = 0.3f;
                 leapChargeDuration = 0.9f;
+                pointsOnDeath = 100;
                 bulletCollision = false;
 
                 leapSpeed = 5f;
@@ -525,6 +534,7 @@ public class EnemyController : MonoBehaviour
                 rangedAttackRange = 2f;
                 projSpeed = 2f;
                 attackType = AttackType.Ranged;
+                pointsOnDeath = 200;
                 bulletCollision = false;
                 break;
             case EnemyType.BigRat:
@@ -536,6 +546,7 @@ public class EnemyController : MonoBehaviour
                 rangedAttackRange = 2f;
                 projSpeed = 2f;
                 attackType = AttackType.Ranged;
+                pointsOnDeath = 150;
                 bulletCollision = false;
                 break;
             case EnemyType.Laser:
@@ -551,6 +562,7 @@ public class EnemyController : MonoBehaviour
                 laserDuration = 2f;
                 laserCooldown = 3f;
                 laserDamage = 2;
+                pointsOnDeath = 300;
                 break;
             case EnemyType.BlobbyMini:
                 health = 3;
@@ -561,6 +573,7 @@ public class EnemyController : MonoBehaviour
                 rangedAttackRange = 2f;
                 projSpeed = 3f;
                 attackType = AttackType.Ranged;
+                pointsOnDeath = 100;
                 bulletCollision = false;
                 break;
         }

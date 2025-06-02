@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ScoreManager : MonoBehaviour
 {
-    public int enemyScorePoint;
+    //public int enemyScorePoint;
     public int totalScore;
     public int scoreMultiplier;
     
@@ -17,6 +17,11 @@ public class ScoreManager : MonoBehaviour
     void Update()
     {
         scoreMultiplier = noteManager.noteCombo;
-        totalScore = enemyScorePoint + totalScore * scoreMultiplier;
+        Debug.Log("Total Score: " + totalScore);
+    }
+    public void AddScore(int points)
+    {
+        totalScore += points * scoreMultiplier;
+        Debug.Log("Score Added: " + points * scoreMultiplier + ", Total Score: " + totalScore);
     }
 }
