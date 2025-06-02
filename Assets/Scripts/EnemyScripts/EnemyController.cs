@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyController : MonoBehaviour
@@ -22,6 +23,8 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private float attackCooldown;
     [SerializeField] private float rotationSpeed;
     [SerializeField] private float rangedAttackRange;
+    [SerializeField] private int pointsOnDeath;
+    [SerializeField] private int coinsOnDeath;
 
     [Header("Detection")]
     [SerializeField] private float obstacleCheckCircleRadius;
@@ -56,11 +59,13 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private float miniSpawnRadius = 0.5f;
     [SerializeField] private float miniExplosionForce = 5f;
 
-
+    private BetterNoteManager noteManager;
+    private ScoreManager scoreManager;
     private bool isFiring;
     private bool isLeaping;
     private Rigidbody2D rb;
     private PlayerDetection playerDetection;
+
     private Vector2 targetDirection;
     private RaycastHit2D[] obstacleCollisions;
     private Transform player;
@@ -68,12 +73,20 @@ public class EnemyController : MonoBehaviour
     private bool enemyCollided;
     private bool hasLeaped = false;
     private bool leapRest = false;
-
+    private bool isAttacking;
 
     public int GetEnemyHealth => health;
 
     private void Awake()
     {
+        if (noteManager == null)
+        {
+            noteManager = FindFirstObjectByType<BetterNoteManager>();
+        }
+        if (scoreManager == null)
+        {
+            scoreManager = FindFirstObjectByType<ScoreManager>();
+        }
         rb = GetComponent<Rigidbody2D>();
         playerDetection = GetComponent<PlayerDetection>();
         obstacleCollisions = new RaycastHit2D[100];
@@ -100,14 +113,16 @@ public class EnemyController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        UpdateTargetDirection();
-        RotateTowardsTarget();
-        SetVelocity();
-        if (!isFiring && !isCooldown && PlayerDetected() && attackType == AttackType.Laser)
+        if (!noteManager.trackHolder.introRiff.isPlaying)
         {
-            StartCoroutine(FireLaser());
+            UpdateTargetDirection();
+            RotateTowardsTarget();
+            SetVelocity();
+            if (!isFiring && !isCooldown && PlayerDetected() && attackType == AttackType.Laser)
+            {
+                StartCoroutine(FireLaser());
+            }
         }
-
     }
 
 
@@ -145,11 +160,13 @@ public class EnemyController : MonoBehaviour
 
     private void SetVelocity()
     {
-        AnimatorStateInfo animState = enemyAnimator.GetCurrentAnimatorStateInfo(0);
-        if (leapRest || isFiring || isLeaping || targetDirection == Vector2.zero 
-            || (attackType == AttackType.Ranged && animState.IsName("attack") 
-            || (attackType == AttackType.Ranged && animState.IsName("walk") && isCooldown)))
+        if (attackType == AttackType.Ranged && isCooldown)
         {
+          rb.linearVelocity = Vector2.zero;
+           return;
+        }
+        if (leapRest || isFiring || isLeaping || targetDirection == Vector2.zero || (attackType == AttackType.Ranged && isAttacking))
+        { 
             rb.linearVelocity = Vector2.zero;
         }
         else if (hasLeaped)
@@ -314,6 +331,7 @@ public class EnemyController : MonoBehaviour
                 }
             }
             isCooldown = true;
+            isAttacking = false;
             PlayEnemyWalkingAnimation();
             if (rbProj != null)
             {
@@ -325,6 +343,14 @@ public class EnemyController : MonoBehaviour
     //Player detection for laser
     private bool PlayerDetected()
     {
+        if (player == null)
+            return false;
+
+        Vector2 startPos = projPos[0].position;
+        Vector2 direction = (player.position - projPos[0].position).normalized;
+
+        // Draw a ray in the editor view to visualize it
+        Debug.DrawRay(startPos, direction * 10f, Color.red);
         Debug.Log("Player Detected");
         RaycastHit2D hit = Physics2D.Raycast(projPos[0].position, projPos[0].up, Mathf.Infinity, playerLayer);
         return hit.collider != null;
@@ -390,18 +416,25 @@ public class EnemyController : MonoBehaviour
 
     public void Attack()
     {
-        switch (attackType)
+        if (!noteManager.trackHolder.introRiff.isPlaying)
         {
-            case AttackType.Melee:
-                Debug.Log("Melee Attack");
-                if (player != null && enemyCollided)
-                    player.GetComponent<HealthController>()?.TakeDamage(damage);
-                break;
-            case AttackType.Ranged:
-                Debug.Log("Ranged Attack");
-                if (player != null)
-                    ShootProjectile();
-                break;
+            switch (attackType)
+            {
+                case AttackType.Melee:
+                    Debug.Log("Melee Attack");
+                    if (player != null && enemyCollided)
+                        player.GetComponent<HealthController>()?.TakeDamage(damage);
+                    break;
+                case AttackType.Ranged:
+                    Debug.Log("Ranged Attack");
+                    if (player != null)
+                        ShootProjectile();
+                    break;
+            }
+        }
+        else
+        {
+            Debug.Log("Enemy cannot attack during intro riff");
         }
     }
 
@@ -417,6 +450,8 @@ public class EnemyController : MonoBehaviour
 
     private void OnDestroy()
     {
+        Debug.Log("Enemy Destroyed");
+        scoreManager.AddScore(pointsOnDeath);
         // Find the RoomDetection instance in the scene.
         RoomDetection roomDetection = Object.FindAnyObjectByType<RoomDetection>();
 
@@ -448,22 +483,22 @@ public class EnemyController : MonoBehaviour
                 }
 
                 // If the mini blob spawns inside the room, update the enemy count.
-                if (roomDetection != null)
-                {
-                    Collider2D roomCollider = roomDetection.GetComponent<Collider2D>();
-                    if (roomCollider != null && roomCollider.OverlapPoint(miniBlob.transform.position))
-                    {
-                        roomDetection.AddEnemy();
-                    }
-                }
+                //if (roomDetection != null)
+                //{
+                //    Collider2D roomCollider = roomDetection.GetComponent<Collider2D>();
+                //    //if (roomCollider != null && roomCollider.OverlapPoint(miniBlob.transform.position))
+                //    //{
+                //    //    roomDetection.AddEnemy();
+                //    //}
+                //}
             }
         }
 
-        
-        if (roomDetection != null && isInsideRoom && enemyType == EnemyType.Blobby)
-        {
-            roomDetection.RemoveEnemy();
-        }
+
+        //if (roomDetection != null && isInsideRoom && enemyType == EnemyType.Blobby)
+        //{
+        //    roomDetection.RemoveEnemy();
+        //}
     }
 
 
@@ -483,6 +518,8 @@ public class EnemyController : MonoBehaviour
                 leapSpeed = 5f;
                 leapDuration = 0.3f;
                 leapChargeDuration = 0.9f;
+                pointsOnDeath = 100;
+                coinsOnDeath = 100;
                 bulletCollision = false;
 
                 leapSpeed = 5f;
@@ -499,23 +536,27 @@ public class EnemyController : MonoBehaviour
                 rangedAttackRange = 2f;
                 projSpeed = 2f;
                 attackType = AttackType.Ranged;
+                pointsOnDeath = 200;
+                coinsOnDeath = 100;
                 bulletCollision = false;
                 break;
             case EnemyType.BigRat:
                 health = 3;
                 damage = 1;
-                speed = 0f;
+                speed = 0.5f;
                 attackCooldown = 2;
                 rotationSpeed = 500;
                 rangedAttackRange = 2f;
                 projSpeed = 2f;
                 attackType = AttackType.Ranged;
+                pointsOnDeath = 150;
+                coinsOnDeath = 100;
                 bulletCollision = false;
                 break;
             case EnemyType.Laser:
                 health = 3;
                 damage = 1;
-                speed = 0f;
+                speed = 0.5f;
                 attackCooldown = 1;
                 rotationSpeed = 500;
                 rangedAttackRange = 2f;
@@ -525,16 +566,20 @@ public class EnemyController : MonoBehaviour
                 laserDuration = 2f;
                 laserCooldown = 3f;
                 laserDamage = 2;
+                pointsOnDeath = 300;
+                coinsOnDeath = 100;
                 break;
             case EnemyType.BlobbyMini:
                 health = 3;
                 damage = 1;
-                speed = 0f;
-                attackCooldown = 2;
-                rotationSpeed = 0;
+                speed = 1f;
+                attackCooldown = 1.12f;
+                rotationSpeed = 500;
                 rangedAttackRange = 2f;
                 projSpeed = 3f;
                 attackType = AttackType.Ranged;
+                pointsOnDeath = 100;
+                coinsOnDeath = 100;
                 bulletCollision = false;
                 break;
         }
@@ -561,20 +606,29 @@ public class EnemyController : MonoBehaviour
 
     public void PlayEnemyAttackAnimation()
     {
-        switch (enemyType)
+        if (!noteManager.trackHolder.introRiff.isPlaying)
         {
-            case EnemyType.Rat:
-            case EnemyType.BigRat:
-            case EnemyType.Laser:
-                enemyAnimator.Play("attack");
-                break;
-            case EnemyType.Blobby:
-                enemyAnimator.Play("blob_attack");
-                break;
-            case EnemyType.BlobbyMini:
-                enemyAnimator.Play("blob_attack");
-                break;
-            
+            isAttacking = true;
+
+            switch (enemyType)
+            {
+                case EnemyType.Rat:
+                case EnemyType.BigRat:
+                case EnemyType.Laser:
+                    enemyAnimator.Play("attack");
+                    break;
+                case EnemyType.Blobby:
+                    enemyAnimator.Play("blob_attack");
+                    break;
+                case EnemyType.BlobbyMini:
+                    enemyAnimator.Play("blob_attack");
+                    break;
+
+            }
+        }
+        else
+        {
+            Debug.Log("Enemy cannot attack during intro riff");
         }
     }
 }

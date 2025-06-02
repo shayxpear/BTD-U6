@@ -210,11 +210,35 @@ MonoBehaviour:
   speed: 1
   attackCooldown: 1
   rotationSpeed: 500
+  rangedAttackRange: 0
+  pointsOnDeath: 100
   obstacleCheckCircleRadius: 0.2
   obstacleCheckDistance: 0.1
   obstacleLayerMask:
     serializedVersion: 2
     m_Bits: 769
+  projSpeed: 2
+  projPos: []
+  projPrefab: {fileID: 0}
+  bulletCollision: 0
+  leapSpeed: 5
+  leapDuration: 0.3
+  leapChargeDuration: 0.95
+  leapCooldown: 1
+  laserLines: []
+  laserDuration: 0
+  laserCooldown: 0
+  laserDamage: 0
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  laserHitLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  attackTriggerCollider: {fileID: 0}
+  blobbyMiniPrefabs: []
+  miniSpawnRadius: 0.5
+  miniExplosionForce: 5
 --- !u!114 &1449853393039647472
 MonoBehaviour:
   m_ObjectHideFlags: 0
