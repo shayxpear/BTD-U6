@@ -48,20 +48,29 @@ public class HealthController : MonoBehaviour
     {
         if (playerController != null)
         {
-            //Debug.Log("Player has died.");
-            // Add player death logic here.
+            Destroy(gameObject);
+            Debug.Log("Player has died.");
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            //StartCoroutine(Respawn());
+           
         }
         else if (enemyController != null)
         {
             //Debug.Log("Enemy has died.");
             // Add enemy death logic here.
+            Destroy(gameObject);
         }
-
-        Destroy(gameObject);
     }
 
     public int GetCurrentHealth()
     {
         return currentHealth;
+    }
+
+    IEnumerator Respawn()
+    {
+        
+        yield return new WaitForSeconds(0.9f);
+        
     }
 }
