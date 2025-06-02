@@ -74,7 +74,8 @@ public class EnemyController : MonoBehaviour
     private bool hasLeaped = false;
     private bool leapRest = false;
     private bool isAttacking;
-
+    private bool isDying = false;
+    public bool ouch = false;
     public int GetEnemyHealth => health;
 
     private void Awake()
@@ -165,7 +166,7 @@ public class EnemyController : MonoBehaviour
           rb.linearVelocity = Vector2.zero;
            return;
         }
-        if (leapRest || isFiring || isLeaping || targetDirection == Vector2.zero || (attackType == AttackType.Ranged && isAttacking))
+        if (ouch || leapRest || isFiring || isLeaping || targetDirection == Vector2.zero || (attackType == AttackType.Ranged && isAttacking))
         { 
             rb.linearVelocity = Vector2.zero;
         }
@@ -273,7 +274,7 @@ public class EnemyController : MonoBehaviour
         }
         if (collision.gameObject == GameObject.FindGameObjectWithTag("Player") && attackType == AttackType.Ranged && isCooldown)
         {
-            PlayEnemyWalkingAnimation();
+            //PlayEnemyWalkingAnimation();
         }
     }
     private IEnumerator LeapAttack()
@@ -311,12 +312,14 @@ public class EnemyController : MonoBehaviour
 
 
 
-    private void ShootProjectile()
+    private IEnumerator ShootProjectileCoroutine()
     {
         Debug.Log("Shooting Projectile");
+
+        // Instantiate projectiles for each spawn point.
         foreach (Transform pos in projPos)
         {
-            // Use the spawn point's rotation instead of parent's rotation
+            // Use the spawn point's rotation instead of the parent's rotation.
             GameObject newProjectile = Instantiate(projPrefab, pos.position, pos.rotation);
             Rigidbody2D rbProj = newProjectile.GetComponent<Rigidbody2D>();
             Bullet bullet = newProjectile.GetComponent<Bullet>();
@@ -325,20 +328,28 @@ public class EnemyController : MonoBehaviour
             {
                 bullet.enemyBulletDamage = damage;
                 bullet.bulletCollision = bulletCollision;
-                if (bullet.bulletCollision)
-                {
-                    Debug.Log("Bullet Collision Off");
-                }
             }
-            isCooldown = true;
-            isAttacking = false;
-            PlayEnemyWalkingAnimation();
+
             if (rbProj != null)
             {
-                // Use the spawn point's up direction instead of parent's up
                 rbProj.linearVelocity = pos.up * projSpeed;
             }
         }
+
+        // Set flags indicating the attack is done.
+        isCooldown = true;
+        isAttacking = false;
+
+        // Wait until the attack animation finishes.
+        yield return new WaitUntil(() =>
+        {
+            AnimatorStateInfo stateInfo = enemyAnimator.GetCurrentAnimatorStateInfo(0);
+            // Replace "attack" with the actual name of your attack animation state.
+            return !stateInfo.IsName("blob_attack") || stateInfo.normalizedTime >= 1f;
+        });
+
+        // Now that the attack animation is complete, play the walking animation.
+        PlayEnemyWalkingAnimation();
     }
     //Player detection for laser
     private bool PlayerDetected()
@@ -428,7 +439,7 @@ public class EnemyController : MonoBehaviour
                 case AttackType.Ranged:
                     Debug.Log("Ranged Attack");
                     if (player != null)
-                        ShootProjectile();
+                        StartCoroutine(ShootProjectileCoroutine());
                     break;
             }
         }
@@ -588,6 +599,8 @@ public class EnemyController : MonoBehaviour
     //Hold Enemy Animations
     public void PlayEnemyWalkingAnimation()
     {
+        if (isDying || ouch)
+            return;
         switch (enemyType)
         {
             case EnemyType.Rat:
@@ -606,6 +619,8 @@ public class EnemyController : MonoBehaviour
 
     public void PlayEnemyAttackAnimation()
     {
+        if (isDying || ouch)
+            return;
         if (!noteManager.trackHolder.introRiff.isPlaying)
         {
             isAttacking = true;
@@ -629,6 +644,36 @@ public class EnemyController : MonoBehaviour
         else
         {
             Debug.Log("Enemy cannot attack during intro riff");
+        }
+    }
+    public void PlayEnemyDeathAnimation()
+    {
+        isDying = true;
+        switch (enemyType)
+        {
+            case EnemyType.Rat:
+            case EnemyType.Laser:
+            case EnemyType.BigRat:
+            case EnemyType.Blobby:
+            case EnemyType.BlobbyMini:
+                enemyAnimator.Play("death");
+                break;
+        }
+    }
+    public void PlayEnemyHurtAnimation()
+    {
+        ouch = true;
+        if (isDying)
+            return;
+        switch (enemyType)
+        {
+            case EnemyType.Rat:
+            case EnemyType.Laser:
+            case EnemyType.BigRat:
+            case EnemyType.Blobby:
+            case EnemyType.BlobbyMini:
+                enemyAnimator.Play("hurt");
+                break;
         }
     }
 }

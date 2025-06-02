@@ -1,0 +1,611 @@
+fileFormatVersion: 2
+guid: 5d6488fd67552c4408c03da63a8e6329
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 920509228752762632
+    second: Mob_BlobAttack_0
+  - first:
+      213: -7221260432129482615
+    second: Mob_BlobAttack_1
+  - first:
+      213: 6720028646317278311
+    second: Mob_BlobAttack_2
+  - first:
+      213: -8833972686063648090
+    second: Mob_BlobAttack_3
+  - first:
+      213: -5289731004361294878
+    second: Mob_BlobAttack_4
+  - first:
+      213: 7545397908407116292
+    second: Mob_BlobAttack_5
+  - first:
+      213: 4316350182765125079
+    second: Mob_BlobAttack_6
+  - first:
+      213: -72946723591257484
+    second: Mob_BlobAttack_7
+  - first:
+      213: -4480181429781442780
+    second: Mob_BlobAttack_8
+  - first:
+      213: -2111291336385252274
+    second: Mob_BlobAttack_9
+  - first:
+      213: 6692321546412749723
+    second: Mob_BlobAttack_10
+  - first:
+      213: 5396139621561410075
+    second: Mob_BlobAttack_11
+  - first:
+      213: -3367865100171593006
+    second: Mob_BlobAttack_12
+  - first:
+      213: 5955131250099836461
+    second: Mob_BlobAttack_13
+  - first:
+      213: -8713322270901321740
+    second: Mob_BlobAttack_14
+  - first:
+      213: -4942155318379810594
+    second: Mob_BlobAttack_15
+  - first:
+      213: -8120767931814341593
+    second: Mob_BlobAttack_16
+  - first:
+      213: 5268873932418092321
+    second: Mob_BlobAttack_17
+  - first:
+      213: 2810779188382315238
+    second: Mob_BlobAttack_18
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Mob_BlobAttack_0
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 6
+        width: 49
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 807f648344e46cc00800000000000000
+      internalID: 920509228752762632
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mob_BlobAttack_1
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 6
+        width: 42
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 980a65895ede8cb90800000000000000
+      internalID: -7221260432129482615
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mob_BlobAttack_2
+      rect:
+        serializedVersion: 2
+        x: 137
+        y: 6
+        width: 38
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 764c0381376524d50800000000000000
+      internalID: 6720028646317278311
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mob_BlobAttack_3
+      rect:
+        serializedVersion: 2
+        x: 203
+        y: 6
+        width: 28
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6a24cab75ac676580800000000000000
+      internalID: -8833972686063648090
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mob_BlobAttack_4
+      rect:
+        serializedVersion: 2
+        x: 265
+        y: 6
+        width: 28
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2ebbcaf7da91796b0800000000000000
+      internalID: -5289731004361294878
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mob_BlobAttack_5
+      rect:
+        serializedVersion: 2
+        x: 327
+        y: 6
+        width: 28
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 402e493ab63a6b860800000000000000
+      internalID: 7545397908407116292
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mob_BlobAttack_6
+      rect:
+        serializedVersion: 2
+        x: 389
+        y: 6
+        width: 28
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7dd58e94f91c6eb30800000000000000
+      internalID: 4316350182765125079
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mob_BlobAttack_7
+      rect:
+        serializedVersion: 2
+        x: 450
+        y: 6
+        width: 30
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 47280d46757dcfef0800000000000000
+      internalID: -72946723591257484
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mob_BlobAttack_8
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 6
+        width: 30
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 42f43940ab233d1c0800000000000000
+      internalID: -4480181429781442780
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mob_BlobAttack_9
+      rect:
+        serializedVersion: 2
+        x: 574
+        y: 6
+        width: 30
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e44b56537bf23b2e0800000000000000
+      internalID: -2111291336385252274
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mob_BlobAttack_10
+      rect:
+        serializedVersion: 2
+        x: 636
+        y: 6
+        width: 30
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b93ff903df6efdc50800000000000000
+      internalID: 6692321546412749723
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mob_BlobAttack_11
+      rect:
+        serializedVersion: 2
+        x: 698
+        y: 6
+        width: 30
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b1224955560f2ea40800000000000000
+      internalID: 5396139621561410075
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mob_BlobAttack_12
+      rect:
+        serializedVersion: 2
+        x: 760
+        y: 6
+        width: 30
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2da36dcf880f241d0800000000000000
+      internalID: -3367865100171593006
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mob_BlobAttack_13
+      rect:
+        serializedVersion: 2
+        x: 822
+        y: 6
+        width: 30
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d2657010250e4a250800000000000000
+      internalID: 5955131250099836461
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mob_BlobAttack_14
+      rect:
+        serializedVersion: 2
+        x: 884
+        y: 6
+        width: 30
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4ff3d6d4f8f041780800000000000000
+      internalID: -8713322270901321740
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mob_BlobAttack_15
+      rect:
+        serializedVersion: 2
+        x: 946
+        y: 6
+        width: 30
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ed0f92f2cefe96bb0800000000000000
+      internalID: -4942155318379810594
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mob_BlobAttack_16
+      rect:
+        serializedVersion: 2
+        x: 1001
+        y: 6
+        width: 45
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 72492d8779c3d4f80800000000000000
+      internalID: -8120767931814341593
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mob_BlobAttack_17
+      rect:
+        serializedVersion: 2
+        x: 1060
+        y: 4
+        width: 54
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 12d88140decce1940800000000000000
+      internalID: 5268873932418092321
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mob_BlobAttack_18
+      rect:
+        serializedVersion: 2
+        x: 1122
+        y: 4
+        width: 54
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e2b69997c4e10720800000000000000
+      internalID: 2810779188382315238
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Mob_BlobAttack_0: 920509228752762632
+      Mob_BlobAttack_1: -7221260432129482615
+      Mob_BlobAttack_10: 6692321546412749723
+      Mob_BlobAttack_11: 5396139621561410075
+      Mob_BlobAttack_12: -3367865100171593006
+      Mob_BlobAttack_13: 5955131250099836461
+      Mob_BlobAttack_14: -8713322270901321740
+      Mob_BlobAttack_15: -4942155318379810594
+      Mob_BlobAttack_16: -8120767931814341593
+      Mob_BlobAttack_17: 5268873932418092321
+      Mob_BlobAttack_18: 2810779188382315238
+      Mob_BlobAttack_2: 6720028646317278311
+      Mob_BlobAttack_3: -8833972686063648090
+      Mob_BlobAttack_4: -5289731004361294878
+      Mob_BlobAttack_5: 7545397908407116292
+      Mob_BlobAttack_6: 4316350182765125079
+      Mob_BlobAttack_7: -72946723591257484
+      Mob_BlobAttack_8: -4480181429781442780
+      Mob_BlobAttack_9: -2111291336385252274
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

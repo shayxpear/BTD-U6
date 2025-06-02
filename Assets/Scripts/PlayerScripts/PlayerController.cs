@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour
     private GameObject guitarController;
     private Transform playerSpriteTransform;
     private SpriteRenderer guitarSpriteRenderer;
-
+    private BetterNoteManager noteManager;
     public bool CanDash { get; private set; }
     public int GetPlayerHealth => health;
     private float currentDashTime;
@@ -42,7 +42,8 @@ public class PlayerController : MonoBehaviour
 
         playerSpriteTransform = spriteController.GetComponent<Transform>();
         guitarSpriteRenderer = guitarController.GetComponent<SpriteRenderer>();
-        
+
+        noteManager = FindFirstObjectByType<BetterNoteManager>();
         CanDash = true;
     }
 
@@ -101,6 +102,7 @@ public class PlayerController : MonoBehaviour
         CanDash = true;
         playerCollider.excludeLayers = LayerMask.GetMask("Nothing");
         rb.excludeLayers = LayerMask.GetMask("Nothing");
+        dashCooldown = noteManager.bpm / 60; // Reset the dash cooldown to the current BPM of the song.
         yield return new WaitForSeconds(dashCooldown);
         isCooldown = false;
     }

@@ -1,0 +1,429 @@
+fileFormatVersion: 2
+guid: e74b26d503982e74b9f44e5b275bdee5
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -717496110311338753
+    second: Mob_BlobHurt_0
+  - first:
+      213: 8962800622405157800
+    second: Mob_BlobHurt_1
+  - first:
+      213: 1418211068846631667
+    second: Mob_BlobHurt_2
+  - first:
+      213: -12208268066288123
+    second: Mob_BlobHurt_3
+  - first:
+      213: -2980396824222783114
+    second: Mob_BlobHurt_4
+  - first:
+      213: -8093868841463682933
+    second: Mob_BlobHurt_5
+  - first:
+      213: 2239018014952627726
+    second: Mob_BlobHurt_6
+  - first:
+      213: 2694380430421038753
+    second: Mob_BlobHurt_7
+  - first:
+      213: -7343171113235282404
+    second: Mob_BlobHurt_8
+  - first:
+      213: 8125451495751370271
+    second: Mob_BlobHurt_9
+  - first:
+      213: -8389790325108013940
+    second: Mob_BlobHurt_10
+  - first:
+      213: -2417415653297994266
+    second: Mob_BlobHurt_11
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Mob_BlobHurt_0
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 6
+        width: 49
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ffc0b21d611fa06f0800000000000000
+      internalID: -717496110311338753
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mob_BlobHurt_1
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 5
+        width: 47
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a30c1bdda3426c70800000000000000
+      internalID: 8962800622405157800
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mob_BlobHurt_2
+      rect:
+        serializedVersion: 2
+        x: 133
+        y: 5
+        width: 47
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3fa612ff37f7ea310800000000000000
+      internalID: 1418211068846631667
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mob_BlobHurt_3
+      rect:
+        serializedVersion: 2
+        x: 195
+        y: 4
+        width: 44
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 50e069615a0a4dff0800000000000000
+      internalID: -12208268066288123
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mob_BlobHurt_4
+      rect:
+        serializedVersion: 2
+        x: 257
+        y: 4
+        width: 44
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 679af7211e083a6d0800000000000000
+      internalID: -2980396824222783114
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mob_BlobHurt_5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 3
+        width: 42
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b8864fdfb2dccaf80800000000000000
+      internalID: -8093868841463682933
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mob_BlobHurt_6
+      rect:
+        serializedVersion: 2
+        x: 382
+        y: 2
+        width: 43
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e0e93f29507921f10800000000000000
+      internalID: 2239018014952627726
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mob_BlobHurt_7
+      rect:
+        serializedVersion: 2
+        x: 444
+        y: 2
+        width: 43
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a6920dd9bc546520800000000000000
+      internalID: 2694380430421038753
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mob_BlobHurt_8
+      rect:
+        serializedVersion: 2
+        x: 505
+        y: 4
+        width: 44
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c1683be37c0d71a90800000000000000
+      internalID: -7343171113235282404
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mob_BlobHurt_9
+      rect:
+        serializedVersion: 2
+        x: 568
+        y: 4
+        width: 42
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f164debb51763c070800000000000000
+      internalID: 8125451495751370271
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mob_BlobHurt_10
+      rect:
+        serializedVersion: 2
+        x: 629
+        y: 5
+        width: 47
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c848deb762a719b80800000000000000
+      internalID: -8389790325108013940
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mob_BlobHurt_11
+      rect:
+        serializedVersion: 2
+        x: 691
+        y: 5
+        width: 47
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e544b6754d937ed0800000000000000
+      internalID: -2417415653297994266
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Mob_BlobHurt_0: -717496110311338753
+      Mob_BlobHurt_1: 8962800622405157800
+      Mob_BlobHurt_10: -8389790325108013940
+      Mob_BlobHurt_11: -2417415653297994266
+      Mob_BlobHurt_2: 1418211068846631667
+      Mob_BlobHurt_3: -12208268066288123
+      Mob_BlobHurt_4: -2980396824222783114
+      Mob_BlobHurt_5: -8093868841463682933
+      Mob_BlobHurt_6: 2239018014952627726
+      Mob_BlobHurt_7: 2694380430421038753
+      Mob_BlobHurt_8: -7343171113235282404
+      Mob_BlobHurt_9: 8125451495751370271
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
