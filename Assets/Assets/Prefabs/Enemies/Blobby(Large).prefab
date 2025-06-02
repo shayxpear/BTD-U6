@@ -484,12 +484,13 @@ MonoBehaviour:
   attackCooldown: 2
   rotationSpeed: 0
   rangedAttackRange: 2
+  pointsOnDeath: 200
   obstacleCheckCircleRadius: 0.2
   obstacleCheckDistance: 0.1
   obstacleLayerMask:
     serializedVersion: 2
     m_Bits: 769
-  projSpeed: 3
+  projSpeed: 2
   projPos:
   - {fileID: 1753438689483025265}
   - {fileID: 3787680479060540115}
@@ -508,7 +509,7 @@ MonoBehaviour:
   laserLines: []
   laserDuration: 2
   laserCooldown: 3
-  laserDamage: 0
+  laserDamage: 2
   playerLayer:
     serializedVersion: 2
     m_Bits: 64

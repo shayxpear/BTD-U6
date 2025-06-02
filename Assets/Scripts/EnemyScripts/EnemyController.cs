@@ -24,6 +24,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private float rotationSpeed;
     [SerializeField] private float rangedAttackRange;
     [SerializeField] private int pointsOnDeath;
+    [SerializeField] private int coinsOnDeath;
 
     [Header("Detection")]
     [SerializeField] private float obstacleCheckCircleRadius;
@@ -518,6 +519,7 @@ public class EnemyController : MonoBehaviour
                 leapDuration = 0.3f;
                 leapChargeDuration = 0.9f;
                 pointsOnDeath = 100;
+                coinsOnDeath = 100;
                 bulletCollision = false;
 
                 leapSpeed = 5f;
@@ -535,24 +537,26 @@ public class EnemyController : MonoBehaviour
                 projSpeed = 2f;
                 attackType = AttackType.Ranged;
                 pointsOnDeath = 200;
+                coinsOnDeath = 100;
                 bulletCollision = false;
                 break;
             case EnemyType.BigRat:
                 health = 3;
                 damage = 1;
-                speed = 0f;
+                speed = 0.5f;
                 attackCooldown = 2;
                 rotationSpeed = 500;
                 rangedAttackRange = 2f;
                 projSpeed = 2f;
                 attackType = AttackType.Ranged;
                 pointsOnDeath = 150;
+                coinsOnDeath = 100;
                 bulletCollision = false;
                 break;
             case EnemyType.Laser:
                 health = 3;
                 damage = 1;
-                speed = 0f;
+                speed = 0.5f;
                 attackCooldown = 1;
                 rotationSpeed = 500;
                 rangedAttackRange = 2f;
@@ -563,17 +567,19 @@ public class EnemyController : MonoBehaviour
                 laserCooldown = 3f;
                 laserDamage = 2;
                 pointsOnDeath = 300;
+                coinsOnDeath = 100;
                 break;
             case EnemyType.BlobbyMini:
                 health = 3;
                 damage = 1;
-                speed = 0f;
-                attackCooldown = 2;
-                rotationSpeed = 0;
+                speed = 1f;
+                attackCooldown = 1.12f;
+                rotationSpeed = 500;
                 rangedAttackRange = 2f;
                 projSpeed = 3f;
                 attackType = AttackType.Ranged;
                 pointsOnDeath = 100;
+                coinsOnDeath = 100;
                 bulletCollision = false;
                 break;
         }

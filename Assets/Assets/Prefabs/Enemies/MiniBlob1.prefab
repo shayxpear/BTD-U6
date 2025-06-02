@@ -406,8 +406,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46cfda66e8074414aa52dce670cc7ded, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyType: 1
-  lastEnemyType: 1
+  enemyType: 3
+  lastEnemyType: 3
   attackType: 1
   enemyAnimator: {fileID: 4582173307286183198}
   health: 3
@@ -416,6 +416,7 @@ MonoBehaviour:
   attackCooldown: 1.12
   rotationSpeed: 500
   rangedAttackRange: 2
+  pointsOnDeath: 100
   obstacleCheckCircleRadius: 0.2
   obstacleCheckDistance: 0.1
   obstacleLayerMask:

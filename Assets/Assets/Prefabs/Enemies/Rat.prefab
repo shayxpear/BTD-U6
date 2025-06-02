@@ -211,12 +211,13 @@ MonoBehaviour:
   attackCooldown: 1
   rotationSpeed: 500
   rangedAttackRange: 0
+  pointsOnDeath: 100
   obstacleCheckCircleRadius: 0.2
   obstacleCheckDistance: 0.1
   obstacleLayerMask:
     serializedVersion: 2
     m_Bits: 769
-  projSpeed: 3
+  projSpeed: 2
   projPos: []
   projPrefab: {fileID: 0}
   bulletCollision: 0
