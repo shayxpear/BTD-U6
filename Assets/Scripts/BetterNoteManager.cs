@@ -249,7 +249,7 @@ public class BetterNoteManager : MonoBehaviour
 
         foreach (RectTransform note in activeLeftNotes)
         {
-            if (Mathf.Abs(note.anchoredPosition.x - (notebar.rect.width / 2)) < mainCircle.rectTransform.rect.width)
+            if (Mathf.Abs(note.anchoredPosition.x - (notebar.rect.width / 2)) < mainCircle.rectTransform.rect.width + hitDistance)
             {
                 leftSideCollided = true;
             }
@@ -257,7 +257,7 @@ public class BetterNoteManager : MonoBehaviour
 
         foreach (RectTransform note in activeRightNotes)
         {
-            if (Mathf.Abs((note.anchoredPosition.x * -1) - (notebar.rect.width / 2)) < mainCircle.rectTransform.rect.width)
+            if (Mathf.Abs((note.anchoredPosition.x * -1) - (notebar.rect.width / 2)) < mainCircle.rectTransform.rect.width + hitDistance)
             {
                 rightSideCollided = true;
             }
