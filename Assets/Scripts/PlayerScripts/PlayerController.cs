@@ -102,7 +102,7 @@ public class PlayerController : MonoBehaviour
         CanDash = true;
         playerCollider.excludeLayers = LayerMask.GetMask("Nothing");
         rb.excludeLayers = LayerMask.GetMask("Nothing");
-        dashCooldown = noteManager.bpm / 60; // Reset the dash cooldown to the current BPM of the song.
+        dashCooldown = (60f/noteManager.bpm); // Reset the dash cooldown to the current BPM of the song.
         yield return new WaitForSeconds(dashCooldown);
         isCooldown = false;
     }
