@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class RoomDetection : MonoBehaviour
 {
@@ -7,6 +8,7 @@ public class RoomDetection : MonoBehaviour
     private BetterNoteManager noteManager;
     private TrackHolder trackHolder;
 
+    private Coroutine closeRoomCoroutine;
     public int enemiesInRange = 0;
     public void Start()
     {
@@ -30,6 +32,13 @@ public class RoomDetection : MonoBehaviour
     {
         if (playerInRange && enemiesInRange > 0)
         {
+            // Cancel any pending close
+            if (closeRoomCoroutine != null)
+            {
+                StopCoroutine(closeRoomCoroutine);
+                closeRoomCoroutine = null;
+            }
+
             Doors.SetActive(true);
             if (!noteManager.started)
             {
@@ -41,14 +50,15 @@ public class RoomDetection : MonoBehaviour
                 noteManager.StartSong();
                 trackHolder.backgroundSong.Stop();
             }
-
             noteManager.ended = false;
         }
         else
         {
-            Doors.SetActive(false);
-            noteManager.ended = true;
-            if (!trackHolder.backgroundSong.isPlaying) { trackHolder.backgroundSong.Play(); }
+            // Start delayed close if not already running
+            if (closeRoomCoroutine == null)
+            {
+                closeRoomCoroutine = StartCoroutine(CloseRoomWithDelay());
+            }
         }
     }
 
@@ -71,5 +81,21 @@ public class RoomDetection : MonoBehaviour
         {
             enemiesInRange = Mathf.Max(0, enemiesInRange - 1);
         }
+    }
+    private IEnumerator CloseRoomWithDelay() 
+    {
+        yield return new WaitForSeconds(0.1f);
+
+        // Double-check state in case enemies/player came back during the delay
+        if (!(playerInRange && enemiesInRange > 0))
+        {
+            Doors.SetActive(false);
+            noteManager.ended = true;
+            if (!trackHolder.backgroundSong.isPlaying)
+            {
+                trackHolder.backgroundSong.Play();
+            }
+        }
+        closeRoomCoroutine = null;
     }
 }

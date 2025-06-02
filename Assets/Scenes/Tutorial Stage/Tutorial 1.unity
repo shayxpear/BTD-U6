@@ -7599,6 +7599,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4b7aae911166234a9f8164e6a2a21df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isDead: 0
   roomDetection: {fileID: 86782881}
   spawnPoints:
   - {fileID: 1624625388}
@@ -11603,7 +11604,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2897e9cdf24fbf2418816540bb57fd9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyScorePoint: 0
   totalScore: 0
   scoreMultiplier: 0
 --- !u!4 &1064810826
@@ -23009,8 +23009,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitTolerance: 0.05
-  hitDistance: 500
-  bpm: 0
+  hitDistance: 50
+  bpm: 100
   notebar: {fileID: 4315506749363859661}
   mainCircle: {fileID: 6492864688097953953}
   miss: {fileID: 5007386461095583610}
@@ -23253,6 +23253,7 @@ MonoBehaviour:
   playerUI: {fileID: 966633497016133035}
   trackHolder: {fileID: 239965322}
   gameManager: {fileID: 762805479}
+  noteManager: {fileID: 0}
 --- !u!114 &3979627798117057977
 MonoBehaviour:
   m_ObjectHideFlags: 0

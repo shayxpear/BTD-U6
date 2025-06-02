@@ -13,6 +13,7 @@ public class CrosshairSpriteController : MonoBehaviour
     [SerializeField] private PlayerUI playerUI;
     [SerializeField] private TrackHolder trackHolder;
     [SerializeField] private GameManager gameManager;
+    [SerializeField] private BetterNoteManager noteManager;
 
     // Call this to start the crosshair animation
     public void StartCrosshairCoroutine(List<double> leftNoteTimes, List<double> rightNoteTimes, System.Func<double> getAudioSourceTime)
@@ -89,7 +90,7 @@ public class CrosshairSpriteController : MonoBehaviour
             // If the song ends during the segment, reset to white
             if (!trackHolder.guitarRiff.isPlaying && (gameManager == null || !gameManager.isPaused))
             {
-                ResetToWhiteCrosshair();
+                StartCoroutine(ResetToWhiteCrosshair());
                 yield break;
             }
         }
@@ -97,14 +98,29 @@ public class CrosshairSpriteController : MonoBehaviour
         // Wait until the audio completes playing before resetting to white
         yield return new WaitUntil(() => !trackHolder.guitarRiff.isPlaying);
 
-        ResetToWhiteCrosshair();
+        StartCoroutine(ResetToWhiteCrosshair());
     }
 
-    private void ResetToWhiteCrosshair()
+    private IEnumerator ResetToWhiteCrosshair()
     {
-        if (whiteCrosshairSprites != null && whiteCrosshairSprites.Length > 0)
+        if (whiteCrosshairSprites == null || whiteCrosshairSprites.Length == 0)
+            yield break;
+
+        // Get BPM from BetterNoteManager if available
+        float bpm = 120f;
+        var noteManager = FindFirstObjectByType<BetterNoteManager>();
+        if (noteManager != null)
+            bpm = noteManager.bpm;
+
+        float beatDuration = 60f / bpm;
+        float frameDuration = beatDuration / whiteCrosshairSprites.Length;
+
+        int spriteIndex = 0;
+        while (true)
         {
-            crosshairRenderer.sprite = whiteCrosshairSprites[0];
+            crosshairRenderer.sprite = whiteCrosshairSprites[spriteIndex];
+            spriteIndex = (spriteIndex + 1) % whiteCrosshairSprites.Length;
+            yield return new WaitForSeconds(frameDuration);
         }
     }
 }

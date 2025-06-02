@@ -8,11 +8,11 @@ using Melanchall.DryWetMidi.Interaction;
 public class BetterNoteManager : MonoBehaviour
 {
     [Header("Hit Tolerance")]
-    [SerializeField] private float hitTolerance; //Based off of seconds
+    [SerializeField] public float hitTolerance; //Based off of seconds
     [SerializeField] private float hitDistance; //Based off of the extra width of the mainCircle
 
     [Header("BPM")]
-    [SerializeField] private float bpm; // Set this in the inspector or calculate from MIDI
+    [SerializeField] public float bpm; // Set this in the inspector or calculate from MIDI
 
     [Header("Canvas Elements")]
     [SerializeField] private RectTransform notebar; // Note bar rectangle will spawn left circles at left edge and right circles at right edge

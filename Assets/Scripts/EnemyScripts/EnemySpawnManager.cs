@@ -11,6 +11,8 @@ public class EnemySpawnInfo
 
 public class EnemySpawnManager : MonoBehaviour
 {
+    [HideInInspector] public bool isDead;
+
     [Header("Room Reference")]
     [SerializeField] private RoomDetection roomDetection;
 
@@ -36,7 +38,7 @@ public class EnemySpawnManager : MonoBehaviour
     {
         if (roomDetection == null)
         {
-            roomDetection = FindFirstObjectByType < RoomDetection >();
+            roomDetection = FindFirstObjectByType <RoomDetection>();
         }
         if (noteManager == null)
         {
@@ -55,6 +57,7 @@ public class EnemySpawnManager : MonoBehaviour
             StartSpawning();
             
         }
+        Debug.Log("Player Dead " + isDead);
     }
     public void StartSpawning()
     {

@@ -8,6 +8,7 @@ public class HealthController : MonoBehaviour
     private int currentHealth;
     private PlayerController playerController;
     private EnemyController enemyController;
+    private EnemySpawnManager enemySpawnManager;
 
     void Awake()
     {
@@ -17,6 +18,7 @@ public class HealthController : MonoBehaviour
         if (this.playerController != null)
         {
             currentHealth = playerController.GetPlayerHealth;
+            enemySpawnManager = FindFirstObjectByType<EnemySpawnManager>();
         }
         else if (this.enemyController != null)
         {
@@ -48,6 +50,15 @@ public class HealthController : MonoBehaviour
     {
         if (playerController != null)
         {
+            if (enemySpawnManager != null)
+            {
+                Debug.Log("Setting isDead to true on EnemySpawnManager");
+                enemySpawnManager.isDead = true;
+            }
+            else
+            {
+                Debug.LogWarning("EnemySpawnManager not found!");
+            }
             Destroy(gameObject);
             Debug.Log("Player has died.");
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
@@ -61,7 +72,10 @@ public class HealthController : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
+    private void OnDestroy()
+    {
+     
+    }
     public int GetCurrentHealth()
     {
         return currentHealth;

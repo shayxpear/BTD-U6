@@ -81,7 +81,7 @@ public class EnemyController : MonoBehaviour
     {
         if (noteManager == null)
         {
-            noteManager = FindFirstObjectByType<BetterNoteManager>();
+            noteManager = GameObject.Find("NoteManager").GetComponent<BetterNoteManager>();
         }
         if (scoreManager == null)
         {
