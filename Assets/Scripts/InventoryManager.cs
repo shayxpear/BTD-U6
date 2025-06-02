@@ -23,6 +23,17 @@ public class InventoryManager : MonoBehaviour
     {
         isInventoryOpen = !isInventoryOpen;  // Toggle the inventory state
         inventoryPanel.SetActive(isInventoryOpen);  // Show or hide the inventory UI
+
+        //if (isInventoryOpen)
+       // {
+            //Cursor.lockState = CursorLockMode.None;
+            //Cursor.visible = true;
+       // }
+        //else
+        //{
+         //   Cursor.lockState = CursorLockMode.Locked;
+         //   Cursor.visible = false;
+        //}
     }
     public bool AddItem(ItemInstance itemData)
     {

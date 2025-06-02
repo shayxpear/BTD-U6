@@ -2,12 +2,15 @@ using UnityEngine;
 
 public class ItemPickup : MonoBehaviour
 {
-    public InventoryManager inventory;  // Reference to the player's inventory
-    //private bool playerInRange = false;  // Whether the player is in range of the item
+      // Reference to the player's inventory
     private ItemInstance itemData;  // Reference to the item's data (item name, icon, type)
     public GameObject inventoryManager;
     public GameObject HeartStickerUI;
     public Slot[] slots;
+
+    public PlayerController playerController;
+    public InventoryManager inventory;
+
 
     private void Start()
     {
@@ -29,14 +32,17 @@ public class ItemPickup : MonoBehaviour
     {
         if (other.CompareTag("Player"))  // Check if the player enters the item trigger
         {
-            Debug.Log("Player entered item trigger.");
-            //playerInRange = true;
-            itemData = GetComponent<ItemInstance>();  // Get the ItemInstance data from the pickup object
+          Debug.Log("Player entered item trigger.");
+         //playerInRange = true;
+        itemData = GetComponent<ItemInstance>();  // Get the ItemInstance data from the pickup object
 
-            // Automatically pick up the item when entering the trigger
-            PickupItem();
-        }
+        //Automatically pick up the item when entering the trigger
+         PickupItem();
+         }
+        
     }
+
+
 
     // Called when the player exits the trigger area
     private void OnTriggerExit2D(Collider2D other)
@@ -49,30 +55,36 @@ public class ItemPickup : MonoBehaviour
         }
     }
 
-    // Function to handle the item pickup logic
-    private void PickupItem()
+   
+private void PickupItem()
     {
         if (inventory != null && itemData != null)
         {
             Debug.Log("Attempting to add item to inventory: " + itemData.itemName);
-            bool added = inventory.AddItem(itemData);  // Add the item to the inventory
+            bool added = inventory.AddItem(itemData);
 
+
+            if (playerController != null)
+            {
+                playerController.SetHealth(9);
+                Destroy(gameObject);
+                Debug.Log("healed");
+                
+            }
+            else
+            {
+                Debug.LogWarning("PlayerController reference not set.");
+            }
             if (added)
             {
-                //Instantiate(HeartStickerUI, slots[0].transform);
-                //Debug.Log("Item added to inventory: " + itemData.itemName);
-                //Destroy(gameObject);  // Remove the item from the world
-
-                // Show the HeartStickerUI when the item is picked up
                 if (HeartStickerUI != null)
                 {
-                    // Instantiate HeartStickerUI as a child of the first slot
                     Instantiate(HeartStickerUI, slots[0].transform);
-                    HeartStickerUI.SetActive(true);  // Make sure it is active
+                    HeartStickerUI.SetActive(true);
                 }
 
                 Debug.Log("Item added to inventory: " + itemData.itemName);
-                Destroy(gameObject);  // Remove the item from the world
+                Destroy(gameObject);
             }
             else
             {

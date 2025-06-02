@@ -105,6 +105,11 @@ public class PlayerController : MonoBehaviour
         isCooldown = false;
     }
 
+    public void SetHealth(int newHealth)
+    {
+        health = newHealth;
+        Debug.Log("Player health set to: " + health);
+    }
 
     private void PlayerMovement()
     {
