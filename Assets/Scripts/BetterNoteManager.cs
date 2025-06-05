@@ -22,15 +22,25 @@ public class BetterNoteManager : MonoBehaviour
     [SerializeField] private AudioSource miss;
     [SerializeField] private AudioSource cooldown;
 
-    [Header("Prefabs")]
+    [Header("Note Prefabs")]
     [SerializeField] private GameObject leftNotePrefab;
     [SerializeField] private GameObject rightNotePrefab;
+
+    [Header("Note Sprites")]
+    [SerializeField] private Image leftNoteImage;
+    [SerializeField] private Image rightNoteImage;
+    [SerializeField] private Sprite[] hitSprites;
+    [SerializeField] private Sprite[] missSprites;
+
+    [Header("Player Prefabs")]
     [SerializeField] private GuitarController guitarController;
     [SerializeField] private PlayerController playerController;
     [SerializeField] private PlayerUI playerUI;
     [SerializeField] private CrosshairSpriteController crosshairSpriteController;
-    [SerializeField] private GameManager gameManager;
     [SerializeField] private PlayerCooldown playerCooldown;
+
+    [Header("Game Prefabs")]
+    [SerializeField] private GameManager gameManager;
     [SerializeField] public TrackHolder trackHolder;
 
     [Header("Debug")]
@@ -182,7 +192,9 @@ public class BetterNoteManager : MonoBehaviour
 
                 if (leftSideCollided)
                 {
-                    activeLeftNotes.Dequeue().gameObject.SetActive(false);
+                    //activeLeftNotes.Dequeue().gameObject.SetActive(false);
+                    successfulHit = true;
+                    StartCoroutine(PlayLeftHitAnimation());
                     Hit();
                 }
                 else
@@ -197,6 +209,7 @@ public class BetterNoteManager : MonoBehaviour
                 if (rightSideCollided)
                 {
                     activeRightNotes.Dequeue().gameObject.SetActive(false);
+                    successfulHit = true;
                     Hit();
                 }
                 else
@@ -345,7 +358,6 @@ public class BetterNoteManager : MonoBehaviour
 
     public void Hit()
     {
-        successfulHit = true;
         guitarController.Shoot();
     }
 
@@ -379,6 +391,22 @@ public class BetterNoteManager : MonoBehaviour
             }
             attempts = tempAttempts;
             startedRiff = false;
+        }
+    }
+
+    public IEnumerator PlayLeftHitAnimation()
+    {
+        foreach (Sprite sprites in hitSprites)
+        {
+            leftNotePrefab.GetComponent<Animator>().StopPlayback();
+            leftNoteImage.sprite = sprites;
+            Debug.Log(sprites);
+            yield return new WaitForSeconds(hitTolerance/hitSprites.Length);
+
+            if (sprite == hitSprites.Length - 1)
+            {
+                activeLeftNotes.Dequeue().gameObject.SetActive(false);
+            }
         }
     }
 }

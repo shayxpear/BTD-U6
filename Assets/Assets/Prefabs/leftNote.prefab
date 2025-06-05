@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8718118223501498207}
   - component: {fileID: 4260933112826760440}
   - component: {fileID: 2777726771588828201}
-  - component: {fileID: 3148146513175864784}
+  - component: {fileID: 7910836839234631519}
   m_Layer: 5
   m_Name: leftNote
   m_TagString: Untagged
@@ -76,7 +76,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!95 &3148146513175864784
+--- !u!95 &7910836839234631519
 Animator:
   serializedVersion: 7
   m_ObjectHideFlags: 0
