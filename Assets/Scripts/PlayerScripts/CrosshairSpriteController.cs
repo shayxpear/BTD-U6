@@ -24,6 +24,7 @@ public class CrosshairSpriteController : MonoBehaviour
     private void Start()
     {
         StartCoroutine(ResetToWhiteCrosshair());
+        noteManager = GameObject.Find("NoteManager").GetComponent<BetterNoteManager>();
 
     }
 

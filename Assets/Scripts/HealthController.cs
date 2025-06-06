@@ -60,10 +60,8 @@ public class HealthController : MonoBehaviour
             {
                 Debug.LogWarning("EnemySpawnManager not found!");
             }
-            Destroy(gameObject);
-            Debug.Log("Player has died.");
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-            //StartCoroutine(Respawn());
+            
+            StartCoroutine(Respawn());
            
         }
         else if (enemyController != null)
@@ -153,8 +151,14 @@ public class HealthController : MonoBehaviour
 
     IEnumerator Respawn()
     {
-        
+        Destroy(GameObject.Find("PlayerPrefab"));
+        Destroy(GameObject.Find("Managers"));
+        Debug.Log("Player has died.");
+        SceneManager.LoadScene("Tutorial 1");
+        yield return new WaitForSeconds(0.1f);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         yield return new WaitForSeconds(0.9f);
-        
+
+
     }
 }
