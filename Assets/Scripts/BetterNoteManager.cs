@@ -431,26 +431,24 @@ public class BetterNoteManager : MonoBehaviour
 
     public IEnumerator NoteAnimation(RectTransform note, Animator animator) //Plays animation before dequeuing note
     {
-        if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 1)
+        while (true)
         {
-            if(animator.GetBool("Miss"))
+            var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+            if (stateInfo.IsName("Miss") || stateInfo.IsName("Hit"))
             {
-                Miss();
-            }
+                if (stateInfo.IsName("Miss"))
+                    Miss();
+                else if (stateInfo.IsName("Hit"))
+                    Hit();
 
-            if(animator.GetBool("Hit"))
-            {
-                Hit();
+                yield return new WaitForSeconds(stateInfo.length);
+                break;
             }
-            //playingNoteAnimation = true;
-            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-            float animLength = stateInfo.length;
-            yield return new WaitForSeconds(animLength);
-            note.gameObject.SetActive(false);
-            //playingNoteAnimation = false;
+            yield return null;
         }
-    }
 
+        note.gameObject.SetActive(false);
+    }
 
     public void Hit()
     {
