@@ -22852,7 +22852,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitTolerance: 0.1
-  hitDistance: 25
+  hitDistance: 5
   bpm: 100
   notebar: {fileID: 4315506749363859661}
   mainCircle: {fileID: 6492864688097953953}
@@ -22860,17 +22860,6 @@ MonoBehaviour:
   cooldown: {fileID: 8660193523167772552}
   leftNotePrefab: {fileID: 7883400903560103422, guid: c09d6579ef905f24192a42755e51d5c1, type: 3}
   rightNotePrefab: {fileID: 796594625953969667, guid: e1e89f7e268b7204d83710dd0f8bc660, type: 3}
-  leftNoteImage: {fileID: 2777726771588828201, guid: c09d6579ef905f24192a42755e51d5c1, type: 3}
-  rightNoteImage: {fileID: 4468294682079559371, guid: e1e89f7e268b7204d83710dd0f8bc660, type: 3}
-  hitSprites:
-  - {fileID: -1586506074275382365, guid: 97587d31696a56c43b23c458d3560125, type: 3}
-  - {fileID: 2372024721394182229, guid: 97587d31696a56c43b23c458d3560125, type: 3}
-  - {fileID: -2873761472931101510, guid: 97587d31696a56c43b23c458d3560125, type: 3}
-  - {fileID: -9047716800718424716, guid: 97587d31696a56c43b23c458d3560125, type: 3}
-  - {fileID: -4828332374244943515, guid: 97587d31696a56c43b23c458d3560125, type: 3}
-  - {fileID: -8281307367096859791, guid: 97587d31696a56c43b23c458d3560125, type: 3}
-  - {fileID: -909542042, guid: 97587d31696a56c43b23c458d3560125, type: 3}
-  missSprites: []
   guitarController: {fileID: 8403176677395653958}
   playerController: {fileID: 5490831414920916292}
   playerUI: {fileID: 966633497016133035}

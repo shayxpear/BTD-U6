@@ -26,12 +26,6 @@ public class BetterNoteManager : MonoBehaviour
     [SerializeField] private GameObject leftNotePrefab;
     [SerializeField] private GameObject rightNotePrefab;
 
-    [Header("Note Sprites")]
-    [SerializeField] private Image leftNoteImage;
-    [SerializeField] private Image rightNoteImage;
-    [SerializeField] private Sprite[] hitSprites;
-    [SerializeField] private Sprite[] missSprites;
-
     [Header("Player Prefabs")]
     [SerializeField] private GuitarController guitarController;
     [SerializeField] private PlayerController playerController;
@@ -46,7 +40,6 @@ public class BetterNoteManager : MonoBehaviour
     [Header("Debug")]
     [SerializeField] private int attempts;
     [SerializeField] public int noteCombo;
-   // [SerializeField] private int sprite;
     [SerializeField] private float noteTravelTimeSeconds;
     [SerializeField] public bool playedIntro;
     public bool ended;
@@ -54,6 +47,7 @@ public class BetterNoteManager : MonoBehaviour
     public bool started = false;
     public int levelsBeaten;
     public bool successfulHit;
+    [SerializeField] private bool playingNoteAnimation; //prevent collision from being true during the hit/miss animations
     
 
     //Temp Vars
@@ -73,8 +67,8 @@ public class BetterNoteManager : MonoBehaviour
     private enum SIDE {LEFT_SIDE = 0, RIGHT_SIDE = 1, BOTH_SIDES = 2};
     private SIDE side;
 
-    private bool leftSideCollided;
-    private bool rightSideCollided;
+    [SerializeField] private bool leftSideCollided;
+    [SerializeField] private bool rightSideCollided;
     private bool bothSideCollided;
     private bool isLeftToleranceActive = false;
     private bool isRightToleranceActive = false;
@@ -199,6 +193,7 @@ public class BetterNoteManager : MonoBehaviour
                         if (animator != null)
                         {
                             animator.SetTrigger("Hit");
+                            StartCoroutine(NoteAnimation(note, animator));
                         }
                     }
                     successfulHit = true;
@@ -206,6 +201,16 @@ public class BetterNoteManager : MonoBehaviour
                 }
                 else
                 {
+                    if (activeLeftNotes.Count > 0)
+                    {
+                        var note = activeLeftNotes.Dequeue();
+                        Animator animator = note.GetComponent<Animator>();
+                        if (animator != null)
+                        {
+                            animator.SetTrigger("Miss");
+                            StartCoroutine(NoteAnimation(note, animator));
+                        }
+                    }
                     Miss();
                 }
             }
@@ -215,12 +220,31 @@ public class BetterNoteManager : MonoBehaviour
             {
                 if (rightSideCollided)
                 {
-                    activeRightNotes.Dequeue().gameObject.SetActive(false);
+                    if (activeRightNotes.Count > 0)
+                    {
+                        var note = activeRightNotes.Dequeue();
+                        Animator animator = note.GetComponent<Animator>();
+                        if (animator != null)
+                        {
+                            animator.SetTrigger("Hit");
+                            StartCoroutine(NoteAnimation(note, animator));
+                        }
+                    }
                     successfulHit = true;
                     Hit();
                 }
                 else
                 {
+                    if (activeRightNotes.Count > 0)
+                    {
+                        var note = activeRightNotes.Dequeue();
+                        Animator animator = note.GetComponent<Animator>();
+                        if (animator != null)
+                        {
+                            animator.SetTrigger("Miss");
+                            StartCoroutine(NoteAnimation(note, animator));
+                        }
+                    }
                     Miss();
                 }
             }
@@ -269,7 +293,7 @@ public class BetterNoteManager : MonoBehaviour
 
         foreach (RectTransform note in activeLeftNotes)
         {
-            if (Mathf.Abs(note.anchoredPosition.x - (notebar.rect.width / 2)) < mainCircle.rectTransform.rect.width + hitDistance)
+            if ((Mathf.Abs(note.anchoredPosition.x - (notebar.rect.width / 2)) < mainCircle.rectTransform.rect.width + hitDistance) && !playingNoteAnimation)
             {
                 leftSideCollided = true;
             }
@@ -277,7 +301,7 @@ public class BetterNoteManager : MonoBehaviour
 
         foreach (RectTransform note in activeRightNotes)
         {
-            if (Mathf.Abs((note.anchoredPosition.x * -1) - (notebar.rect.width / 2)) < mainCircle.rectTransform.rect.width + hitDistance)
+            if ((Mathf.Abs((note.anchoredPosition.x * -1) - (notebar.rect.width / 2)) < mainCircle.rectTransform.rect.width + hitDistance) && !playingNoteAnimation)
             {
                 rightSideCollided = true;
             }
@@ -341,7 +365,13 @@ public class BetterNoteManager : MonoBehaviour
         yield return new WaitForSeconds(hitTolerance);
         if (!successfulHit && activeLeftNotes.Count > 0)
         {
-            activeLeftNotes.Dequeue().gameObject.SetActive(false);
+            var note = activeLeftNotes.Dequeue();
+            Animator animator = note.GetComponent<Animator>();
+            if (animator != null)
+            {
+                animator.SetTrigger("Miss");
+                StartCoroutine(NoteAnimation(note, animator));
+            }
             Miss();
         }
         successfulHit = false;
@@ -354,12 +384,31 @@ public class BetterNoteManager : MonoBehaviour
         yield return new WaitForSeconds(hitTolerance);
         if (!successfulHit && activeRightNotes.Count > 0)
         {
-            activeRightNotes.Dequeue().gameObject.SetActive(false);
+            var note = activeRightNotes.Dequeue();
+            Animator animator = note.GetComponent<Animator>();
+            if (animator != null)
+            {
+                animator.SetTrigger("Miss");
+                StartCoroutine(NoteAnimation(note, animator));
+            }
             Miss();
         }
         successfulHit = false;
         rightSideCollided = false;
         isRightToleranceActive = false;
+    }
+
+    public IEnumerator NoteAnimation(RectTransform note, Animator animator) //Plays animation before dequeuing note
+    {
+        if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 1)
+        {
+            playingNoteAnimation = true;
+            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+            float animLength = stateInfo.length;
+            yield return new WaitForSeconds(animLength);
+            note.gameObject.SetActive(false);
+            playingNoteAnimation = false;
+        }
     }
 
 
@@ -387,32 +436,8 @@ public class BetterNoteManager : MonoBehaviour
         {
             cooldown.Play();
             playerCooldown.StartCooldown();
-            while (activeLeftNotes.Count > 0)
-            {
-                activeLeftNotes.Dequeue().gameObject.SetActive(false);
-            }
-
-            while (activeRightNotes.Count > 0)
-            {
-                activeRightNotes.Dequeue().gameObject.SetActive(false);
-            }
             attempts = tempAttempts;
             startedRiff = false;
-        }
-    }
-
-    public IEnumerator PlayLeftHitAnimation()
-    {
-        foreach (Sprite sprites in hitSprites)
-        {
-            Debug.Log(leftNoteImage.sprite);
-            leftNoteImage.sprite = sprites;
-
-            if (leftNoteImage.sprite == hitSprites[hitSprites.Length - 1])
-            {
-                activeLeftNotes.Dequeue().gameObject.SetActive(false);
-            }
-            yield return new WaitForSeconds(hitTolerance / hitSprites.Length);
         }
     }
 }
