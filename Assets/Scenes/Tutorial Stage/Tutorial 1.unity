@@ -22880,7 +22880,6 @@ MonoBehaviour:
   trackHolder: {fileID: 239965322}
   attempts: 3
   noteCombo: 0
-  sprite: 0
   noteTravelTimeSeconds: 1
   playedIntro: 0
   ended: 0
