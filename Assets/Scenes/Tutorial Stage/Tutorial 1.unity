@@ -22867,7 +22867,7 @@ MonoBehaviour:
   playerCooldown: {fileID: 1000935763}
   gameManager: {fileID: 762805479}
   trackHolder: {fileID: 239965322}
-  attempts: 1000
+  attempts: 3
   noteCombo: 0
   noteTravelTimeSeconds: 1
   levelsBeaten: 0
