@@ -22867,18 +22867,19 @@ MonoBehaviour:
   playerCooldown: {fileID: 1000935763}
   gameManager: {fileID: 762805479}
   trackHolder: {fileID: 239965322}
-  attempts: 3
+  attempts: 1000
   noteCombo: 0
   noteTravelTimeSeconds: 1
+  levelsBeaten: 0
+  successfulHit: 0
   playedIntro: 0
   ended: 0
   startedRiff: 0
   started: 0
-  levelsBeaten: 0
-  successfulHit: 0
-  playingNoteAnimation: 0
   leftSideCollided: 0
   rightSideCollided: 0
+  isLeftToleranceActive: 0
+  isRightToleranceActive: 0
 --- !u!50 &3256099295749082782
 Rigidbody2D:
   serializedVersion: 5

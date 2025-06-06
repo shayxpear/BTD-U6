@@ -78,7 +78,7 @@ public class GuitarController : MonoBehaviour
 
         if ((Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)) && playerController.CanDash && !playerCooldown.GetCooldown())
         {
-            if (!noteManager.startedRiff)
+            if (!noteManager.startedRiff && noteManager.started)
             {
                 noteManager.startedRiff = true;
             }
