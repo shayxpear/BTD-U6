@@ -22852,7 +22852,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitTolerance: 0.1
-  hitDistance: 5
+  hitDistance: 25
   bpm: 100
   notebar: {fileID: 4315506749363859661}
   mainCircle: {fileID: 6492864688097953953}
@@ -22876,6 +22876,9 @@ MonoBehaviour:
   started: 0
   levelsBeaten: 0
   successfulHit: 0
+  playingNoteAnimation: 0
+  leftSideCollided: 0
+  rightSideCollided: 0
 --- !u!50 &3256099295749082782
 Rigidbody2D:
   serializedVersion: 5
