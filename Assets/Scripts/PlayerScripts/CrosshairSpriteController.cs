@@ -21,6 +21,11 @@ public class CrosshairSpriteController : MonoBehaviour
         StopAllCoroutines();
         StartCoroutine(CrosshairSprite(leftNoteTimes, rightNoteTimes, getAudioSourceTime));
     }
+    private void Start()
+    {
+        StartCoroutine(ResetToWhiteCrosshair());
+
+    }
 
     private IEnumerator CrosshairSprite(List<double> leftNoteTimes, List<double> rightNoteTimes, System.Func<double> getAudioSourceTime)
     {

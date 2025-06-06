@@ -46,7 +46,7 @@ public class BetterNoteManager : MonoBehaviour
     [Header("Debug")]
     [SerializeField] private int attempts;
     [SerializeField] public int noteCombo;
-    [SerializeField] private int sprite;
+   // [SerializeField] private int sprite;
     [SerializeField] private float noteTravelTimeSeconds;
     [SerializeField] public bool playedIntro;
     public bool ended;
@@ -192,9 +192,16 @@ public class BetterNoteManager : MonoBehaviour
 
                 if (leftSideCollided)
                 {
-                    //activeLeftNotes.Dequeue().gameObject.SetActive(false);
+                    if (activeLeftNotes.Count > 0)
+                    {
+                        var note = activeLeftNotes.Dequeue();
+                        Animator animator = note.GetComponent<Animator>();
+                        if (animator != null)
+                        {
+                            animator.SetTrigger("Hit");
+                        }
+                    }
                     successfulHit = true;
-                    StartCoroutine(PlayLeftHitAnimation());
                     Hit();
                 }
                 else
@@ -398,15 +405,14 @@ public class BetterNoteManager : MonoBehaviour
     {
         foreach (Sprite sprites in hitSprites)
         {
-            leftNotePrefab.GetComponent<Animator>().StopPlayback();
+            Debug.Log(leftNoteImage.sprite);
             leftNoteImage.sprite = sprites;
-            Debug.Log(sprites);
-            yield return new WaitForSeconds(hitTolerance/hitSprites.Length);
 
-            if (sprite == hitSprites.Length - 1)
+            if (leftNoteImage.sprite == hitSprites[hitSprites.Length - 1])
             {
                 activeLeftNotes.Dequeue().gameObject.SetActive(false);
             }
+            yield return new WaitForSeconds(hitTolerance / hitSprites.Length);
         }
     }
 }
