@@ -22852,7 +22852,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitTolerance: 0.1
-  hitDistance: 25
+  hitDistance: 50
   bpm: 100
   notebar: {fileID: 4315506749363859661}
   mainCircle: {fileID: 6492864688097953953}
