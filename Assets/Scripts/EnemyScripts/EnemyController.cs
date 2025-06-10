@@ -374,6 +374,7 @@ public class EnemyController : MonoBehaviour
         float startTime = Time.time;
         float damageTickInterval = 0.5f;
         float tickTimer = 0f;
+        bool initialHitDone = false;
 
         while (Time.time < startTime + laserDuration)
         {
@@ -398,19 +399,32 @@ public class EnemyController : MonoBehaviour
             laserLines[0].SetPosition(0, startPos);
             laserLines[0].SetPosition(1, endPos);
 
-            // Accumulate time and do damage tick when interval is met.
-            tickTimer += Time.deltaTime;
-            if (tickTimer >= damageTickInterval)
+            HealthController hc = hit.collider != null ? hit.collider.GetComponent<HealthController>() : null;
+
+            // Initial hit damage
+            if (!initialHitDone && hit.collider != null && hit.collider.CompareTag("Player"))
             {
-                if (hit.collider != null && hit.collider.CompareTag("Player"))
+                if (hc != null)
                 {
-                    HealthController hc = hit.collider.GetComponent<HealthController>();
-                    if (hc != null)
-                    {
-                        hc.TakeDamage(laserDamage);
-                    }
+                    hc.TakeDamage(laserDamage);
                 }
-                tickTimer = 0f;
+                initialHitDone = true;
+                tickTimer = 0f; // Reset tick timer so next tick is after interval
+            }
+            else if (initialHitDone)
+            {
+                tickTimer += Time.deltaTime;
+                if (tickTimer >= damageTickInterval)
+                {
+                    if (hit.collider != null && hit.collider.CompareTag("Player"))
+                    {
+                        if (hc != null)
+                        {
+                            hc.TakeDamage(laserDamage);
+                        }
+                    }
+                    tickTimer = 0f;
+                }
             }
 
             yield return null;
