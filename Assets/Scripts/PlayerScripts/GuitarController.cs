@@ -7,9 +7,7 @@ public class GuitarController : MonoBehaviour
     [Header("Bullet Type")]
     public GameObject bulletType;
     Transform playerSpriteTransform;
-    Transform crosshairTransform;
     Transform firePoint;
-    Animator guitarAnimator;
 
     Vector2 playerScreenPosition;
     Vector2 mousePosition;
@@ -20,6 +18,9 @@ public class GuitarController : MonoBehaviour
     [SerializeField] private float bulletScale;
     [SerializeField] private float missCooldown;
 
+    [Header("Sprite Handler")]
+    [SerializeField] private PlayerSpriteHandler spriteHandler;
+
     GameObject spriteController;
     GameObject guitarController;
     GameObject noteManagerObject;
@@ -28,6 +29,7 @@ public class GuitarController : MonoBehaviour
     PlayerController playerController;
     BetterNoteManager noteManager;
 
+    [Header("Player Cooldown")]
     public PlayerCooldown playerCooldown;
 
 
@@ -38,11 +40,10 @@ public class GuitarController : MonoBehaviour
         noteManagerObject = GameObject.Find("NoteManager");
         firePointObject = GameObject.Find("firingPoint");
 
-        playerController = GetComponent<PlayerController>();
+        playerController = GameObject.Find("Player").GetComponent<PlayerController>();
         noteManager = noteManagerObject.GetComponent<BetterNoteManager>();
         playerSpriteTransform = spriteController.GetComponent<Transform>();
         firePoint = firePointObject.GetComponent<Transform>();
-        guitarAnimator = guitarController.GetComponent<Animator>();
         
     }
 
@@ -87,14 +88,15 @@ public class GuitarController : MonoBehaviour
     public void Shoot()
     {
         noteManager.noteCombo++;
+        spriteHandler.guitar = PlayerSpriteHandler.Guitar.SHOOTING;
+        spriteHandler.GuitarShootAnimation();
+
         if (noteManager.noteCombo % 5 == 0 && noteManager.noteCombo != 0)
         {
             GameObject bullet = Instantiate(bulletType, firePoint.position, guitarController.transform.rotation);
             bullet.GetComponent<Bullet>().bulletDamage = bulletDamage;
             Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
             rb.AddForce(firePoint.up * bulletForce, ForceMode2D.Impulse);
-            guitarAnimator.Play("mainCharacter_guitarShoot", -1, 0f);
-
             if (playerScreenPosition.x > mousePosition.x) { bullet.transform.localScale = new Vector2(-bulletScale * 2, -bulletScale * 2); }
             else { bullet.transform.localScale = new Vector2(bulletScale * 2, bulletScale * 2); }
         }
@@ -104,11 +106,16 @@ public class GuitarController : MonoBehaviour
             bullet.GetComponent<Bullet>().bulletDamage = bulletDamage;
             Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
             rb.AddForce(firePoint.up * bulletForce, ForceMode2D.Impulse);
-            guitarAnimator.Play("mainCharacter_guitarShoot", -1, 0f);
-
             if (playerScreenPosition.x > mousePosition.x) { bullet.transform.localScale = new Vector2(-bulletScale, -bulletScale); }
             else { bullet.transform.localScale = new Vector2(bulletScale, bulletScale); }
         }
         
     }
+    public void EndShoot() //End of Animation Event in Guitar Shoot
+    {
+        spriteHandler.guitar = PlayerSpriteHandler.Guitar.IDLE;
+        spriteHandler.GuitarShootAnimation();
+    }
 }
+
+    

@@ -12,16 +12,15 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float dashSpeed;
     [SerializeField] private float dashCooldown;
 
+    [Header("Sprite Handler")]
+    [SerializeField] private PlayerSpriteHandler spriteHandler;
+
     bool isCooldown;
 
     private Rigidbody2D rb;
-    private Animator animator;
     private Collider2D playerCollider; //Prevents player from going through walls when dashing, not used to test if enemies have attacked the player
 
-    private GameObject spriteController;
-    private GameObject guitarController;
     private Transform playerSpriteTransform;
-    private SpriteRenderer guitarSpriteRenderer;
     private BetterNoteManager noteManager;
     public bool CanDash { get; private set; }
     public int GetPlayerHealth => health;
@@ -33,15 +32,10 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        spriteController = GameObject.Find("SpriteController");
-        guitarController = GameObject.Find("GuitarController");
-
         rb = GetComponent<Rigidbody2D>();
-        animator = spriteController.GetComponent<Animator>();
         playerCollider = GetComponent<Collider2D>();
 
-        playerSpriteTransform = spriteController.GetComponent<Transform>();
-        guitarSpriteRenderer = guitarController.GetComponent<SpriteRenderer>();
+        playerSpriteTransform = GameObject.Find("SpriteController").GetComponent<Transform>();
 
         noteManager = FindFirstObjectByType<BetterNoteManager>();
         CanDash = true;
@@ -71,20 +65,20 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator Dash(Vector2 direction)
     {
-        isCooldown = true;
-        guitarSpriteRenderer.enabled = false;
         CanDash = false;
+        isCooldown = true;
         currentDashTime = dashTime;
-        playerCollider.excludeLayers = LayerMask.GetMask("Enemies", "Bullets", "CollisionBullets");
-        rb.excludeLayers = LayerMask.GetMask("Enemies", "Bullets", "CollisionBullets");
+        playerCollider.excludeLayers = LayerMask.GetMask("Enemies", "Bullets", "CollisionBullets"); //Dodge layers
+        rb.excludeLayers = LayerMask.GetMask("Enemies", "Bullets", "CollisionBullets"); //Exclude layers
 
-        switch (direction.y > 0)
+        switch (playerScreenPosition.y + 100 < mousePosition.y)
         {
             case true:
-                animator.Play("mainCharacter_dash_back", -1, 0f);
+                spriteHandler.playerBody = PlayerSpriteHandler.PlayerBody.DODGING_B;
+
                 break;
             case false:
-                animator.Play("mainCharacter_dash", -1, 0f);
+                spriteHandler.playerBody = PlayerSpriteHandler.PlayerBody.DODGING_F;
                 break;
         }
 
@@ -98,7 +92,6 @@ public class PlayerController : MonoBehaviour
         }
         rb.linearVelocity = new Vector2(0f, 0f); // Stop dashing. 
         
-        guitarSpriteRenderer.enabled = true;
         CanDash = true;
         playerCollider.excludeLayers = LayerMask.GetMask("Nothing");
         rb.excludeLayers = LayerMask.GetMask("Nothing");
@@ -124,12 +117,12 @@ public class PlayerController : MonoBehaviour
                     switch ((movement.x != 0 | movement.y != 0))
                     {
                         case true | true:
-                            animator.Play("mainCharacter_walkCycle_back");
-                            guitarSpriteRenderer.sortingOrder = -1;
+                            spriteHandler.playerBody = PlayerSpriteHandler.PlayerBody.RUNNING_B;
+                            spriteHandler.playerHead = PlayerSpriteHandler.PlayerHead.RUNNING_B;
                             break;
                         case false | false:
-                            animator.Play("mainCharacter_idleCycle_back");
-                            guitarSpriteRenderer.sortingOrder = -1;
+                            spriteHandler.playerBody = PlayerSpriteHandler.PlayerBody.IDLE_B;
+                            spriteHandler.playerHead = PlayerSpriteHandler.PlayerHead.IDLE_B;
                             break;
                     }
                     break;
@@ -137,12 +130,12 @@ public class PlayerController : MonoBehaviour
                     switch ((movement.x != 0 | movement.y != 0))
                     {
                         case true | true:
-                            animator.Play("mainCharacter_walkCycle");
-                            guitarSpriteRenderer.sortingOrder = 1;
+                            spriteHandler.playerBody = PlayerSpriteHandler.PlayerBody.RUNNING_F;
+                            spriteHandler.playerHead = PlayerSpriteHandler.PlayerHead.RUNNING_F;
                             break;
                         case false | false:
-                            animator.Play("mainCharacter_idleCycle");
-                            guitarSpriteRenderer.sortingOrder = 1;
+                            spriteHandler.playerBody = PlayerSpriteHandler.PlayerBody.IDLE_F;
+                            spriteHandler.playerHead = PlayerSpriteHandler.PlayerHead.IDLE_F;
                             break;
                     }
                     break;

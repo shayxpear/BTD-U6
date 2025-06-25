@@ -22851,8 +22851,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2be2a9cacf8c4a3438250847c2384ea6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitTolerance: 0.1
-  hitDistance: 50
+  hitTolerance: 100
+  hitDistance: 100
   bpm: 100
   notebar: {fileID: 4315506749363859661}
   mainCircle: {fileID: 6492864688097953953}
@@ -22860,7 +22860,7 @@ MonoBehaviour:
   cooldown: {fileID: 8660193523167772552}
   leftNotePrefab: {fileID: 7883400903560103422, guid: c09d6579ef905f24192a42755e51d5c1, type: 3}
   rightNotePrefab: {fileID: 796594625953969667, guid: e1e89f7e268b7204d83710dd0f8bc660, type: 3}
-  guitarController: {fileID: 8403176677395653958}
+  guitarController: {fileID: 7761764508319623424}
   playerController: {fileID: 5490831414920916292}
   playerUI: {fileID: 966633497016133035}
   crosshairSpriteController: {fileID: 3820910120167366494}
@@ -23142,6 +23142,7 @@ GameObject:
   - component: {fileID: 1072807480227111939}
   - component: {fileID: 2715588184273218613}
   - component: {fileID: 7761764508319623423}
+  - component: {fileID: 7761764508319623424}
   m_Layer: 6
   m_Name: GuitarController
   m_TagString: Untagged
@@ -23465,6 +23466,7 @@ MonoBehaviour:
   dashTime: 0.5
   dashSpeed: 2
   dashCooldown: 0.2
+  spriteHandler: {fileID: 8403176677395653960}
 --- !u!114 &5536165163465072809
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24032,6 +24034,25 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &7761764508319623424
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4009976796190576649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66645b5eff0ec9b44b59d61ef7f69cd3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletType: {fileID: 7681205809409122204, guid: fbfb994da87fe2843bdb4e3162fff127, type: 3}
+  bulletDamage: 1
+  bulletForce: 3
+  bulletScale: 2
+  missCooldown: 1
+  spriteHandler: {fileID: 8403176677395653960}
+  playerCooldown: {fileID: 1000935763}
 --- !u!1 &7838435008318969756
 GameObject:
   m_ObjectHideFlags: 0
@@ -24044,10 +24065,10 @@ GameObject:
   - component: {fileID: 6411669768001173484}
   - component: {fileID: 3256099295749082782}
   - component: {fileID: 5490831414920916292}
-  - component: {fileID: 8403176677395653958}
   - component: {fileID: 8403176677395653959}
   - component: {fileID: 966633497016133035}
   - component: {fileID: 916834157264302073}
+  - component: {fileID: 8403176677395653960}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -24189,24 +24210,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cc914cf4a23553a40ba6cbbbee27e8ec, type: 3}
---- !u!114 &8403176677395653958
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7838435008318969756}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66645b5eff0ec9b44b59d61ef7f69cd3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bulletType: {fileID: 7681205809409122204, guid: fbfb994da87fe2843bdb4e3162fff127, type: 3}
-  bulletDamage: 1
-  bulletForce: 4
-  bulletScale: 2
-  missCooldown: 1
-  playerCooldown: {fileID: 1000935763}
 --- !u!114 &8403176677395653959
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24223,6 +24226,27 @@ MonoBehaviour:
   inventoryManager: {fileID: 1928531960}
   HeartStickerUI: {fileID: 1628905900}
   slots: []
+--- !u!114 &8403176677395653960
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7838435008318969756}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b590f1c61e843443adc6566f01c41be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bodyAnimator: {fileID: 5742555456520717512}
+  headAnimator: {fileID: 0}
+  guitarAnimator: {fileID: 2715588184273218613}
+  bodySprite: {fileID: 3526050529819090981}
+  headSprite: {fileID: 0}
+  guitarSprite: {fileID: 1072807480227111939}
+  playerBody: 0
+  playerHead: 0
+  guitar: 0
 --- !u!82 &8660193523167772552
 AudioSource:
   m_ObjectHideFlags: 0
