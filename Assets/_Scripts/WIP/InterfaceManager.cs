@@ -28,10 +28,6 @@ public class InterfaceManager : MonoBehaviour
 
     public void RhythmModule()
     {
-        if(beatManager.playingSong)
-        {
-            
-        }
         
     }
 }

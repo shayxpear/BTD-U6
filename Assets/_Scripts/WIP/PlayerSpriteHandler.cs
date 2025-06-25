@@ -19,7 +19,7 @@ public class PlayerSpriteHandler : MonoBehaviour
 
     public enum PlayerBody { IDLE_F, IDLE_B, RUNNING_F, RUNNING_B, DODGING_F, DODGING_B };
     public enum PlayerHead {  IDLE_F, IDLE_B, RUNNING_F, RUNNING_B, DODGING_F, DODGING_B, SHOOTING};
-    public enum Guitar { IDLE, SHOOTING };
+    public enum Guitar { IDLE, SHOOTING, COOLDOWN };
 
     private void Start()
     {
@@ -78,9 +78,12 @@ public class PlayerSpriteHandler : MonoBehaviour
         switch (guitar)
         {
             case Guitar.IDLE:
+                guitarAnimator.ResetTrigger("SHOOTING");
                 guitarAnimator.Play("IDLE", -1, 0f);
                 break;
             case Guitar.SHOOTING:
+                guitarAnimator.ResetTrigger("SHOOTING");
+                guitarAnimator.SetTrigger("SHOOTING");
                 guitarAnimator.Play("SHOOTING", -1, 0f);
                 break;
         }

@@ -7606,9 +7606,9 @@ MonoBehaviour:
   - {fileID: 403222697}
   enemyPool:
   - enemyPrefab: {fileID: 6626866697285094789, guid: 49e8243a7553b7546a9c1a779d7a6822, type: 3}
-    difficulty: 1
+    difficulty: 2
   - enemyPrefab: {fileID: 7888501527499802821, guid: 7613e229596329840af7786148b431c2, type: 3}
-    difficulty: 3
+    difficulty: 1
   - enemyPrefab: {fileID: 7576607333861121549, guid: aaeb04fc5fd81684283b3c46da6e2bca, type: 3}
     difficulty: 2
   currentStage: 1
@@ -24052,6 +24052,9 @@ MonoBehaviour:
   bulletScale: 2
   missCooldown: 1
   spriteHandler: {fileID: 8403176677395653960}
+  playerSpriteTransform: {fileID: 0}
+  firePoint: {fileID: 0}
+  beatManager: {fileID: 0}
   playerCooldown: {fileID: 1000935763}
 --- !u!1 &7838435008318969756
 GameObject:

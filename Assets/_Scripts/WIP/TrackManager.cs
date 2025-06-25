@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class TrackManager : MonoBehaviour
 {
+    [Header("Track Name")]
+    public string trackName;
+
     [Header("Intervals")]
     [SerializeField] private int BPM;
 
@@ -16,7 +19,7 @@ public class TrackManager : MonoBehaviour
     [Header("Notes")]
     [SerializeField] private List<string> notes = new(); //L = left R = right
 
-     private AudioSource trackSource;
+    private AudioSource trackSource;
 
     public void Awake() //awake so it loads before the beatmanager
     {
@@ -40,6 +43,8 @@ public class TrackManager : MonoBehaviour
     public AudioSource GetTrackSource() { return trackSource; }
 
     public List<string> GetTrackNotes() { return notes; }
+
+    public void SetTrackNotes(string note) { notes.Add(note); }
 
     public int GetTrackLength() { return notes.Count; }
 }
