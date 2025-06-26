@@ -180,7 +180,7 @@ public class BetterNoteManager : MonoBehaviour
             }
 
             // Player Left Click Check
-            if (Input.GetMouseButtonDown(0) && playerController.CanDash && playerCooldown.GetCooldown() == false)
+            if (Input.GetMouseButtonDown(0) && playerCooldown.GetCooldown() == false)
             {
 
                 if (leftSideCollided)
@@ -214,7 +214,7 @@ public class BetterNoteManager : MonoBehaviour
             }
 
             // Player Right Click Check
-            if (Input.GetMouseButtonDown(1) && playerController.CanDash && playerCooldown.GetCooldown() == false)
+            if (Input.GetMouseButtonDown(1) && playerCooldown.GetCooldown() == false)
             {
                 if (rightSideCollided)
                 {
@@ -246,7 +246,7 @@ public class BetterNoteManager : MonoBehaviour
                 }
             }
 
-            if ((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.Space)) && playerController.CanDash)
+            if ((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.Space)))
             {
                 /**
                 bool leftHit = CollisionCheck(true);

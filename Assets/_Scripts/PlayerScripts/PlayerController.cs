@@ -8,23 +8,24 @@ public class PlayerController : MonoBehaviour
     [Header("Player Stats")]
     [SerializeField] private int health;
     [SerializeField] private float moveSpeed;
-    [SerializeField] private float dashTime;
+    [SerializeField] private float dashTime; //should never be less than or equal to 1
     [SerializeField] private float dashSpeed;
     [SerializeField] private float dashCooldown;
 
-    [Header("Sprite Handler")]
+    [Header("Handlers")]
     [SerializeField] private PlayerSpriteHandler spriteHandler;
+    [SerializeField] private InputHandler inputHandler;
 
-    bool isCooldown;
+    [Header("Managers")]
+    [SerializeField] private BeatManager beatManager;
 
     private Rigidbody2D rb;
     private Collider2D playerCollider; //Prevents player from going through walls when dashing, not used to test if enemies have attacked the player
 
     private Transform playerSpriteTransform;
-    private BetterNoteManager noteManager;
-    public bool CanDash { get; private set; }
+
     public int GetPlayerHealth => health;
-    private float currentDashTime;
+    bool canDash = true;
 
     Vector2 movement;
     Vector2 playerScreenPosition;
@@ -36,9 +37,6 @@ public class PlayerController : MonoBehaviour
         playerCollider = GetComponent<Collider2D>();
 
         playerSpriteTransform = GameObject.Find("SpriteController").GetComponent<Transform>();
-
-        noteManager = FindFirstObjectByType<BetterNoteManager>();
-        CanDash = true;
     }
 
     void Update()
@@ -48,29 +46,29 @@ public class PlayerController : MonoBehaviour
 
         playerScreenPosition = Camera.main.WorldToScreenPoint(playerSpriteTransform.transform.position);
         mousePosition = Input.mousePosition;
-
-        PlayerMovement();
-        PlayerDash();
-    }
-    private void PlayerDash()
-    {
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
-
-        if (!isCooldown && CanDash && (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.Space)) && (movement.x != 0 || movement.y != 0))
+        PlayerMovement();
+        PlayerDodge();
+        //Dash();
+    }
+    private void PlayerDodge()
+    {
+        if (inputHandler.successfulDodge && canDash)
         {
-            StartCoroutine(Dash(new Vector2(movement.x, movement.y).normalized));
+            StartCoroutine(Dodging());
         }
     }
 
-    IEnumerator Dash(Vector2 direction)
+    IEnumerator Dodging()
     {
-        CanDash = false;
-        isCooldown = true;
-        currentDashTime = dashTime;
+        inputHandler.successfulDodge = false;
+        canDash = false;
+        spriteHandler.bodyAnimator.speed = 1 * (dashTime * (beatManager.currentBPM / 60f));
+        rb.linearVelocity = new Vector2(movement.x, movement.y).normalized * dashSpeed;
+
         playerCollider.excludeLayers = LayerMask.GetMask("Enemies", "Bullets", "CollisionBullets"); //Dodge layers
         rb.excludeLayers = LayerMask.GetMask("Enemies", "Bullets", "CollisionBullets"); //Exclude layers
-
         switch (playerScreenPosition.y + 100 < mousePosition.y)
         {
             case true:
@@ -82,33 +80,18 @@ public class PlayerController : MonoBehaviour
                 break;
         }
 
-        while (currentDashTime > 0f)
-        {
-            currentDashTime -= Time.deltaTime; // Lower the dash timer each.
-
-            rb.linearVelocity = direction * dashSpeed; // Dash in the direction that was held down.
-
-            yield return null; // Returns out of the coroutine this frame so we don't hit an infinite loop.
-        }
-        rb.linearVelocity = new Vector2(0f, 0f); // Stop dashing. 
-        
-        CanDash = true;
+        yield return new WaitForSeconds(60f/ (dashTime * beatManager.currentBPM));
+        rb.linearVelocity = new Vector2(0f, 0f);
         playerCollider.excludeLayers = LayerMask.GetMask("Nothing");
         rb.excludeLayers = LayerMask.GetMask("Nothing");
-        //dashCooldown = (60f/noteManager.bpm); // Reset the dash cooldown to the current BPM of the song.
-        yield return new WaitForSeconds(dashCooldown);
-        isCooldown = false;
+        spriteHandler.bodyAnimator.speed = 1;
+        canDash = true;
     }
-
 
     private void PlayerMovement()
     {
-        //Get Player Input
-        movement.x = Input.GetAxisRaw("Horizontal");
-        movement.y = Input.GetAxisRaw("Vertical");
-
         //Move Rigidbody
-        if (CanDash)
+        if (canDash)
         {
             rb.MovePosition(rb.position + movement.normalized * moveSpeed * Time.fixedDeltaTime);
             switch (playerScreenPosition.y+100 < mousePosition.y)

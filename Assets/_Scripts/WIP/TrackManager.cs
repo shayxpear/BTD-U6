@@ -18,13 +18,6 @@ public class TrackManager : MonoBehaviour
 
     [Header("Notes")]
     [SerializeField] private List<string> notes = new(); //L = left R = right
-
-    private AudioSource trackSource;
-
-    public void Awake() //awake so it loads before the beatmanager
-    {
-        trackSource = gameObject.GetComponent<AudioSource>();
-    }
     
     //Getters
     public int GetBPM() { return BPM; }
@@ -39,8 +32,6 @@ public class TrackManager : MonoBehaviour
     public float GetOutroRiffTime() { return outroRiff.length; }
 
     public AudioClip GetBackgroundSong() { return backgroundSong; }
-
-    public AudioSource GetTrackSource() { return trackSource; }
 
     public List<string> GetTrackNotes() { return notes; }
 

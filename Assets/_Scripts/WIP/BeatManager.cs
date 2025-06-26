@@ -17,9 +17,12 @@ public class BeatManager : MonoBehaviour
     [SerializeField] private GameObject leftNotePrefab;
     [SerializeField] private GameObject rightNotePrefab;
 
-    [Header("Extra Components")]
+    [Header("Handlers")]
     [SerializeField] private PlayerSpriteHandler spriteHandler;
-    [SerializeField] private GuitarController guitarController;
+    [SerializeField] private InputHandler inputHandler;
+
+    [Header("Audio Source")]
+    [SerializeField] private AudioSource trackSource;
 
     [Header("RhythmUI")]
     [SerializeField] private RectTransform RhythmModuleTransform;
@@ -57,7 +60,7 @@ public class BeatManager : MonoBehaviour
     public enum SongStage { INTRO, RIFF, OUTRO, BACKGROUND}
     private enum SIDE { LEFT_SIDE = 0, RIGHT_SIDE = 1, BOTH_SIDES = 2 };
 
-    private double AudioSourceTime { get { return (double)tracks[currentTrackIndex].GetTrackSource().timeSamples / tracks[currentTrackIndex].GetTrackSource().clip.frequency; } }
+    private double AudioSourceTime { get { return (double)trackSource.timeSamples / trackSource.clip.frequency; } }
 
     public void Start()
     {
@@ -85,7 +88,7 @@ public class BeatManager : MonoBehaviour
 
     IEnumerator BPMUpdate()
     {                                                                                                                               
-        while (tracks[currentTrackIndex].GetTrackSource().clip == tracks[currentTrackIndex].GetGuitarRiff())
+        while (trackSource.clip == tracks[currentTrackIndex].GetGuitarRiff())
         {
             NoteSpawner();
             yield return new WaitForSeconds((60f - noteTravelTimeSeconds) / currentBPM); //noteTravelTime spawns notes early so it matches BPM
@@ -141,7 +144,7 @@ public class BeatManager : MonoBehaviour
 
     public void NoteChecker()
     {
-        if (tracks[currentTrackIndex].GetTrackSource().clip == tracks[currentTrackIndex].GetGuitarRiff()) //easier way to call when the riff plays and be able to call the variable in other scripts.
+        if (trackSource.clip == tracks[currentTrackIndex].GetGuitarRiff()) //easier way to call when the riff plays and be able to call the variable in other scripts.
         {
 
             //Move Left Notes
@@ -183,90 +186,107 @@ public class BeatManager : MonoBehaviour
     public void InputChecker()
     {
         //Checks if riff started, and the guitar is not in cooldown
-        if (songStage == SongStage.RIFF && spriteHandler.guitar != PlayerSpriteHandler.Guitar.COOLDOWN)
+        if (songStage == SongStage.RIFF && spriteHandler.guitar != PlayerSpriteHandler.Guitar.COOLDOWN && 
+            (spriteHandler.playerBody != PlayerSpriteHandler.PlayerBody.DODGING_F || spriteHandler.playerBody != PlayerSpriteHandler.PlayerBody.DODGING_B))
         {
-            if(spriteHandler.playerBody != PlayerSpriteHandler.PlayerBody.DODGING_F || spriteHandler.playerBody != PlayerSpriteHandler.PlayerBody.DODGING_B)
+            if (inputHandler.GetLeftShootDown())
             {
-                if (Input.GetMouseButtonDown(0))
-                {
-                    if (leftSideHittable)
-                    {
-                        LeftHit();
-                    }
-                    else
-                    {
-                        LeftMiss();
-                    }
-                }
+                if (leftSideHittable && activeLeftNotes.Count > 0) Hit(SIDE.LEFT_SIDE); else Miss();
+            }
 
-                if (Input.GetMouseButtonDown(1))
-                {
-                    if (rightSideHittable)
-                    {
-                        RightHit();
-                    }
-                    else
-                    {
-                        RightMiss();
-                    }
-                }
+            if (inputHandler.GetRightShootDown())
+            {
+                if (rightSideHittable && activeRightNotes.Count > 0) Hit(SIDE.RIGHT_SIDE); else Miss();
+            }
+
+            if (inputHandler.GetDodgeDown() && (inputHandler.getPlayerMovement.x != 0 || inputHandler.getPlayerMovement.y != 0))
+            {
+                if ((leftSideHittable && activeLeftNotes.Count > 0)) { Dodge(); } else { Miss(); }
             }
         }
     }
-
-    public void LeftHit()
+    private void Hit(SIDE hitSide)
     {
-        guitarController.Shoot();
+        if (hitSide == SIDE.LEFT_SIDE)
+        {
+            inputHandler.successfulLeftShoot = true;
+            activeLeftNotes.Dequeue().gameObject.SetActive(false);
+        }
+
+        if (hitSide == SIDE.RIGHT_SIDE)
+        {
+            inputHandler.successfulRightShoot = true;
+            activeRightNotes.Dequeue().gameObject.SetActive(false);
+        }
+    }
+    public void Dodge()
+    {
+        inputHandler.successfulDodge = true;
         activeLeftNotes.Dequeue().gameObject.SetActive(false);
     }
 
-    public void LeftMiss()
+    private void Miss()
     {
-        activeLeftNotes.Dequeue().gameObject.SetActive(false);
+        bool hasLeft = activeLeftNotes.Count > 0;
+        bool hasRight = activeRightNotes.Count > 0;
+
+        if (!hasLeft && !hasRight) return;
+
+        if (hasLeft && !hasRight)
+        {
+            inputHandler.successfulLeftShoot = false;
+            activeLeftNotes.Dequeue().gameObject.SetActive(false);
+            return;
+        }
+
+        if (hasRight && !hasLeft)
+        {
+            inputHandler.successfulRightShoot = false;
+            return;
+        }
+
+        // Both are active — pick the closer one to center
+        RectTransform left = activeLeftNotes.Peek();
+        RectTransform right = activeRightNotes.Peek();
+
+        float centerX = notebar.rect.width / 2f;
+        float leftDist = Mathf.Abs(left.anchoredPosition.x - centerX);
+        float rightDist = Mathf.Abs(-right.anchoredPosition.x - centerX);
+
+        if (leftDist < rightDist)
+        {
+            inputHandler.successfulLeftShoot = false;
+            activeLeftNotes.Dequeue().gameObject.SetActive(false);
+        }
+        else
+        {
+            inputHandler.successfulRightShoot = false;
+            activeRightNotes.Dequeue().gameObject.SetActive(false);
+        }
     }
 
-    public void RightHit()
-    {
-        guitarController.Shoot();
-        activeRightNotes.Dequeue().gameObject.SetActive(false);
-    }
-
-    public void RightMiss()
-    {
-        activeRightNotes.Dequeue().gameObject.SetActive(false);
-    }
 
     private void CollisionCheck()
     {
-
+        leftSideHittable = false;
+        rightSideHittable = false;
         foreach (RectTransform note in activeLeftNotes)
         {
             if ((Mathf.Abs(note.anchoredPosition.x - (notebar.rect.width / 2)) < mainCircle.rectTransform.rect.width + hitDistance))
             {
                 leftSideHittable = true;
+                break;
             }
-            else
-            {
-                leftSideHittable = false;
-            }
-
         }
-
 
         foreach (RectTransform note in activeRightNotes)
         {
             if ((Mathf.Abs((note.anchoredPosition.x * -1) - (notebar.rect.width / 2)) < mainCircle.rectTransform.rect.width + hitDistance))
             {
                 rightSideHittable = true;
+                break;
             }
-            else
-            {
-                rightSideHittable = false;
-            }
-
         }
-
-
     }
 
     private void SpawnNote(int index, SIDE spawnSide)
@@ -302,6 +322,9 @@ public class BeatManager : MonoBehaviour
 
         activeRightNotes.Clear();
         activeLeftNotes.Clear();
+
+        leftSideHittable = false;
+        rightSideHittable = false;
     }
 
     public IEnumerator LeftNoteHitTolerance(RectTransform note)
@@ -331,9 +354,9 @@ public class BeatManager : MonoBehaviour
     public IEnumerator PlayIntro()
     {
         songStage = SongStage.INTRO;
-        tracks[currentTrackIndex].GetTrackSource().clip = tracks[currentTrackIndex].GetIntroRiff();
-        tracks[currentTrackIndex].GetTrackSource().Play();
-        tracks[currentTrackIndex].GetTrackSource().loop = false;
+        trackSource.clip = tracks[currentTrackIndex].GetIntroRiff();
+        trackSource.Play();
+        trackSource.loop = false;
         yield return new WaitForSeconds(tracks[currentTrackIndex].GetIntroRiffTime());
         StartCoroutine(PlayRiff());
     }
@@ -341,9 +364,9 @@ public class BeatManager : MonoBehaviour
     public IEnumerator PlayRiff()
     {
         songStage = SongStage.RIFF;
-        tracks[currentTrackIndex].GetTrackSource().clip = tracks[currentTrackIndex].GetGuitarRiff();
-        tracks[currentTrackIndex].GetTrackSource().Play();
-        tracks[currentTrackIndex].GetTrackSource().loop = true;
+        trackSource.clip = tracks[currentTrackIndex].GetGuitarRiff();
+        trackSource.Play();
+        trackSource.loop = true;
         StartCoroutine(BPMUpdate());
         yield return new WaitUntil(() => clearedStage);
         StartCoroutine(PlayOutro());
@@ -353,9 +376,9 @@ public class BeatManager : MonoBehaviour
     {
         songStage = SongStage.OUTRO;
         ClearNotes();
-        tracks[currentTrackIndex].GetTrackSource().clip = tracks[currentTrackIndex].GetOutroRiff();
-        tracks[currentTrackIndex].GetTrackSource().Play();
-        tracks[currentTrackIndex].GetTrackSource().loop = false;
+        trackSource.clip = tracks[currentTrackIndex].GetOutroRiff();
+        trackSource.Play();
+        trackSource.loop = false;
         yield return new WaitForSeconds(tracks[currentTrackIndex].GetOutroRiffTime());
         PlayBackgroundSong();
     }
@@ -363,8 +386,8 @@ public class BeatManager : MonoBehaviour
     public void PlayBackgroundSong() 
     {
         songStage = SongStage.BACKGROUND;
-        tracks[currentTrackIndex].GetTrackSource().clip = tracks[currentTrackIndex].GetBackgroundSong();
-        tracks[currentTrackIndex].GetTrackSource().Play();
-        tracks[currentTrackIndex].GetTrackSource().loop = true;
+        trackSource.clip = tracks[currentTrackIndex].GetBackgroundSong();
+        trackSource.Play();
+        trackSource.loop = true;
     }
 }

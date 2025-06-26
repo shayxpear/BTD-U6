@@ -21,6 +21,8 @@ public class PlayerSpriteHandler : MonoBehaviour
     public enum PlayerHead {  IDLE_F, IDLE_B, RUNNING_F, RUNNING_B, DODGING_F, DODGING_B, SHOOTING};
     public enum Guitar { IDLE, SHOOTING, COOLDOWN };
 
+
+    //SPRITE HANDLER NOTE: RESET TRIGGER FOR ANIMATIONS THAT DONT LOOP INCASE IT GETS STUCK
     private void Start()
     {
     }
@@ -51,15 +53,18 @@ public class PlayerSpriteHandler : MonoBehaviour
                 break;
             case PlayerBody.RUNNING_B:
                 bodyAnimator.SetTrigger("RUNNING_B");
+                bodyAnimator.speed = 1f;
                 guitarSprite.enabled = true;
                 bodySprite.sortingOrder = 1;
                 break;
             case PlayerBody.DODGING_F:
+                bodyAnimator.ResetTrigger("DODGING_F");
                 bodyAnimator.SetTrigger("DODGING_F");
                 guitarSprite.enabled = false;
                 bodySprite.sortingOrder = -1;
                 break;
             case PlayerBody.DODGING_B:
+                bodyAnimator.ResetTrigger("DODGING_B");
                 bodyAnimator.SetTrigger("DODGING_B");
                 bodySprite.sortingOrder = 1;
                 guitarSprite.enabled = false;

@@ -171,7 +171,7 @@ public class NoteManager : MonoBehaviour
             }
 
             // Player Left Click Check
-            if (Input.GetMouseButtonDown(0) && playerController.CanDash && playerCooldown.GetCooldown() == false)
+            if (Input.GetMouseButtonDown(0) && playerCooldown.GetCooldown() == false)
             {
                 bool hit = CollisionCheck(true);
                 activeLeftNotes.Dequeue().gameObject.SetActive(false);
@@ -182,7 +182,7 @@ public class NoteManager : MonoBehaviour
             }
 
             // Player Right Click Check
-            if (Input.GetMouseButtonDown(1) && playerController.CanDash && playerCooldown.GetCooldown() == false)
+            if (Input.GetMouseButtonDown(1) && playerCooldown.GetCooldown() == false)
             {
                 bool hit = CollisionCheck(false);
                 activeRightNotes.Dequeue().gameObject.SetActive(false);
@@ -192,7 +192,7 @@ public class NoteManager : MonoBehaviour
                 else { Miss(); }
             }
 
-            if ((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.Space)) && playerController.CanDash)
+            if ((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.Space)))
             {
                 bool leftHit = CollisionCheck(true);
                 bool rightHit = CollisionCheck(false);

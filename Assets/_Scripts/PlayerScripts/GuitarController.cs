@@ -16,13 +16,14 @@ public class GuitarController : MonoBehaviour
     [SerializeField] private float bulletScale;
     [SerializeField] private float missCooldown;
 
-    [Header("Components")]
+    [Header("Handlers")]
     [SerializeField] private PlayerSpriteHandler spriteHandler;
+    [SerializeField] private InputHandler inputHandler;
+
+    [Header("Components")]
     [SerializeField] private Transform playerSpriteTransform;
     [SerializeField] private Transform firePoint;
     [SerializeField] private BeatManager beatManager;
-
-    PlayerController playerController;
 
 
     [Header("Player Cooldown")]
@@ -31,7 +32,7 @@ public class GuitarController : MonoBehaviour
 
     void Start()
     {
-        playerController = GameObject.Find("Player").GetComponent<PlayerController>();
+
     }
 
     void Update()
@@ -43,6 +44,11 @@ public class GuitarController : MonoBehaviour
 
         mousePosition = Input.mousePosition;
         PlayerGuitar();
+
+        if(inputHandler.successfulLeftShoot || inputHandler.successfulRightShoot)
+        {
+            Shoot();
+        }
     }
 
     private void PlayerGuitar()
@@ -67,6 +73,8 @@ public class GuitarController : MonoBehaviour
     public void Shoot()
     {
         //noteManager.noteCombo++;
+        if (inputHandler.successfulLeftShoot) { inputHandler.successfulLeftShoot = false; }
+        if (inputHandler.successfulRightShoot) { inputHandler.successfulRightShoot = false; }
         spriteHandler.guitar = PlayerSpriteHandler.Guitar.SHOOTING;
         spriteHandler.GuitarShootAnimation();
 
