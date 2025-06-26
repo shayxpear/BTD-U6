@@ -7,6 +7,11 @@ public class TrackManager : MonoBehaviour
     [Header("Track Name")]
     public string trackName;
 
+    [Header("Intro Notes")]
+    public AudioClip[] introNoteClips;
+
+    [HideInInspector] public AudioSource trackSource;
+
     [Header("Intervals")]
     [SerializeField] private int BPM;
 
@@ -16,9 +21,14 @@ public class TrackManager : MonoBehaviour
     [SerializeField] private AudioClip outroRiff;
     [SerializeField] private AudioClip backgroundSong;
 
-    [Header("Notes")]
-    [SerializeField] private List<string> notes = new(); //L = left R = right
-    
+
+    private List<string> notes = new(); //L = left R = right
+
+    private void Start()
+    {
+        trackSource = GetComponent<AudioSource>();
+    }
+
     //Getters
     public int GetBPM() { return BPM; }
 

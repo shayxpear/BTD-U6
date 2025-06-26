@@ -21,28 +21,35 @@ public class BeatManager : MonoBehaviour
     [SerializeField] private PlayerSpriteHandler spriteHandler;
     [SerializeField] private InputHandler inputHandler;
 
-    [Header("Audio Source")]
-    [SerializeField] private AudioSource trackSource;
-
     [Header("RhythmUI")]
     [SerializeField] private RectTransform RhythmModuleTransform;
     [SerializeField] private RectTransform notebar;
     [SerializeField] private Image mainCircle;
+
+    [Header("FreestyleUI")]
+    [SerializeField] private RectTransform selectedNotesTransform;
+
+    [Header("AudioClips")]
+    [SerializeField] private AudioClip miss;
+
     //Note Information
     public readonly List<GameObject> leftNotes = new();
     public readonly List<GameObject> rightNotes = new();
     public readonly Queue<RectTransform> activeLeftNotes = new();
     public readonly Queue<RectTransform> activeRightNotes = new();
 
+    private List<GameObject> freestyleNotes = new();
+    private AudioSource audioSource;
+
     [Header("Tracks")]
     [SerializeField] public TrackManager[] tracks;
 
-    [Header("Metronome (DEBUGGING)")]
-    [SerializeField] private bool turnOnMetronome;
+    [Header("DEBUGGING - [C] Clear stage [R] Reset stage [M] Metronome")]
+    [SerializeField] private bool turnOnDebugTools;
     private AudioSource metronome;
 
-    [Header("Debug Tools")]
     public bool clearedStage;
+    private bool turnOnMetronome;
 
     public bool leftSideHittable;
     public bool rightSideHittable;
@@ -55,25 +62,24 @@ public class BeatManager : MonoBehaviour
     public int leftNoteIndex;
     public int rightNoteIndex;
 
+    private int introIndex;
+
     public SongStage songStage;
 
-    public enum SongStage { INTRO, RIFF, OUTRO, BACKGROUND}
+    public enum SongStage { INTRO, INTRO_TRANSITION, RIFF, OUTRO, BACKGROUND}
     private enum SIDE { LEFT_SIDE = 0, RIGHT_SIDE = 1, BOTH_SIDES = 2 };
-
-    private double AudioSourceTime { get { return (double)trackSource.timeSamples / trackSource.clip.frequency; } }
 
     public void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         if (tracks == null)
         {
             //grab a default track if no tracks are in the list
         }
         else
         {
-            LoadAllNotesFromtrack();
+            PlayIntro();
             currentBPM = tracks[currentTrackIndex].GetBPM();
-            StartCoroutine(PlayIntro());
-
         }
 
         metronome = GameObject.Find("Metronome").GetComponent<AudioSource>();
@@ -84,11 +90,78 @@ public class BeatManager : MonoBehaviour
         NoteChecker();
         CollisionCheck();
         InputChecker();
+
+        if(songStage == SongStage.INTRO)
+        {
+            IntroNotes();
+        }
+
+        if(turnOnDebugTools)
+        {
+            if(Input.GetKeyDown(KeyCode.C))
+            {
+                clearedStage = true;
+            }
+
+            if (Input.GetKeyDown(KeyCode.R) && songStage == SongStage.BACKGROUND)
+            {
+                PlayIntro();
+            }
+
+            if(Input.GetKeyDown(KeyCode.M))
+            {
+                turnOnMetronome = !turnOnMetronome;
+            }
+        }
+    }
+
+    public void IntroNotes()
+    {
+
+        if (tracks[currentTrackIndex].GetTrackNotes().Count < tracks[currentTrackIndex].introNoteClips.Length)
+        {
+            if (inputHandler.GetLeftShootDown())
+            {
+                //tracks[currentTrackIndex].PlayOneShot(clip)
+                tracks[currentTrackIndex].SetTrackNotes("L");
+                GameObject freestyleNote = Instantiate(leftNotePrefab, selectedNotesTransform);
+                freestyleNotes.Add(freestyleNote);
+
+                if (introIndex < tracks[currentTrackIndex].introNoteClips.Length)
+                {
+                    audioSource.clip = tracks[currentTrackIndex].introNoteClips[introIndex];
+                    audioSource.Play();
+                    introIndex++;
+                }
+            }
+
+            if (inputHandler.GetRightShootDown())
+            {
+                tracks[currentTrackIndex].SetTrackNotes("R");
+                GameObject freestyleNote = Instantiate(rightNotePrefab, selectedNotesTransform);
+                freestyleNotes.Add(freestyleNote);
+
+                if (introIndex < tracks[currentTrackIndex].introNoteClips.Length)
+                {
+                    audioSource.clip = tracks[currentTrackIndex].introNoteClips[introIndex];
+                    audioSource.Play();
+                    introIndex++;
+                }
+            }
+
+            
+            
+        }
+        else
+        {
+            StartCoroutine(PlayDelayedRiff());
+        }
+        
     }
 
     IEnumerator BPMUpdate()
     {                                                                                                                               
-        while (trackSource.clip == tracks[currentTrackIndex].GetGuitarRiff())
+        while (tracks[currentTrackIndex].trackSource.clip == tracks[currentTrackIndex].GetGuitarRiff())
         {
             NoteSpawner();
             yield return new WaitForSeconds((60f - noteTravelTimeSeconds) / currentBPM); //noteTravelTime spawns notes early so it matches BPM
@@ -96,7 +169,7 @@ public class BeatManager : MonoBehaviour
     }
 
     //Load from trackmanager's note list
-    public void LoadAllNotesFromtrack()
+    public void LoadAllNotesFromTrack()
     {
         foreach(string note in tracks[currentTrackIndex].GetTrackNotes())
         {
@@ -115,26 +188,31 @@ public class BeatManager : MonoBehaviour
             }
         }
     }
-    public void NoteSpawner() // checks every BPM
+    public void NoteSpawner()
     {
-        if (turnOnMetronome) { metronome.Play(); }
+        if (turnOnMetronome)
+            metronome.Play();
+
+        if (currentNoteIndex >= tracks[currentTrackIndex].GetTrackLength()) //prevent leftover notes
+            return;
 
         if (songStage == SongStage.RIFF)
         {
-            if (tracks[currentTrackIndex].GetTrackNotes()[currentNoteIndex] == "L" && leftNoteIndex < leftNotes.Count)
+            string note = tracks[currentTrackIndex].GetTrackNotes()[currentNoteIndex];
+
+            if (note == "L" && leftNoteIndex < leftNotes.Count)
             {
                 SpawnNote(leftNoteIndex++, SIDE.LEFT_SIDE);
             }
-
-
-            if (tracks[currentTrackIndex].GetTrackNotes()[currentNoteIndex] == "R" && rightNoteIndex < rightNotes.Count)
+            else if (note == "R" && rightNoteIndex < rightNotes.Count)
             {
                 SpawnNote(rightNoteIndex++, SIDE.RIGHT_SIDE);
             }
+
             currentNoteIndex++;
         }
 
-        if(currentNoteIndex == tracks[currentTrackIndex].GetTrackLength())
+        if (currentNoteIndex == tracks[currentTrackIndex].GetTrackLength())
         {
             currentNoteIndex = 0;
             leftNoteIndex = 0;
@@ -142,9 +220,10 @@ public class BeatManager : MonoBehaviour
         }
     }
 
+
     public void NoteChecker()
     {
-        if (trackSource.clip == tracks[currentTrackIndex].GetGuitarRiff()) //easier way to call when the riff plays and be able to call the variable in other scripts.
+        if (songStage == SongStage.RIFF)
         {
 
             //Move Left Notes
@@ -227,6 +306,8 @@ public class BeatManager : MonoBehaviour
 
     private void Miss()
     {
+        audioSource.PlayOneShot(miss);
+
         bool hasLeft = activeLeftNotes.Count > 0;
         bool hasRight = activeRightNotes.Count > 0;
 
@@ -242,6 +323,7 @@ public class BeatManager : MonoBehaviour
         if (hasRight && !hasLeft)
         {
             inputHandler.successfulRightShoot = false;
+            activeRightNotes.Dequeue().gameObject.SetActive(false);
             return;
         }
 
@@ -292,7 +374,6 @@ public class BeatManager : MonoBehaviour
     private void SpawnNote(int index, SIDE spawnSide)
     {
         RectTransform note;
-
         switch (spawnSide)
         {
             case SIDE.LEFT_SIDE:
@@ -301,6 +382,7 @@ public class BeatManager : MonoBehaviour
                     note.anchoredPosition = new Vector2(0, 0); // Move it to left (anchored to left of parent)
                     activeLeftNotes.Enqueue(note); // Track note on active note queue
                     note.gameObject.SetActive(true); // Make the note visible
+                   
                     break;
                 }
 
@@ -317,14 +399,27 @@ public class BeatManager : MonoBehaviour
 
     private void ClearNotes()
     {
-        foreach (RectTransform note in activeLeftNotes) { note.gameObject.SetActive(false); }
-        foreach (RectTransform note in activeRightNotes) { note.gameObject.SetActive(false); }
+        foreach (GameObject note in leftNotes) { note.SetActive(false); Destroy(note.gameObject); }
+        foreach (GameObject note in rightNotes) { note.SetActive(false); Destroy(note.gameObject); }
+        foreach (GameObject note in freestyleNotes) { note.SetActive(false); Destroy(note.gameObject); }
+
+        tracks[currentTrackIndex].GetTrackNotes().Clear();
+
+        leftNotes.Clear();
+        rightNotes.Clear();
 
         activeRightNotes.Clear();
         activeLeftNotes.Clear();
+        freestyleNotes.Clear();
 
         leftSideHittable = false;
         rightSideHittable = false;
+
+        currentNoteIndex = 0;
+        leftNoteIndex = 0;
+        rightNoteIndex = 0;
+
+        introIndex = 0;
     }
 
     public IEnumerator LeftNoteHitTolerance(RectTransform note)
@@ -351,22 +446,29 @@ public class BeatManager : MonoBehaviour
 
     }
 
-    public IEnumerator PlayIntro()
+    public void PlayIntro()
     {
         songStage = SongStage.INTRO;
-        trackSource.clip = tracks[currentTrackIndex].GetIntroRiff();
-        trackSource.Play();
-        trackSource.loop = false;
-        yield return new WaitForSeconds(tracks[currentTrackIndex].GetIntroRiffTime());
+        clearedStage = false;
+        tracks[currentTrackIndex].trackSource.clip = tracks[currentTrackIndex].GetIntroRiff();
+        tracks[currentTrackIndex].trackSource.Play();
+        tracks[currentTrackIndex].trackSource.loop = true;
+    }
+
+    public IEnumerator PlayDelayedRiff()
+    {
+        songStage = SongStage.INTRO_TRANSITION;
+        LoadAllNotesFromTrack();
+        yield return new WaitForSeconds(60f/currentBPM);
         StartCoroutine(PlayRiff());
     }
 
     public IEnumerator PlayRiff()
     {
         songStage = SongStage.RIFF;
-        trackSource.clip = tracks[currentTrackIndex].GetGuitarRiff();
-        trackSource.Play();
-        trackSource.loop = true;
+        tracks[currentTrackIndex].trackSource.clip = tracks[currentTrackIndex].GetGuitarRiff();
+        tracks[currentTrackIndex].trackSource.Play();
+        tracks[currentTrackIndex].trackSource.loop = true;
         StartCoroutine(BPMUpdate());
         yield return new WaitUntil(() => clearedStage);
         StartCoroutine(PlayOutro());
@@ -376,9 +478,9 @@ public class BeatManager : MonoBehaviour
     {
         songStage = SongStage.OUTRO;
         ClearNotes();
-        trackSource.clip = tracks[currentTrackIndex].GetOutroRiff();
-        trackSource.Play();
-        trackSource.loop = false;
+        tracks[currentTrackIndex].trackSource.clip = tracks[currentTrackIndex].GetOutroRiff();
+        tracks[currentTrackIndex].trackSource.Play();
+        tracks[currentTrackIndex].trackSource.loop = false;
         yield return new WaitForSeconds(tracks[currentTrackIndex].GetOutroRiffTime());
         PlayBackgroundSong();
     }
@@ -386,8 +488,8 @@ public class BeatManager : MonoBehaviour
     public void PlayBackgroundSong() 
     {
         songStage = SongStage.BACKGROUND;
-        trackSource.clip = tracks[currentTrackIndex].GetBackgroundSong();
-        trackSource.Play();
-        trackSource.loop = true;
+        tracks[currentTrackIndex].trackSource.clip = tracks[currentTrackIndex].GetBackgroundSong();
+        tracks[currentTrackIndex].trackSource.Play();
+        tracks[currentTrackIndex].trackSource.loop = true;
     }
 }
