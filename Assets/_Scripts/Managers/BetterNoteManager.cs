@@ -7,6 +7,7 @@ using Melanchall.DryWetMidi.Interaction;
 
 public class BetterNoteManager : MonoBehaviour
 {
+
     [Header("Hit Tolerance")]
     [SerializeField] public float hitTolerance; //Based off of seconds
     [SerializeField] private float hitDistance; //Based off of the extra width of the mainCircle
@@ -104,7 +105,7 @@ public class BetterNoteManager : MonoBehaviour
             Debug.Log($"Detected BPM: {bpm}");
             break; // Assuming only the first tempo for simplicity
         }
-
+        /**
         foreach (Note note in midiFile.GetNotes())
         {
             var metricTimeSpan = TimeConverter.ConvertTo<MetricTimeSpan>(note.Time, tempoMap);
@@ -125,6 +126,7 @@ public class BetterNoteManager : MonoBehaviour
                 rightNotes.Add(g);
             }
         }
+        **/
     }
 
     private void NoteChecker()

@@ -22,7 +22,7 @@ public class TrackManager : MonoBehaviour
     [SerializeField] private AudioClip backgroundSong;
 
 
-    private List<string> notes = new(); //L = left R = right
+    private List<Note> trackNotes = new(); //L = left R = right
 
     private void Start()
     {
@@ -43,9 +43,9 @@ public class TrackManager : MonoBehaviour
 
     public AudioClip GetBackgroundSong() { return backgroundSong; }
 
-    public List<string> GetTrackNotes() { return notes; }
+    public List<Note> GetTrackNotes() { return trackNotes; }
 
-    public void SetTrackNotes(string note) { notes.Add(note); }
+    public void SetTrackNotes(Note note) { trackNotes.Add(note); }
 
-    public int GetTrackLength() { return notes.Count; }
+    public int GetTrackLength() { return trackNotes.Count; }
 }

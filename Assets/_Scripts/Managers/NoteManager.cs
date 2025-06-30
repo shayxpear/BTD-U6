@@ -7,6 +7,7 @@ using Melanchall.DryWetMidi.Interaction;
 
 public class NoteManager : MonoBehaviour
 {
+    /**
     [Header("Control Panel")]
     [SerializeField] private float hitTolerance; // Tolerance for collision of hitting note [0 = exact match only, 0.1 = 90% overlap, 0.9 = 10% overlap]
     [SerializeField] private float noteDespawnPastDistance; // Distance for a note to go past hitting the center before despawning
@@ -565,4 +566,5 @@ public class NoteManager : MonoBehaviour
         // Ensure it snaps back
         pulseObject.anchoredPosition = originalPos;
     }
+    **/
 }

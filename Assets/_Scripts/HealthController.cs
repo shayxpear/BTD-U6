@@ -6,21 +6,15 @@ using UnityEngine.SceneManagement;
 public class HealthController : MonoBehaviour
 {
     private int currentHealth;
-    private PlayerController playerController;
     private EnemyController enemyController;
     private EnemySpawnManager enemySpawnManager;
 
     void Awake()
     {
-        playerController = GetComponent<PlayerController>();
+        
         enemyController = GetComponent<EnemyController>();
 
-        if (this.playerController != null)
-        {
-            currentHealth = playerController.GetPlayerHealth;
-            enemySpawnManager = FindFirstObjectByType<EnemySpawnManager>();
-        }
-        else if (this.enemyController != null)
+        if (this.enemyController != null)
         {
             currentHealth = enemyController.GetEnemyHealth;
         }
@@ -31,11 +25,7 @@ public class HealthController : MonoBehaviour
         currentHealth -= damage;
         currentHealth = Mathf.Clamp(currentHealth, 0, currentHealth);
 
-        if (playerController != null)
-        {
-            //Debug.Log($"Player took {damage} damage. Current Health: {currentHealth}");
-        }
-        else if (enemyController != null)
+        if (enemyController != null)
         {
             //Debug.Log($"Enemy took {damage} damage. Current Health: {currentHealth}");
             StartCoroutine(HurtEnemyCoroutine());
@@ -49,22 +39,18 @@ public class HealthController : MonoBehaviour
 
     private void Die()
     {
-        if (playerController != null)
+        if (enemySpawnManager != null)
         {
-            if (enemySpawnManager != null)
-            {
-                Debug.Log("Setting isDead to true on EnemySpawnManager");
-                enemySpawnManager.isDead = true;
-            }
-            else
-            {
-                Debug.LogWarning("EnemySpawnManager not found!");
-            }
-            
-            StartCoroutine(Respawn());
-           
+            Debug.Log("Setting isDead to true on EnemySpawnManager");
+            enemySpawnManager.isDead = true;
         }
-        else if (enemyController != null)
+        else
+        {
+            Debug.LogWarning("EnemySpawnManager not found!");
+        }
+            
+           
+        if (enemyController != null)
         {
             StartCoroutine(DieEnemyCoroutine());
         }
@@ -149,16 +135,5 @@ public class HealthController : MonoBehaviour
         return currentHealth;
     }
 
-    IEnumerator Respawn()
-    {
-        Destroy(GameObject.Find("PlayerPrefab"));
-        Destroy(GameObject.Find("Managers"));
-        Debug.Log("Player has died.");
-        SceneManager.LoadScene("Tutorial 1");
-        yield return new WaitForSeconds(0.1f);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        yield return new WaitForSeconds(0.9f);
-
-
-    }
+    
 }

@@ -5,6 +5,10 @@ using UnityEngine.UI;
 
 public class InterfaceManager : MonoBehaviour
 {
+
+    //Interface Manager is used to control what UI is shown or hidden depending on the situation.
+    //UI Mechanics should still be built on seperate scripts.
+
     [Header("Menus")]
     [SerializeField] private GameObject PauseMenu;
     [SerializeField] private GameObject InventoryMenu;

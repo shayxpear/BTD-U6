@@ -399,7 +399,7 @@ public class EnemyController : MonoBehaviour
             laserLines[0].SetPosition(0, startPos);
             laserLines[0].SetPosition(1, endPos);
 
-            HealthController hc = hit.collider != null ? hit.collider.GetComponent<HealthController>() : null;
+            PlayerHealth hc = hit.collider != null ? hit.collider.GetComponent<PlayerHealth>() : null;
 
             // Initial hit damage
             if (!initialHitDone && hit.collider != null && hit.collider.CompareTag("Player"))
@@ -448,7 +448,7 @@ public class EnemyController : MonoBehaviour
                 case AttackType.Melee:
                     Debug.Log("Melee Attack");
                     if (player != null && enemyCollided)
-                        player.GetComponent<HealthController>()?.TakeDamage(damage);
+                        player.GetComponent<PlayerHealth>()?.TakeDamage(damage);
                     break;
                 case AttackType.Ranged:
                     Debug.Log("Ranged Attack");

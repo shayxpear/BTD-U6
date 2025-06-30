@@ -13,7 +13,6 @@ public class CrosshairSpriteController : MonoBehaviour
     [SerializeField] private PlayerUI playerUI;
     [SerializeField] private TrackHolder trackHolder;
     [SerializeField] private GameManager gameManager;
-    [SerializeField] private BetterNoteManager noteManager;
 
     // Call this to start the crosshair animation
     public void StartCrosshairCoroutine(List<double> leftNoteTimes, List<double> rightNoteTimes, System.Func<double> getAudioSourceTime)
@@ -24,8 +23,6 @@ public class CrosshairSpriteController : MonoBehaviour
     private void Start()
     {
         StartCoroutine(ResetToWhiteCrosshair());
-        noteManager = GameObject.Find("NoteManager").GetComponent<BetterNoteManager>();
-
     }
 
     private IEnumerator CrosshairSprite(List<double> leftNoteTimes, List<double> rightNoteTimes, System.Func<double> getAudioSourceTime)

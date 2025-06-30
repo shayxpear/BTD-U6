@@ -6,7 +6,6 @@ public class PlayerController : MonoBehaviour
 {
 
     [Header("Player Stats")]
-    [SerializeField] private int health;
     [SerializeField] private float moveSpeed;
     [SerializeField] private float dashTime; //should never be less than or equal to 1
     [SerializeField] private float dashSpeed;
@@ -24,7 +23,6 @@ public class PlayerController : MonoBehaviour
 
     private Transform playerSpriteTransform;
 
-    public int GetPlayerHealth => health;
     bool canDash = true;
 
     Vector2 movement;
@@ -69,7 +67,7 @@ public class PlayerController : MonoBehaviour
 
         playerCollider.excludeLayers = LayerMask.GetMask("Enemies", "Bullets", "CollisionBullets"); //Dodge layers
         rb.excludeLayers = LayerMask.GetMask("Enemies", "Bullets", "CollisionBullets"); //Exclude layers
-        switch (playerScreenPosition.y + 100 < mousePosition.y)
+        switch (playerScreenPosition.y + 200 < mousePosition.y)
         {
             case true:
                 spriteHandler.playerBody = PlayerSpriteHandler.PlayerBody.DODGING_B;
@@ -94,7 +92,7 @@ public class PlayerController : MonoBehaviour
         if (canDash)
         {
             rb.MovePosition(rb.position + movement.normalized * moveSpeed * Time.fixedDeltaTime);
-            switch (playerScreenPosition.y+100 < mousePosition.y)
+            switch (playerScreenPosition.y + 200 < mousePosition.y)
             {
                 case true: // back
                     switch ((movement.x != 0 | movement.y != 0))
