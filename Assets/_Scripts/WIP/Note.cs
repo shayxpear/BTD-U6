@@ -7,7 +7,7 @@ public class Note : MonoBehaviour
     public NoteState noteState;
     public enum SIDE { LEFT_SIDE, RIGHT_SIDE };
     public enum NoteState { 
-        Active, Hittable, 
+        Active, Hittable,
         Hit, Miss, Dodge, 
         Despawning}
 

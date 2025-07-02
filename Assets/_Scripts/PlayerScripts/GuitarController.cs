@@ -25,14 +25,8 @@ public class GuitarController : MonoBehaviour
     [SerializeField] private Transform firePoint;
     [SerializeField] private BeatManager beatManager;
 
-
-    [Header("Player Cooldown")]
-    public PlayerCooldown playerCooldown;
-
-
     void Start()
     {
-
     }
 
     void Update()

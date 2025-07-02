@@ -12,6 +12,7 @@ public class BeatManager : MonoBehaviour
 
     [Header("Stats")]
     [SerializeField] public int attempts;
+    [SerializeField] public int cooldownIntervals;
     [SerializeField] public int noteCombo;
 
     [Header("Note Prefabs")]
@@ -38,10 +39,9 @@ public class BeatManager : MonoBehaviour
     public readonly Queue<RectTransform> activeRightNotes = new();
     **/
 
-    public List<Note> notes = new();
-    public readonly Queue<Note> activeNotes = new();
-
-    public List<Note> freestyleNotes = new();
+    private List<Note> notes = new();
+    private readonly Queue<Note> activeNotes = new();
+    private List<Note> freestyleNotes = new();
 
     private AudioSource audioSource;
 
@@ -61,6 +61,7 @@ public class BeatManager : MonoBehaviour
     public int currentNoteIndex;
 
     private int introIndex;
+    private int missCount;
 
     public SongStage songStage;
 
@@ -84,7 +85,7 @@ public class BeatManager : MonoBehaviour
 
     public void Update()
     {
-        switch(songStage)
+        switch (songStage)
         {
             case SongStage.INTRO:
                 IntroNotes();
@@ -97,9 +98,9 @@ public class BeatManager : MonoBehaviour
                 break;
         }
 
-        if(turnOnDebugTools)
+        if (turnOnDebugTools)
         {
-            if(Input.GetKeyDown(KeyCode.C))
+            if (Input.GetKeyDown(KeyCode.C))
             {
                 clearedStage = true;
             }
@@ -109,10 +110,15 @@ public class BeatManager : MonoBehaviour
                 PlayIntro();
             }
 
-            if(Input.GetKeyDown(KeyCode.M))
+            if (Input.GetKeyDown(KeyCode.M))
             {
                 turnOnMetronome = !turnOnMetronome;
             }
+        }
+
+        if (missCount == attempts)
+        {
+            StartCoroutine(NoteCooldown());
         }
     }
 
@@ -178,7 +184,7 @@ public class BeatManager : MonoBehaviour
         if (turnOnMetronome)
             metronome.Play();
 
-        if (songStage == SongStage.RIFF)
+        if (songStage == SongStage.RIFF && spriteHandler.guitar != PlayerSpriteHandler.Guitar.COOLDOWN)
         {
             if (notes[currentNoteIndex].side == Note.SIDE.LEFT_SIDE)
             {
@@ -199,7 +205,7 @@ public class BeatManager : MonoBehaviour
         foreach (Note note in activeNotes)
         {
             //Move Active Notes
-            if(note.noteState != Note.NoteState.Despawning)
+            if(note.noteState != Note.NoteState.Despawning || spriteHandler.guitar != PlayerSpriteHandler.Guitar.COOLDOWN )
             {
                 if (note.noteTransform.anchoredPosition.x < notebar.rect.width / 2 && note.side == Note.SIDE.LEFT_SIDE) { note.noteTransform.anchoredPosition += new Vector2(notebar.rect.width / 2 * Time.deltaTime / noteTravelTimeSeconds, 0); }
                 if (-note.noteTransform.anchoredPosition.x < notebar.rect.width / 2 && note.side == Note.SIDE.RIGHT_SIDE) { note.noteTransform.anchoredPosition -= new Vector2(notebar.rect.width / 2 * Time.deltaTime / noteTravelTimeSeconds, 0); }
@@ -271,6 +277,17 @@ public class BeatManager : MonoBehaviour
         Destroy(note.gameObject);
     }
 
+    public IEnumerator NoteCooldown()
+    {
+        missCount = 0;
+        spriteHandler.guitar = PlayerSpriteHandler.Guitar.COOLDOWN;
+
+        foreach (Note note in activeNotes) { Destroy(note.gameObject); }
+        activeNotes.Clear();
+        
+        yield return new WaitForSeconds(60f / (currentBPM/cooldownIntervals));
+        spriteHandler.guitar = PlayerSpriteHandler.Guitar.IDLE;
+    }
     public void InputChecker()
     {
         // Guard clauses: skip input if player is in cooldown or dodging
@@ -397,7 +414,7 @@ public class BeatManager : MonoBehaviour
     private void Miss(Note note)
     {
         note.noteState = Note.NoteState.Miss;
-
+        missCount++;
         if (note.side == Note.SIDE.LEFT_SIDE)
         {
             inputHandler.successfulLeftShoot = false;

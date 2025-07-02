@@ -362,7 +362,6 @@ MonoBehaviour:
   playerSpriteTransform: {fileID: 2105184423}
   firePoint: {fileID: 14888148}
   beatManager: {fileID: 1944652697}
-  playerCooldown: {fileID: 0}
 --- !u!223 &129825984
 Canvas:
   m_ObjectHideFlags: 0
@@ -2143,7 +2142,8 @@ MonoBehaviour:
   hitTolerance: 0.1
   hitDistance: 50
   noteTravelTimeSeconds: 1
-  attempts: 0
+  attempts: 3
+  cooldownIntervals: 2
   noteCombo: 0
   leftNotePrefab: {fileID: 4437138442464683271, guid: c09d6579ef905f24192a42755e51d5c1, type: 3}
   rightNotePrefab: {fileID: 5672420782034410698, guid: e1e89f7e268b7204d83710dd0f8bc660, type: 3}
@@ -2153,8 +2153,6 @@ MonoBehaviour:
   notebar: {fileID: 118258691}
   mainCircle: {fileID: 1037213287}
   FreestyleModuleTransform: {fileID: 502540058}
-  notes: []
-  freestyleNotes: []
   tracks:
   - {fileID: 1225313304}
   turnOnDebugTools: 1
