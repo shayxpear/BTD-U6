@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 public class BeatManager : MonoBehaviour
 {
+    //Write a note state function so it is easier to tell what state the notes are in
     [Header("Hit Tolerance")]
     [SerializeField] public float hitTolerance; //Based off of seconds
     [SerializeField] public float hitDistance; //Based off of the extra width of the mainCircle
@@ -29,9 +30,6 @@ public class BeatManager : MonoBehaviour
     [Header("FreestyleUI")]
     [SerializeField] private RectTransform FreestyleModuleTransform;
 
-    [Header("AudioClips")]
-    [SerializeField] private AudioClip miss;
-
     //Note Information
     /**
     public readonly List<Note> leftNotes = new();
@@ -41,9 +39,7 @@ public class BeatManager : MonoBehaviour
     **/
 
     public List<Note> notes = new();
-
-    public readonly Queue<RectTransform> activeLeftNotes = new();
-    public readonly Queue<RectTransform> activeRightNotes = new();
+    public readonly Queue<Note> activeNotes = new();
 
     public List<Note> freestyleNotes = new();
 
@@ -59,21 +55,14 @@ public class BeatManager : MonoBehaviour
     public bool clearedStage;
     private bool turnOnMetronome;
 
-    public bool leftSideHittable;
-    public bool rightSideHittable;
-
     public int currentBPM;
 
     public int currentTrackIndex;
     public int currentNoteIndex;
 
-    public int leftNoteIndex;
-    public int rightNoteIndex;
-
     private int introIndex;
 
     public SongStage songStage;
-
 
     public enum SongStage { INTRO, INTRO_TRANSITION, RIFF, OUTRO, BACKGROUND}
 
@@ -95,13 +84,17 @@ public class BeatManager : MonoBehaviour
 
     public void Update()
     {
-        NoteChecker();
-        //CollisionCheck();
-        //InputChecker();
-
-        if(songStage == SongStage.INTRO)
+        switch(songStage)
         {
-            IntroNotes();
+            case SongStage.INTRO:
+                IntroNotes();
+                break;
+            case SongStage.INTRO_TRANSITION:
+                break;
+            case SongStage.RIFF:
+                NoteChecker();
+                InputChecker();
+                break;
         }
 
         if(turnOnDebugTools)
@@ -131,7 +124,7 @@ public class BeatManager : MonoBehaviour
             if (inputHandler.GetLeftShootDown())
             {
                 Note freestyleNote = Instantiate(leftNotePrefab, FreestyleModuleTransform);
-                freestyleNote.noteState = Note.NoteState.Active;
+                freestyleNote.gameObject.SetActive(true);
                 freestyleNotes.Add(freestyleNote);
 
                 if (introIndex < tracks[currentTrackIndex].introNoteClips.Length)
@@ -145,7 +138,7 @@ public class BeatManager : MonoBehaviour
             if (inputHandler.GetRightShootDown())
             {
                 Note freestyleNote = Instantiate(rightNotePrefab, FreestyleModuleTransform);
-                freestyleNote.noteState = Note.NoteState.Active;
+                freestyleNote.gameObject.SetActive(true);
                 freestyleNotes.Add(freestyleNote);
 
                 if (introIndex < tracks[currentTrackIndex].introNoteClips.Length)
@@ -155,9 +148,6 @@ public class BeatManager : MonoBehaviour
                     introIndex++;
                 }
             }
-
-            
-            
         }
         else
         {
@@ -175,297 +165,270 @@ public class BeatManager : MonoBehaviour
         }
     }
 
-    //Load from trackmanager's note list
     public void LoadAllNotesFromTrack()
     {
         foreach(Note note in freestyleNotes)
         {
-            if(note.side == Note.SIDE.LEFT_SIDE)
-            {
-                Note leftNote = Instantiate(leftNotePrefab, RhythmModuleTransform);
-                notes.Add(leftNote);
-                leftNote.noteState = Note.NoteState.NotActive;
-            }
-
-            if (note.side == Note.SIDE.RIGHT_SIDE)
-            {
-                Note rightNote = Instantiate(rightNotePrefab, RhythmModuleTransform);
-                notes.Add(rightNote);
-                rightNote.noteState = Note.NoteState.NotActive;
-            }
+            notes.Add(note);
         }
     }
+
     public void NoteSpawner()
     {
         if (turnOnMetronome)
             metronome.Play();
 
-        if (currentNoteIndex >= freestyleNotes.Count) //prevent leftover notes
-            return;
-
         if (songStage == SongStage.RIFF)
         {
             if (notes[currentNoteIndex].side == Note.SIDE.LEFT_SIDE)
             {
-                SpawnNote(notes[currentNoteIndex]);
+                activeNotes.Enqueue(Instantiate(leftNotePrefab, RhythmModuleTransform));
             }
             else if (notes[currentNoteIndex].side == Note.SIDE.RIGHT_SIDE)
             {
-                SpawnNote(notes[currentNoteIndex]);
+                activeNotes.Enqueue(Instantiate(rightNotePrefab, RhythmModuleTransform));
             }
             currentNoteIndex++;
         }
 
         if (currentNoteIndex == freestyleNotes.Count) { currentNoteIndex = 0; }
     }
-    private void SpawnNote(Note note)
-    {
-        RectTransform noteTransform;
-        switch (note.side)
-        {
-            case Note.SIDE.LEFT_SIDE:
-                {
-                    noteTransform = note.GetComponent<RectTransform>();
-                    noteTransform.anchoredPosition = new Vector2(0, 0); // Move it to left (anchored to left of parent)
-                    activeLeftNotes.Enqueue(noteTransform);
-                    note.noteState = Note.NoteState.Active;
-                    break;
-                }
-
-            case Note.SIDE.RIGHT_SIDE:
-                {
-                    noteTransform = note.GetComponent<RectTransform>();
-                    noteTransform.anchoredPosition = new Vector2(0, 0); // Move it to right (anchored to right of parent)
-                    activeRightNotes.Enqueue(noteTransform);
-                    note.noteState = Note.NoteState.Active;
-
-                    break;
-                }
-        }
-    }
 
     public void NoteChecker()
     {
-        if (songStage == SongStage.RIFF)
+        foreach (Note note in activeNotes)
         {
-
-            //Move Left Notes
-            foreach (RectTransform activeNote in activeLeftNotes)
+            //Move Active Notes
+            if(note.noteState != Note.NoteState.Despawning)
             {
-                if (activeNote.anchoredPosition.x < notebar.rect.width / 2)
-                    activeNote.anchoredPosition += new Vector2(notebar.rect.width / 2 * Time.deltaTime / noteTravelTimeSeconds, 0);
-            }
-            foreach (RectTransform activeNote in activeRightNotes)
-            {
-                if (-activeNote.anchoredPosition.x < notebar.rect.width / 2)
-                    activeNote.anchoredPosition -= new Vector2(notebar.rect.width / 2 * Time.deltaTime / noteTravelTimeSeconds, 0);
+                if (note.noteTransform.anchoredPosition.x < notebar.rect.width / 2 && note.side == Note.SIDE.LEFT_SIDE) { note.noteTransform.anchoredPosition += new Vector2(notebar.rect.width / 2 * Time.deltaTime / noteTravelTimeSeconds, 0); }
+                if (-note.noteTransform.anchoredPosition.x < notebar.rect.width / 2 && note.side == Note.SIDE.RIGHT_SIDE) { note.noteTransform.anchoredPosition -= new Vector2(notebar.rect.width / 2 * Time.deltaTime / noteTravelTimeSeconds, 0); }
             }
 
-            // Left Note Despawn Check
-            if (activeLeftNotes.Count > 0)
+            switch (note.noteState)
             {
-                var front = activeLeftNotes.Peek();
-                if (front.anchoredPosition.x >= notebar.rect.width / 2)
-                {
-                    
-                    StartCoroutine(LeftNoteHitTolerance(front));
-                }
-            }
-            // Right Note Despawn Check
-            if (activeRightNotes.Count > 0)
-            {
-                var front = activeRightNotes.Peek();
-                if (-front.anchoredPosition.x >= notebar.rect.width / 2)
-                {
-                    StartCoroutine(RightNoteHitTolerance(front));
-                }
-            }
-
-        }
-    }
-    /**
-    public void InputChecker()
-    {
-        //Checks if riff started, and the guitar is not in cooldown
-        if (songStage == SongStage.RIFF && spriteHandler.guitar != PlayerSpriteHandler.Guitar.COOLDOWN && 
-            (spriteHandler.playerBody != PlayerSpriteHandler.PlayerBody.DODGING_F || spriteHandler.playerBody != PlayerSpriteHandler.PlayerBody.DODGING_B))
-        {
-            if (inputHandler.GetLeftShootDown())
-            {
-                if (leftSideHittable && activeLeftNotes.Count > 0)
-                {
-                    var note = activeLeftNotes.Dequeue();
-                    Animator animator = note.GetComponent<Animator>();
-                    if (animator != null)
+                case Note.NoteState.Active:
+                    //Check for collision
+                    if (note.side == Note.SIDE.LEFT_SIDE)
                     {
-                        animator.SetTrigger("Hit");
-                        StartCoroutine(NoteAnimation(note, animator));
-                    }
-                }
-                else
-                {
-                    if (activeLeftNotes.Count > 0)
-                    {
-                        var note = activeLeftNotes.Dequeue();
-                        Animator animator = note.GetComponent<Animator>();
-                        if (animator != null)
+                        float distance = Mathf.Abs(note.noteTransform.anchoredPosition.x - (notebar.rect.width / 2));
+                        if (distance < mainCircle.rectTransform.rect.width + hitDistance && note.noteState == Note.NoteState.Active)
                         {
-                            animator.SetTrigger("Miss");
-                            StartCoroutine(NoteAnimation(note, animator));
+                            note.noteState = Note.NoteState.Hittable;
                         }
                     }
+
+                    else
+                    {
+                        float distance = Mathf.Abs((-note.noteTransform.anchoredPosition.x) - (notebar.rect.width / 2));
+
+                        if (distance < mainCircle.rectTransform.rect.width + hitDistance && note.noteState == Note.NoteState.Active)
+                        {
+                            note.noteState = Note.NoteState.Hittable;
+                        }
+                    }
+                    break;
+
+                case Note.NoteState.Hittable:
+                    // Left Note Despawn Check
+                    if (activeNotes.Count > 0)
+                    {
+                        var posX = note.GetComponent<RectTransform>().anchoredPosition.x;
+
+                        if (posX >= notebar.rect.width / 2 && note.noteState == Note.NoteState.Hittable && note.side == Note.SIDE.LEFT_SIDE)
+                        {
+                            StartCoroutine(HitTolerance(note));
+                        }
+
+                        if (-posX >= notebar.rect.width / 2 && note.noteState == Note.NoteState.Hittable && note.side == Note.SIDE.RIGHT_SIDE)
+                        {
+                            StartCoroutine(HitTolerance(note));
+                        }
+                    }
+                    break;
+            }
+            
+        }
+
+        
+    }
+
+    public IEnumerator HitTolerance(Note note)
+    {
+        yield return new WaitForSeconds(hitTolerance);
+
+        if (note == null || note.gameObject == null)
+            yield break;
+
+        if (note.noteState == Note.NoteState.Despawning || note.noteState == Note.NoteState.Dodge || note.noteState == Note.NoteState.Hit || note.noteState == Note.NoteState.Miss)
+            yield break; // Already handled
+
+        if (activeNotes.Count > 0 && activeNotes.Peek() == note)
+        {
+            activeNotes.Dequeue();
+        }
+
+        Destroy(note.gameObject);
+    }
+
+    public void InputChecker()
+    {
+        // Guard clauses: skip input if player is in cooldown or dodging
+        if (spriteHandler.guitar == PlayerSpriteHandler.Guitar.COOLDOWN ||
+            spriteHandler.playerBody == PlayerSpriteHandler.PlayerBody.DODGING_F ||
+            spriteHandler.playerBody == PlayerSpriteHandler.PlayerBody.DODGING_B)
+            return;
+
+        if (activeNotes.Count == 0)
+            return;
+
+        Note note = activeNotes.Peek();
+
+        // Left Shoot
+        if (inputHandler.GetLeftShootDown())
+        {
+            ProcessNoteInput(note, Note.SIDE.LEFT_SIDE);
+        }
+
+        // Right Shoot
+        if (inputHandler.GetRightShootDown())
+        {
+            ProcessNoteInput(note, Note.SIDE.RIGHT_SIDE);
+        }
+
+        // Dodge
+        if (inputHandler.GetDodgeDown() &&
+           (inputHandler.getPlayerMovement.x != 0 || inputHandler.getPlayerMovement.y != 0))
+        {
+            ProcessDodgeInput(note, Note.SIDE.LEFT_SIDE);
+        }
+    }
+
+    private void ProcessNoteInput(Note note, Note.SIDE inputSide)
+    {
+        Animator animator = note.GetComponent<Animator>();
+
+        if (note.side != inputSide)
+        {
+            animator.SetTrigger("Miss");
+            note.noteState = Note.NoteState.Miss; // Mark state so coroutine skips
+            StartCoroutine(NoteAnimation(animator, note));
+            return;
+        }
+
+        animator.SetTrigger(note.noteState == Note.NoteState.Hittable ? "Hit" : "Miss");
+        note.noteState = note.noteState == Note.NoteState.Hittable ? Note.NoteState.Hit : Note.NoteState.Miss;
+        StartCoroutine(NoteAnimation(animator, note));
+
+        activeNotes.Dequeue();
+    }
+
+    private void ProcessDodgeInput(Note note, Note.SIDE inputSide)
+    {
+        Animator animator = note.GetComponent<Animator>();
+
+        if (note.side != inputSide)
+        {
+            animator.SetTrigger("Miss");
+            note.noteState = Note.NoteState.Miss; // Mark state so coroutine skips
+            StartCoroutine(NoteAnimation(animator, note));
+            return;
+        }
+
+        animator.SetTrigger(note.noteState == Note.NoteState.Hittable ? "Dodge" : "Miss");
+        note.noteState = note.noteState == Note.NoteState.Hittable ? Note.NoteState.Hit : Note.NoteState.Miss;
+        StartCoroutine(NoteAnimation(animator, note));
+
+        activeNotes.Dequeue();
+    }
+
+
+    //---Make this section all inside of the Note script---
+    public IEnumerator NoteAnimation(Animator animator, Note activeNote)
+    {
+        while (true)
+        {
+            var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+            string stateName = stateInfo.IsName("Miss") ? "Miss"
+                               : stateInfo.IsName("Hit") ? "Hit"
+                               : stateInfo.IsName("Dodge") ? "Dodge"
+                               : null;
+
+            if (stateName != null)
+            {
+                // Apply state
+                switch (stateName)
+                {
+                    case "Miss":
+                        Miss(activeNote);
+                        break;
+                    case "Hit":
+                        Hit(activeNote);
+                        break;
+                    case "Dodge":
+                        Dodge(activeNote);
+                        break;
                 }
+
+                if (activeNotes.Count > 0 && activeNotes.Peek() == activeNote)
+                {
+                    activeNotes.Dequeue();
+                }
+
+                yield return new WaitForSeconds(stateInfo.length);
+                Destroy(activeNote.gameObject);
+
+                break;
             }
 
-            if (inputHandler.GetRightShootDown())
-            {
-                if (rightSideHittable && activeRightNotes.Count > 0) Hit(SIDE.RIGHT_SIDE); else Miss();
-            }
-
-            if (inputHandler.GetDodgeDown() && (inputHandler.getPlayerMovement.x != 0 || inputHandler.getPlayerMovement.y != 0))
-            {
-                if ((leftSideHittable && activeLeftNotes.Count > 0)) { Dodge(); } else { Miss(); }
-            }
+            yield return null;
         }
     }
-    private void Hit()
+
+    private void Hit(Note note)
     {
-        if (hitSide == SIDE.LEFT_SIDE)
-        {
+        note.noteState = Note.NoteState.Hit;
+        if (note.side == Note.SIDE.LEFT_SIDE)
             inputHandler.successfulLeftShoot = true;
-            activeLeftNotes.Dequeue().gameObject.SetActive(false);
-        }
-
-        if (hitSide == SIDE.RIGHT_SIDE)
-        {
+        else
             inputHandler.successfulRightShoot = true;
-            activeRightNotes.Dequeue().gameObject.SetActive(false);
-        }
-    }
-    public void Dodge()
-    {
-        inputHandler.successfulDodge = true;
-        activeLeftNotes.Dequeue().gameObject.SetActive(false);
     }
 
-    private void Miss()
+    private void Miss(Note note)
     {
-        audioSource.PlayOneShot(miss);
+        note.noteState = Note.NoteState.Miss;
 
-        bool hasLeft = activeLeftNotes.Count > 0;
-        bool hasRight = activeRightNotes.Count > 0;
-
-        if (!hasLeft && !hasRight) return;
-
-        if (hasLeft && !hasRight)
+        if (note.side == Note.SIDE.LEFT_SIDE)
         {
             inputHandler.successfulLeftShoot = false;
-            activeLeftNotes.Dequeue().gameObject.SetActive(false);
-            return;
-        }
-
-        if (hasRight && !hasLeft)
-        {
-            inputHandler.successfulRightShoot = false;
-            activeRightNotes.Dequeue().gameObject.SetActive(false);
-            return;
-        }
-
-        // Both are active — pick the closer one to center
-        RectTransform left = activeLeftNotes.Peek();
-        RectTransform right = activeRightNotes.Peek();
-
-        float centerX = notebar.rect.width / 2f;
-        float leftDist = Mathf.Abs(left.anchoredPosition.x - centerX);
-        float rightDist = Mathf.Abs(-right.anchoredPosition.x - centerX);
-
-        if (leftDist < rightDist)
-        {
-            inputHandler.successfulLeftShoot = false;
-            activeLeftNotes.Dequeue().gameObject.SetActive(false);
         }
         else
         {
             inputHandler.successfulRightShoot = false;
-            activeRightNotes.Dequeue().gameObject.SetActive(false);
         }
     }
 
-
-    private void CollisionCheck()
+    private void Dodge(Note note)
     {
-        leftSideHittable = false;
-        rightSideHittable = false;
-        foreach (RectTransform note in activeLeftNotes)
-        {
-            if ((Mathf.Abs(note.anchoredPosition.x - (notebar.rect.width / 2)) < mainCircle.rectTransform.rect.width + hitDistance))
-            {
-                leftSideHittable = true;
-                break;
-            }
-        }
-
-        foreach (RectTransform note in activeRightNotes)
-        {
-            if ((Mathf.Abs((note.anchoredPosition.x * -1) - (notebar.rect.width / 2)) < mainCircle.rectTransform.rect.width + hitDistance))
-            {
-                rightSideHittable = true;
-                break;
-            }
-        }
+        note.noteState = Note.NoteState.Dodge;
+        inputHandler.successfulDodge = true;
     }
 
-    
-    **/
-    /**
+    //------------------------------------------------------
     private void ClearNotes()
     {
-        foreach (Note note in leftNotes) { note.noteState = Note.NoteState.NotActive; Destroy(note.gameObject); }
-        foreach (Note note in rightNotes) { note.noteState = Note.NoteState.NotActive; Destroy(note.gameObject); }
-        foreach (Note note in freestyleNotes) { note.noteState = Note.NoteState.NotActive; Destroy(note.gameObject); }
+        foreach (Note note in notes) { Destroy(note.gameObject); }
+        foreach (Note note in freestyleNotes) { Destroy(note.gameObject); }
 
-        tracks[currentTrackIndex].GetTrackNotes().Clear();
+        notes.Clear();
 
-        leftNotes.Clear();
-        rightNotes.Clear();
-
-        activeRightNotes.Clear();
-        activeLeftNotes.Clear();
+        activeNotes.Clear();
         freestyleNotes.Clear();
 
-        leftSideHittable = false;
-        rightSideHittable = false;
-
         currentNoteIndex = 0;
-        leftNoteIndex = 0;
-        rightNoteIndex = 0;
 
         introIndex = 0;
     }
-        **/
-
-    public IEnumerator LeftNoteHitTolerance(RectTransform activeNote)
-    {
-        yield return new WaitForSeconds(hitTolerance);
-        if (activeLeftNotes.Count > 0 && activeLeftNotes.Peek() == activeNote)
-        {
-            leftSideHittable = false;
-            activeLeftNotes.Dequeue();
-        }
-       
-    }
-
-    public IEnumerator RightNoteHitTolerance(RectTransform note)
-    {
-        yield return new WaitForSeconds(hitTolerance);
-        if (activeRightNotes.Count > 0 && activeRightNotes.Peek() == note)
-        {
-            rightSideHittable = false;
-            activeRightNotes.Dequeue();
-        }
-
-    }
-
 
     public void PlayIntro()
     {
@@ -498,7 +461,7 @@ public class BeatManager : MonoBehaviour
     public IEnumerator PlayOutro()
     {
         songStage = SongStage.OUTRO;
-        //ClearNotes();
+        ClearNotes();
         tracks[currentTrackIndex].trackSource.clip = tracks[currentTrackIndex].GetOutroRiff();
         tracks[currentTrackIndex].trackSource.Play();
         tracks[currentTrackIndex].trackSource.loop = false;

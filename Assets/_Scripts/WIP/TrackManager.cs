@@ -21,9 +21,6 @@ public class TrackManager : MonoBehaviour
     [SerializeField] private AudioClip outroRiff;
     [SerializeField] private AudioClip backgroundSong;
 
-
-    private List<Note> trackNotes = new(); //L = left R = right
-
     private void Start()
     {
         trackSource = GetComponent<AudioSource>();
@@ -42,10 +39,4 @@ public class TrackManager : MonoBehaviour
     public float GetOutroRiffTime() { return outroRiff.length; }
 
     public AudioClip GetBackgroundSong() { return backgroundSong; }
-
-    public List<Note> GetTrackNotes() { return trackNotes; }
-
-    public void SetTrackNotes(Note note) { trackNotes.Add(note); }
-
-    public int GetTrackLength() { return trackNotes.Count; }
 }

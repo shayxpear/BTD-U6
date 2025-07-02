@@ -2145,26 +2145,23 @@ MonoBehaviour:
   noteTravelTimeSeconds: 1
   attempts: 0
   noteCombo: 0
-  leftNotePrefab: {fileID: 7883400903560103422, guid: c09d6579ef905f24192a42755e51d5c1, type: 3}
-  rightNotePrefab: {fileID: 796594625953969667, guid: e1e89f7e268b7204d83710dd0f8bc660, type: 3}
+  leftNotePrefab: {fileID: 4437138442464683271, guid: c09d6579ef905f24192a42755e51d5c1, type: 3}
+  rightNotePrefab: {fileID: 5672420782034410698, guid: e1e89f7e268b7204d83710dd0f8bc660, type: 3}
   spriteHandler: {fileID: 1283640056}
   inputHandler: {fileID: 1283640062}
   RhythmModuleTransform: {fileID: 691770429}
   notebar: {fileID: 118258691}
   mainCircle: {fileID: 1037213287}
   FreestyleModuleTransform: {fileID: 502540058}
-  miss: {fileID: 8300000, guid: d5068790f10e84b4fac595f2c1cea178, type: 3}
+  notes: []
+  freestyleNotes: []
   tracks:
   - {fileID: 1225313304}
   turnOnDebugTools: 1
   clearedStage: 0
-  leftSideHittable: 0
-  rightSideHittable: 0
   currentBPM: 0
   currentTrackIndex: 0
   currentNoteIndex: 0
-  leftNoteIndex: 0
-  rightNoteIndex: 0
   songStage: 0
 --- !u!82 &1944652698
 AudioSource:
