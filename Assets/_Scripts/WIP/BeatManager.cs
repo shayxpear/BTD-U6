@@ -419,9 +419,9 @@ public class BeatManager : MonoBehaviour
     {
         foreach (Note note in notes) { Destroy(note.gameObject); }
         foreach (Note note in freestyleNotes) { Destroy(note.gameObject); }
+        foreach (Note note in activeNotes) { Destroy(note.gameObject); }
 
         notes.Clear();
-
         activeNotes.Clear();
         freestyleNotes.Clear();
 
