@@ -444,6 +444,7 @@ public class BeatManager : MonoBehaviour
 
         currentNoteIndex = 0;
 
+        missCount = 0;
         introIndex = 0;
     }
 

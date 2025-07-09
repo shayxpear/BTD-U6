@@ -114,8 +114,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   side: 1
   noteState: 0
-  noteTransform: {fileID: 3663894101945572425}
   miss: {fileID: 8300000, guid: d5068790f10e84b4fac595f2c1cea178, type: 3}
+  noteTransform: {fileID: 3663894101945572425}
 --- !u!82 &6211823131973412920
 AudioSource:
   m_ObjectHideFlags: 0
@@ -129,7 +129,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0
